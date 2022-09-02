@@ -1,4 +1,4 @@
-# meta-dts
+# meta-dts-ce
 
 ## Prerequisites
 
@@ -17,20 +17,20 @@ wget -O ~/bin/kas-container https://raw.githubusercontent.com/siemens/kas/2.6.3/
 chmod +x ~/bin/kas-container
 ```
 
-* `meta-dts` repository cloned
+* `meta-dts-ce` repository cloned
 
 ```bash
 mkdir yocto && cd yocto
 ```
 
 ```bash
-git clone https://github.com/Dasharo/meta-dts.git
+git clone https://github.com/Dasharo/meta-dts-ce.git
 ```
 
 or if you have SSH access:
 
 ```bash
-git clone git@github.com:Dasharo/meta-dts.git
+git clone git@github.com:Dasharo/meta-dts-ce.git
 ```
 
 * [bmaptool](https://source.tizen.org/documentation/reference/bmaptool) installed
@@ -48,7 +48,7 @@ sudo apt install bmap-tools
 From `yocto` directory run:
 
 ```shell
-$ SHELL=/bin/bash kas-container build meta-dts/kas.yml
+$ SHELL=/bin/bash kas-container build meta-dts-ce/kas.yml
 ```
 
 - Image build takes time, so be patient and after build's finish you should see
