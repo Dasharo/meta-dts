@@ -1,0 +1,158 @@
+#!/usr/bin/env bash
+
+CMD_DASHARO_DEPLOY="/usr/sbin/dasharo-deploy"
+
+if [ "$(id -u)" -ne 0 ]; then
+  echo "This script must be started as root!"
+  exit 1
+fi
+
+if [ -d logs ]; then
+  rm -rf logs
+fi
+
+FULL_UPLOAD_URL="https://cloud.3mdeb.com/index.php/s/"${CLOUDSEND_LOGS_URL}
+
+mkdir logs
+echo "Getting hardware information. It will take a few minutes..."
+# echo "Dumping PCI configuration space and topology..."
+lspci -nnvvvxxxx > logs/lspci.log 2> logs/lspci.err.log
+printf '##                                                                  \r'
+
+# echo "Dumping USB devices and topology..."
+lsusb -vvv > logs/lsusb.log 2> logs/lsusb.err.log
+printf '####                                                                \r'
+
+# echo "Dumping Super I/O configuration..."
+superiotool -deV > logs/superiotool.log 2> logs/superiotool.err.log
+printf '######                                                              \r'
+
+# echo "Dumping Embedded Controller configuration (this may take a while if EC is not present)..."
+ectool -ip > logs/ectool.log 2> logs/ectool.err.log
+printf '########                                                            \r'
+
+# echo "Dumping MSRs..."
+msrtool > logs/msrtool.log 2> logs/msrtool.err.log
+printf '##########                                                          \r'
+
+# echo "Dumping SMBIOS tables..."
+dmidecode > logs/dmidecode.log 2> logs/dmidecode.err.log
+printf '############                                                        \r'
+
+# echo "Decoding BIOS information..."
+biosdecode > logs/biosdecode.log 2> logs/biosdecode.err.log
+printf '##############                                                      \r'
+
+# echo "Extracting CMOS NVRAM..."
+nvramtool -x > logs/nvramtool.log 2> logs/nvramtool.err.log
+printf '################                                                    \r'
+
+# echo "Dumping Intel configuration registers..."
+inteltool -a > logs/inteltool.log 2> logs/inteltool.err.log
+printf '##################                                                  \r'
+
+# echo "Generating GPIO configuration C header files for coreboot..."
+intelp2m -file logs/inteltool.log -fld cb -i -p snr -o logs/gpio_snr.h > logs/intelp2m.log 2> logs/intelp2m.err.log
+intelp2m -file logs/inteltool.log -fld cb -i -p cnl -o logs/gpio_cnl.h >> logs/intelp2m.log 2>> logs/intelp2m.err.log
+intelp2m -file logs/inteltool.log -fld cb -i -p apl -o logs/gpio_apl.h >> logs/intelp2m.log 2>> logs/intelp2m.err.log
+intelp2m -file logs/inteltool.log -fld cb -i -p lbg -o logs/gpio_lbg.h >> logs/intelp2m.log 2>> logs/intelp2m.err.log
+printf '####################                                                \r'
+
+# echo "Dumping kernel dmesg..."
+dmesg > logs/dmesg.log 2> logs/dmesg.err.log
+printf '######################                                              \r'
+
+# echo "Dumping ACPI tables..."
+acpidump > logs/acpidump.log 2> logs/acpidump.err.log
+printf '########################                                            \r'
+
+# echo "Dumping Audio devices configuration..."
+for x in /sys/class/sound/card0/hw*; do cat "$x/init_pin_configs" > logs/pin_"$(basename "$x")"; done
+for x in /proc/asound/card0/codec#*; do cat "$x" > logs/"$(basename "$x")"; done
+printf '##########################                                          \r'
+
+# echo "Dumping CPU info..."
+cat /proc/cpuinfo > logs/cpuinfo.log 2> logs/cpuinfo.err.log
+printf '############################                                        \r'
+
+# echo "Dumping I/O ports..."
+cat /proc/ioports > logs/ioports.log 2> logs/ioports.err.log
+printf '##############################                                      \r'
+
+# echo "Dumping input bus types..."
+cat /sys/class/input/input*/id/bustype > logs/input_bustypes.log
+printf '################################                                    \r'
+
+# echo "Trying to read firmware image with flashrom..."
+flashrom -V -p internal:laptop=force_I_want_a_brick -r logs/rom.bin > logs/flashrom_read.log 2> logs/flashrom_read.err.log
+printf '##################################                                  \r'
+
+# echo "Probing all I2C buses..."
+MAX_I2C_ID=$(i2cdetect -l | awk 'BEGIN{c1=0} //{c1++} END{print "",--c1}')
+for bus in $(seq 0 "$MAX_I2C_ID");
+do
+  echo "I2C bus number: $bus" >> logs/i2cdetect.log 2>> logs/i2cdetect.err.log
+  i2cdetect -y "$bus" >> logs/i2cdetect.log 2>> logs/i2cdetect.err.log
+done
+printf '####################################                                \r'
+
+# echo "Decompiling ACPI tables..."
+mkdir -p logs/acpi
+if pushd logs/acpi &> /dev/null; then
+  acpixtract -a ../acpidump.log &>/dev/null
+  iasl -d ./*.dat &>/dev/null
+  popd &> /dev/null
+fi
+printf '######################################                              \r'
+
+# echo "Getting touchpad information..."
+touchpad-info > logs/touchpad.log 2> logs/touchpad.err.log
+printf '########################################                            \r'
+
+# echo "Getting DIMMs information..."
+decode-dimms > logs/decode-dimms.log 2> logs/decode-dimms.err.log
+printf '##########################################                          \r'
+
+printf '############################################                        \r'
+printf '##############################################                      \r'
+printf '################################################                    \r'
+printf '##################################################                  \r'
+printf '####################################################                \r'
+printf '######################################################              \r'
+printf '########################################################            \r'
+printf '##########################################################          \r'
+printf '############################################################        \r'
+printf '##############################################################      \r'
+printf '################################################################    \r'
+printf '##################################################################  \r'
+printf '####################################################################\r'
+
+filename="$(dmidecode -s system-manufacturer)"
+filename+=" $(dmidecode -s system-product-name)"
+filename+=" $(dmidecode -s bios-version)"
+filename+="_$(date +'%Y_%m_%d_%H_%M_%S_%N')"
+
+filename="${filename// /_}"
+
+echo "Creating archive with logs..."
+tar -zcf "$filename.tar.gz" logs/*
+rm -rf logs
+
+echo "Done! Logs saved to: $(readlink -f $filename.tar.gz)"
+
+if [ "$SEND_LOGS" = "true" ]; then
+  echo "Sending logs to 3mdeb cloud..."
+  cloudsend.sh \
+    -e \
+    $(readlink -f $filename.tar.gz) \
+    ${FULL_UPLOAD_URL}
+  if [ "$?" -ne "0" ]; then
+    echo "Failed to send logs to the cloud"
+    if [ -a "${CMD_DASHARO_DEPLOY}" ]; then
+      echo -e "Something may be wrong with credentials. Please use option 4 to change OEM keys
+               \rand make sure that there is no typo."
+    fi
+    exit 1
+  fi
+  echo "Thank you for supporting Dasharo!"
+fi

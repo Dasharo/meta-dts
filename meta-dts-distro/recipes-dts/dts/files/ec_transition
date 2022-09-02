@@ -1,0 +1,158 @@
+#!/usr/bin/env bash
+
+error_exit() {
+  _error_msg="$1"
+  echo "$_error_msg"
+  exit 1
+}
+
+error_check() {
+  _error_code=$?
+  _error_msg="$1"
+  [ "$_error_code" -ne 0 ] && error_exit "$_error_msg : ($_error_code)"
+}
+
+# Method to access IT5570 IO Depth 2 registers
+it5570_i2ec() {
+  # TODO: Use /dev/port instead of iotools
+
+  # Address high byte
+  iotools io_write8 0x2e 0x2e
+  iotools io_write8 0x2f 0x11
+  iotools io_write8 0x2e 0x2f
+  iotools io_write8 0x2f $(($2>>8 & 0xff))
+
+  # Address low byte
+  iotools io_write8 0x2e 0x2e
+  iotools io_write8 0x2f 0x10
+  iotools io_write8 0x2e 0x2f
+  iotools io_write8 0x2f $(($2 & 0xff))
+
+  # Data
+  iotools io_write8 0x2e 0x2e
+  iotools io_write8 0x2f 0x12
+  iotools io_write8 0x2e 0x2f
+
+  case $1 in
+    "r")
+      iotools io_read8 0x2f
+      ;;
+    "w")
+      iotools io_write8 0x2f $3
+      ;;
+  esac
+}
+
+it5570_shutdown() {
+  echo -n "Syncing disks... "
+  sync
+  echo "Done."
+  echo "The computer will shut down automatically in 5 seconds"
+  sleep 5
+  # shut down using EC external watchdog reset
+  it5570_i2ec w 0x1f01 0x20
+  it5570_i2ec w 0x1f07 0x01
+}
+
+
+board_config() {
+  case "$BOARD_VENDOR" in
+    "Notebook")
+      case "$BOARD_MODEL" in
+        "NS50_70MU")
+          HAVE_EC="true"
+          NEED_EC_RESET="true"
+          COMPATIBLE_EC_FW_VERSION="2022-08-31_cbff21b"
+          EC_HASH="d1001465cea74a550914c14f0c8f901b14827a3b5fa0b612ae6d11594ac2b405  /tmp/ecupdate.rom"
+          BIOS_HASH="d4c30660c53bac505997de30b9eac4c5ac15f3212c62366730dc2ca3974bba18  /tmp/biosupdate.rom"
+          ;;
+        *)
+          error_exit "Board model $BOARD_MODEL is currently not supported"
+	;;
+      esac
+      ;;
+    *)
+      error_exit "Board vendor: $BOARD_VENDOR is currently not supported"
+      ;;
+  esac
+}
+
+
+update_ec() {
+  echo "Getting EC firmware update..."
+  cp $EC_UPDATE_PATH /tmp/ecupdate.rom
+  error_check "Failed to get EC firmware update file. Please check if path \
+  $BIOS_UPDATE_PATH is correct."
+  sha256sum --check <(echo "$EC_HASH")
+  error_check "Failed to download EC firmware update"
+
+  echo "Updating EC..."
+  flashrom -p ite_ec -w /tmp/ecupdate.rom
+  error_check "Failed to update EC firmware"
+
+  echo "Successfully updated EC firmware"
+}
+
+install() {
+  echo "Getting update"
+  cp $BIOS_UPDATE_PATH /tmp/biosupdate.rom
+  error_check "Failed to get update file. Please check if path \
+  $BIOS_UPDATE_PATH is correct."
+  sha256sum --check <(echo "$BIOS_HASH")
+  error_check "Failed to verify Dasharo evaluation firmware"
+
+  if [ "$HAVE_EC" = "true" ]; then
+    _ec_fw_version=$(flashrom -p ite_ec | grep "Mainboard EC Version" | tr -d ' ' | cut -d ':' -f 2)
+
+    if [ "$_ec_fw_version" != "$COMPATIBLE_EC_FW_VERSION" ]; then
+      echo "EC version: $_ec_fw_version is not supported, update required"
+      update_ec
+    fi
+  fi
+
+  echo "Installing Dasharo firmware..."
+  flashrom -p internal:boardmismatch=force --ifd -i bios -w /tmp/biosupdate.rom
+  error_check "Failed to install Dasharo firmware"
+
+  echo "Successfully installed Dasharo firmware"
+
+  echo "Powering off"
+  sleep 1
+  if [ "$NEED_EC_RESET" = "true" ]; then
+    it5570_shutdown
+  else
+    ${CMD_POWEROFF}
+  fi
+}
+
+usage() {
+  echo "Usage:"
+  echo "  $0 BIOS_UPDATE_FILE_DIR EC_UPDATE_FILE_DIR"
+  echo "  BIOS_UPDATE_FILE_DIR - This argument takes path to BIOS update file"
+  echo "  EC_UPDATE_FILE_DIR   - This argument takes path to EC update file"
+  exit 1
+}
+
+# not used anymore, we save packages with fw as fw_backup.tar.gz
+# commented out as it may be use later, maybe for uploading the backup
+# to the cloud
+#BIOS_VENDOR=$(dmidecode -s bios-vendor)
+#BIOS_VERSION=$(dmidecode -s bios-version)
+BOARD_VENDOR="$(dmidecode -s system-manufacturer)"
+BOARD_MODEL="$(dmidecode -s system-product-name)"
+ROOT_DIR="/"
+
+[ -z "$BOARD_VENDOR" ] && error_exit "BOARD_VENDOR not given"
+[ -z "$BOARD_MODEL" ] && error_exit "BOARD_MODEL not given"
+
+CMD_POWEROFF="/sbin/poweroff"
+
+if [ $# -ne 2 ]; then
+  usage
+fi
+
+BIOS_UPDATE_PATH=$1
+EC_UPDATE_PATH=$2
+
+board_config
+install

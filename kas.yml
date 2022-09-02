@@ -1,0 +1,10 @@
+header:
+  version: 11
+  includes:
+    - kas/common.yml
+    - kas/cache.yml
+
+distro: dts-distro
+machine: genericx86-64
+target:
+  - dts-base-image-ce

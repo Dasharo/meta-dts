@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+
+trap : 2
+trap : 3
+
+CMD_DASHARO_HCL_REPORT="/usr/sbin/dasharo-hcl-report"
+CMD_SHELL="/bin/bash"
+CMD_POWEROFF="/sbin/poweroff"
+CMD_REBOOT="/sbin/reboot"
+CMD_DASHARO_DEPLOY="/usr/sbin/dasharo-deploy"
+
+print_disclaimer() {
+echo -e \
+"Please note that the report is not anonymous, but we will use it only for\r
+backup and future improvement of the Dasharo product. Every log is encrypted\r
+and sent over HTTPS, so security is assured.\r
+If you still have doubts, you can skip HCL report generation.\r\n
+What is inside the HCL report? We gather information about:\r
+  - PCI, Super I/O, GPIO, EC, audio, and Intel configuration,\r
+  - MSRs, CMOS NVRAM, CPU info, DIMMs, state of touchpad, SMBIOS and ACPI tables,\r
+  - Decoded BIOS information, full firmware image backup, kernel dmesg,\r
+  - IO ports, input bus types, and topology - including I2C and USB,\r"
+}
+
+print_banner() {
+echo '    ____             __                        ______            __        _____       _ __'
+echo '   / __ \____ ______/ /_  ____ __________     /_  __/___  ____  / /____   / ___/__  __(_) /'____
+echo '  / / / / __ `/ ___/ __ \/ __ `/ ___/ __ \     / / / __ \/ __ \/ / ___/   \__ \/ / / / / __/ _ \'
+echo ' / /_/ / /_/ (__  ) / / / /_/ / /  / /_/ /    / / / /_/ / /_/ / (__  )   ___/ / /_/ / / /_/  __/'
+echo '/_____/\__,_/____/_/ /_/\__,_/_/   \____/    /_/  \____/\____/_/____/   /____/\__,_/_/\__/\___/'
+echo
+}
+
+check_network_connection() {
+  echo 'Waiting for network connection ...'
+  n="5"
+  while : ; do
+    ping -c 3 cloud.3mdeb.com > /dev/null 2>&1 && break
+    n=$((n-1))
+    if [ "${n}" == "0" ]; then
+      echo 'No network connection to 3mdeb cloud, please recheck Ethernet connection'
+      return 1
+    fi
+    sleep 1
+  done
+  return 0
+}
+
+print_banner
+
+logs_sent=""
+
+Cloud_base_url="https://cloud.3mdeb.com/index.php/s/"
+
+# base values for CE
+export CLOUDSEND_LOGS_URL="39d4biH4SkXD8Zm"
+export CLOUDSEND_PASSWORD="1{\[\k6G"
+
+echo "  DTS CE version"
+
+
+while : ; do
+  echo "  1) Dasharo HCL report - dump hardware information from this device"
+
+  echo "  9) Shell"
+  echo "  10) Power off system"
+  echo "  11) Reboot system"
+  echo
+  read -p "Enter an option: " OPTION
+  echo
+
+  case ${OPTION} in
+    1)
+      print_disclaimer
+      read -p "Do you want to support Dasharo development by sending us logs with hardware configuration? [N/y] "
+      case ${REPLY} in
+          yes|y|Y|Yes|YES)
+          export SEND_LOGS="true"
+          echo "Thank you for contributing to the Dasharo development! "
+          ;;
+          *)
+          echo "Logs will be saved in root directory."
+          echo "Please consider supporting Dasharo by sending the logs next time."
+          ;;
+      esac
+      if [ "${SEND_LOGS}" == "true" ]; then
+          check_network_connection && ${CMD_DASHARO_HCL_REPORT} && logs_sent="1"
+      else
+          ${CMD_DASHARO_HCL_REPORT}
+      fi
+      ;;
+    9)
+      echo "Entering shell, to leave type exit and press Enter or press LCtrl+D"
+      echo ""
+      ${CMD_SHELL}
+      ;;
+    10)
+      ${CMD_POWEROFF}
+      ;;
+    11)
+      ${CMD_REBOOT}
+      ;;
+    *)
+      ;;
+  esac
+done

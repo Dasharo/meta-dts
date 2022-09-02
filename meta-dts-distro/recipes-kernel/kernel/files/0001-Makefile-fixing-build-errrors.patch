@@ -1,0 +1,39 @@
+From ab38f5ef835d0fd7b7448fdd95e3b9b660f6b8d0 Mon Sep 17 00:00:00 2001
+From: Kas User <kas@example.com>
+Date: Wed, 11 May 2022 10:29:00 +0000
+Subject: [PATCH] Makefile fixing build errrors
+
+Signed-off-by: Kas User <kas@example.com>
+---
+ Makefile | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 0094f7e..a810286 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,17 +1,18 @@
+ obj-m := acpi_call.o
+ 
++SRC := $(shell pwd)
+ KVER ?= $(shell uname -r)
+ KDIR ?= /lib/modules/$(KVER)/build
+ VERSION ?= $(shell cat VERSION)
+ 
+ default:
+-	$(MAKE) -C $(KDIR) M=$(CURDIR) modules
++	$(MAKE) -C $(KERNEL_SRC) M=$(SRC) modules
+ 
+ clean:
+-	$(MAKE) -C $(KDIR) M=$(CURDIR) clean
++	 $(MAKE) -C $(KERNEL_SRC) M=$(SRC) clean
+ 
+ install:
+-	$(MAKE) -C $(KDIR) M=$(CURDIR) modules_install
++	 $(MAKE) -C $(KERNEL_SRC) M=$(SRC) modules_install
+ 
+ load:
+ 	-/sbin/rmmod acpi_call
+-- 
+2.20.1
+

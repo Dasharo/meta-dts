@@ -1,0 +1,10 @@
+header:
+  version: 11
+
+local_conf_header:
+  yocto-cache: |
+    SSTATE_MIRRORS ?= "file://.* http://${LOCAL_PREMIRROR_SERVER}/${PROJECT_NAME}/sstate-cache/PATH"
+    SOURCE_MIRROR_URL ?= "http://${LOCAL_PREMIRROR_SERVER}/${PROJECT_NAME}/downloads"
+    INHERIT += "own-mirrors"
+    LOCAL_PREMIRROR_SERVER ?= "127.0.0.1"
+    PROJECT_NAME ?= "dts"
