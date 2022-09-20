@@ -8,6 +8,10 @@ CMD_SHELL="/bin/bash"
 CMD_POWEROFF="/sbin/poweroff"
 CMD_REBOOT="/sbin/reboot"
 CMD_DASHARO_DEPLOY="/usr/sbin/dasharo-deploy"
+CMD_NCMENU="/usr/sbin/novacustom_menu"
+
+BOARD_VENDOR="$(dmidecode -s system-manufacturer)"
+BOARD_MODEL="$(dmidecode -s system-product-name)"
 
 print_disclaimer() {
 echo -e \
@@ -46,6 +50,30 @@ check_network_connection() {
   return 0
 }
 
+vendor_menu()
+{
+  case "$BOARD_VENDOR" in
+    "Notebook")
+      case "$BOARD_MODEL" in
+      "NV4XMB,ME,MZ" | "NS50_70MU")
+        case "$1" in
+          "print")
+             echo "  6) NovaCustom menu"
+            ;;
+          "action")
+            echo "Entering NovaCustom menu, to leave type exit and press Enter or press LCtrl+D"
+            echo ""
+            ${CMD_NCMENU}
+            ;;
+          *)
+            ;;
+        esac
+        ;;
+      *)
+        ;;
+      esac
+  esac
+}
 print_banner
 
 logs_sent=""
@@ -58,10 +86,9 @@ export CLOUDSEND_PASSWORD="1{\[\k6G"
 
 echo "  DTS CE version"
 
-
 while : ; do
   echo "  1) Dasharo HCL report - dump hardware information from this device"
-
+  vendor_menu "print"
   echo "  9) Shell"
   echo "  10) Power off system"
   echo "  11) Reboot system"
@@ -88,6 +115,9 @@ while : ; do
       else
           ${CMD_DASHARO_HCL_REPORT}
       fi
+      ;;
+    6)
+      vendor_menu "action"
       ;;
     9)
       echo "Entering shell, to leave type exit and press Enter or press LCtrl+D"
