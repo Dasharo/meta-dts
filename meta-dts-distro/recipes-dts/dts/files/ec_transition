@@ -85,13 +85,13 @@ board_config() {
         "NV4XMB,ME,MZ")
           HAVE_EC="true"
           NEED_EC_RESET="true"
-          COMPATIBLE_EC_FW_VERSION="2022-09-14_b70784b-dirty"
-          EC_HASH="792236381336ea8389ded5385051176e7f9ef4270b529020e64548f7ff4e81f1  /tmp/ecupdate.rom"
-          BIOS_HASH="87f4eab3dc6461fa2e9e84b0527e0443244adde6d6d2b1532eb4720573a217a4  /tmp/biosupdate.rom"
+          COMPATIBLE_EC_FW_VERSION="2022-09-20_8f885fc"
+          EC_HASH="28f391238f10e1425b3b11cf21d49efa5f7d8795d236b6a4ac7fa7f09cfb738e  /tmp/ecupdate.rom"
+          BIOS_HASH="7271b638c87cba658162931f55bdaa6987eb5b0555075ce8e2297a79a505c8b0  /tmp/biosupdate.rom"
           PROGRAMATOR_BIOS="ite_ec:boardmismatch=force"
           PROGRAMATOR_EC="ite_ec:boardmismatch=force,romsize=128K,autoload=disable"
-          BIOS_LINK="https://cloud.3mdeb.com/index.php/s/fPtGHPAyDYNbfrX/download"
-          EC_LINK="https://cloud.3mdeb.com/index.php/s/mbdK7Bxwzzt8w4r/download"
+          BIOS_LINK="https://cloud.3mdeb.com/index.php/s/3cjkJSWBzPfb5SP/download"
+          EC_LINK="https://cloud.3mdeb.com/index.php/s/9S5Tmy6kwFjpcNm/download"
           ;;
         *)
           error_exit "Board model $BOARD_MODEL is currently not supported"
