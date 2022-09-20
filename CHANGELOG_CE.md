@@ -8,7 +8,7 @@ this file.
 * Added new vendor specific menu entry with NovaCustom menu
 * `ec_transition` script now supports NV4XMB,ME,MZ laptops and automaticaly
   download firmware used for transition both for NV4x and NS5x laptopts,
-  [firmware transition](TBD)
+  [firmware transition](https://docs.dasharo.com/common-coreboot-docs/dasharo_tools_suite/#dasharo-ec-transition)
   documentation is updated
 * Add kernel configuration to silence terminal logs by default (change loglevel
   to 1)
