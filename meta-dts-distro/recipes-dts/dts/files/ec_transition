@@ -85,8 +85,8 @@ board_config() {
         "NV4XMB,ME,MZ")
           HAVE_EC="true"
           NEED_EC_RESET="true"
-          COMPATIBLE_EC_FW_VERSION="2022-09-28_d7a9890"
-          EC_HASH="9573c4d080cee7f134138974ea1031bd3c056ef78f7691f876de87da3a94a74d  /tmp/ecupdate.rom"
+          COMPATIBLE_EC_FW_VERSION="2022-10-07_c662165"
+          EC_HASH="7a75fd9afd81012f7c1485cc335298979509e5929d931d898465fbddb4ce105c  /tmp/ecupdate.rom"
           BIOS_HASH="7271b638c87cba658162931f55bdaa6987eb5b0555075ce8e2297a79a505c8b0  /tmp/biosupdate.rom"
           PROGRAMMER_BIOS="internal:boardmismatch=force"
           PROGRAMMER_EC="ite_ec:boardmismatch=force,romsize=128K,autoload=disable"
