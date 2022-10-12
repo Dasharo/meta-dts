@@ -3,6 +3,20 @@
 All notable changes to the DTS Community Edition project will be documented in
 this file.
 
+## v1.0.2 - 2022-10-12
+
+* Added new vendor specific menu entry which is displayed only on supported
+  platforms, for now NovaCustom menu was added for NV4x and NS50 70MU laptops
+* DTS version is now printed in the main menu
+* `ec_transition` script now supports NV4XMB,ME,MZ laptops and automaticaly
+  download firmware used for transition both for NV4x and NS5x laptopts,
+  [firmware transition](https://docs.dasharo.com/common-coreboot-docs/dasharo_tools_suite/#dasharo-ec-transition)
+  documentation is updated
+* Add kernel configuration to silence terminal logs by default (change loglevel
+  to 1)
+* Enable GOOGLE_MEMCONSOLE_COREBOOT kernel configuration to ease getting
+  firmware logs
+
 ## v1.0.1 - 2022-09-02
 
 * Added system76_ectool to enable Embedded Controller [firmware

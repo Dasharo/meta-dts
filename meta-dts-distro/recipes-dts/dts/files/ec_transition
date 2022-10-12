@@ -54,6 +54,18 @@ it5570_shutdown() {
   it5570_i2ec w 0x1f07 0x01
 }
 
+check_network_connection() {
+  echo 'Waiting for network connection ...'
+  n="5"
+  while : ; do
+    ping -c 3 cloud.3mdeb.com > /dev/null 2>&1 && break
+    n=$((n-1))
+    if [ "${n}" == "0" ]; then
+      error_exit "No network connection to 3mdeb cloud, please recheck Ethernet connection"
+    fi
+    sleep 1
+  done
+}
 
 board_config() {
   case "$BOARD_VENDOR" in
@@ -65,6 +77,21 @@ board_config() {
           COMPATIBLE_EC_FW_VERSION="2022-08-31_cbff21b"
           EC_HASH="d1001465cea74a550914c14f0c8f901b14827a3b5fa0b612ae6d11594ac2b405  /tmp/ecupdate.rom"
           BIOS_HASH="d4c30660c53bac505997de30b9eac4c5ac15f3212c62366730dc2ca3974bba18  /tmp/biosupdate.rom"
+          PROGRAMMER_BIOS="internal"
+          PROGRAMMER_EC="ite_ec"
+          BIOS_LINK="https://cloud.3mdeb.com/index.php/s/SKpqSNzfFNY7AbK/download"
+          EC_LINK="https://cloud.3mdeb.com/index.php/s/GK2KbXaYprkCCWM/download"
+          ;;
+        "NV4XMB,ME,MZ")
+          HAVE_EC="true"
+          NEED_EC_RESET="true"
+          COMPATIBLE_EC_FW_VERSION="2022-10-07_c662165"
+          EC_HASH="7a75fd9afd81012f7c1485cc335298979509e5929d931d898465fbddb4ce105c  /tmp/ecupdate.rom"
+          BIOS_HASH="7271b638c87cba658162931f55bdaa6987eb5b0555075ce8e2297a79a505c8b0  /tmp/biosupdate.rom"
+          PROGRAMMER_BIOS="internal:boardmismatch=force"
+          PROGRAMMER_EC="ite_ec:boardmismatch=force,romsize=128K,autoload=disable"
+          BIOS_LINK="https://cloud.3mdeb.com/index.php/s/3cjkJSWBzPfb5SP/download"
+          EC_LINK="https://cloud.3mdeb.com/index.php/s/9S5Tmy6kwFjpcNm/download"
           ;;
         *)
           error_exit "Board model $BOARD_MODEL is currently not supported"
@@ -77,32 +104,44 @@ board_config() {
   esac
 }
 
+check_for_opensource_firmware()
+{
+  echo "Checking for opensource firmware"
+  system76_ectool info >> /dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    error_exit "Device has already Open Source Embedded Controller firmware, aborting..."
+  fi
+}
+
+download_files()
+{
+  check_network_connection
+  BIOS_UPDATE_PATH="/tmp/biosupdate.rom"
+  EC_UPDATE_PATH="/tmp/ecupdate.rom"
+  wget -O $EC_UPDATE_PATH $EC_LINK
+  error_check "Cannot download EC update file. Aborting..."
+  wget -O $BIOS_UPDATE_PATH $BIOS_LINK
+  error_check "Cannot download FW update file. Aborting..."
+  echo "Successfully downloaded EC and FW files."
+}
 
 update_ec() {
-  echo "Getting EC firmware update..."
-  cp $EC_UPDATE_PATH /tmp/ecupdate.rom
-  error_check "Failed to get EC firmware update file. Please check if path \
-  $BIOS_UPDATE_PATH is correct."
   sha256sum --check <(echo "$EC_HASH")
   error_check "Failed to download EC firmware update"
 
   echo "Updating EC..."
-  flashrom -p ite_ec -w /tmp/ecupdate.rom
+  flashrom -p ${PROGRAMMER_EC} -w /tmp/ecupdate.rom
   error_check "Failed to update EC firmware"
 
   echo "Successfully updated EC firmware"
 }
 
 install() {
-  echo "Getting update"
-  cp $BIOS_UPDATE_PATH /tmp/biosupdate.rom
-  error_check "Failed to get update file. Please check if path \
-  $BIOS_UPDATE_PATH is correct."
   sha256sum --check <(echo "$BIOS_HASH")
-  error_check "Failed to verify Dasharo evaluation firmware"
+  error_check "Failed to verify Dasharo firmware"
 
   if [ "$HAVE_EC" = "true" ]; then
-    _ec_fw_version=$(flashrom -p ite_ec | grep "Mainboard EC Version" | tr -d ' ' | cut -d ':' -f 2)
+    _ec_fw_version=$(flashrom -p ${PROGRAMMER_EC} | grep "Mainboard EC Version" | tr -d ' ' | cut -d ':' -f 2)
 
     if [ "$_ec_fw_version" != "$COMPATIBLE_EC_FW_VERSION" ]; then
       echo "EC version: $_ec_fw_version is not supported, update required"
@@ -111,7 +150,7 @@ install() {
   fi
 
   echo "Installing Dasharo firmware..."
-  flashrom -p internal:boardmismatch=force --ifd -i bios -w /tmp/biosupdate.rom
+  flashrom -p ${PROGRAMMER_BIOS} --ifd -i bios -w /tmp/biosupdate.rom
   error_check "Failed to install Dasharo firmware"
 
   echo "Successfully installed Dasharo firmware"
@@ -127,17 +166,10 @@ install() {
 
 usage() {
   echo "Usage:"
-  echo "  $0 BIOS_UPDATE_FILE_DIR EC_UPDATE_FILE_DIR"
-  echo "  BIOS_UPDATE_FILE_DIR - This argument takes path to BIOS update file"
-  echo "  EC_UPDATE_FILE_DIR   - This argument takes path to EC update file"
+  echo "  $0 "
   exit 1
 }
 
-# not used anymore, we save packages with fw as fw_backup.tar.gz
-# commented out as it may be use later, maybe for uploading the backup
-# to the cloud
-#BIOS_VENDOR=$(dmidecode -s bios-vendor)
-#BIOS_VERSION=$(dmidecode -s bios-version)
 BOARD_VENDOR="$(dmidecode -s system-manufacturer)"
 BOARD_MODEL="$(dmidecode -s system-product-name)"
 ROOT_DIR="/"
@@ -147,12 +179,7 @@ ROOT_DIR="/"
 
 CMD_POWEROFF="/sbin/poweroff"
 
-if [ $# -ne 2 ]; then
-  usage
-fi
-
-BIOS_UPDATE_PATH=$1
-EC_UPDATE_PATH=$2
-
+check_for_opensource_firmware
 board_config
+download_files
 install
