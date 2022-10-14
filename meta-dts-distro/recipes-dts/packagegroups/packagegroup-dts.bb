@@ -32,6 +32,7 @@ RDEPENDS:${PN}-tools-base = " \
   bmap-tools \
   flashrom \
   fwupd \
+  tpm-tools \
 "
 
 RDEPENDS:${PN}-tools-ce = " \
