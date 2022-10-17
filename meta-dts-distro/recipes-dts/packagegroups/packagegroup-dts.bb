@@ -33,6 +33,7 @@ RDEPENDS:${PN}-tools-base = " \
   flashrom \
   fwupd \
   tpm-tools \
+  mei-amt-check \
 "
 
 RDEPENDS:${PN}-tools-ce = " \
