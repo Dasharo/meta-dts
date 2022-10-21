@@ -1,5 +1,34 @@
 #!/usr/bin/env bash
 
+print_information()
+{
+  echo "+================================================+"
+  echo "|         Information inside the package         |"
+  echo "+================================================+"
+  echo "|         PCI configuration and topology         |"
+  echo "|------------------------------------------------|"
+  echo "|            Super I/O configuration             |"
+  echo "|------------------------------------------------|"
+  echo "|       Embedded Controller configuration        |"
+  echo "|------------------------------------------------|"
+  echo "|        MSRs, SMBIOS tables. CMOS NVRAM         |"
+  echo "|------------------------------------------------|"
+  echo "|                BIOS information                |"
+  echo "|------------------------------------------------|"
+  echo "|          Intel configuration registers         |"
+  echo "|------------------------------------------------|"
+  echo "| GPIO configuration C header files for coreboot |"
+  echo "|------------------------------------------------|"
+  echo "| Kernel dmesg, ACPI tables, CPU info, I/O ports |"
+  echo "|------------------------------------------------|"
+  echo "|           Audio devices configuration          |"
+  echo "|------------------------------------------------|"
+  echo "|          Input bus types, I2C buses            |"
+  echo "|------------------------------------------------|"
+  echo "|             Touchpad and DIMMs info            |"
+  echo "+================================================+"
+}
+
 CMD_DASHARO_DEPLOY="/usr/sbin/dasharo-deploy"
 
 if [ "$(id -u)" -ne 0 ]; then
@@ -143,6 +172,7 @@ printf '####################################################################\r'
 filename="$(dmidecode -s system-manufacturer)"
 filename+=" $(dmidecode -s system-product-name)"
 filename+=" $(dmidecode -s bios-version)"
+
 filename+="_$(date +'%Y_%m_%d_%H_%M_%S_%N')"
 
 filename="${filename// /_}"
@@ -156,6 +186,8 @@ tar -zcf "$filename.tar.gz" logs/*
 rm -rf logs
 
 echo "Done! Logs saved to: $(readlink -f $filename.tar.gz)"
+
+print_information
 
 if [ "$SEND_LOGS" = "true" ]; then
   echo "Sending logs to 3mdeb cloud..."
