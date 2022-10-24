@@ -113,8 +113,12 @@ printf '########################################                            \r'
 decode-dimms > logs/decode-dimms.log 2> logs/decode-dimms.err.log
 printf '##########################################                          \r'
 
-# echo "Getting cbmem table..."
-cbmem > logs/cbmem.log 2> logs/cbmem.log
+# Dump cbmem table if Dasharo is installed
+if [ -n "`fwupdtool hwids | grep -i dasharo`" ]
+then
+  # echo "Getting CBMEM table..."
+  cbmem > logs/cbmem.log 2> logs/cbmem.log
+fi
 printf '############################################                        \r'
 
 printf '##############################################                      \r'
