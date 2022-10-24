@@ -5,4 +5,6 @@ SRC_URI:append = " \
     file://touchpad.cfg \
     file://enable-memconsole-coreboot.cfg \
     file://silence-terminal-logs.cfg \
+    file://tpm.cfg \
+    file://intel-mei.cfg \
 "

@@ -33,6 +33,8 @@ RDEPENDS:${PN}-tools-base = " \
   flashrom \
   fwupd \
   tpm-tools \
+  tpm2-tools \
+  libtss2 \
   mei-amt-check \
 "
 
