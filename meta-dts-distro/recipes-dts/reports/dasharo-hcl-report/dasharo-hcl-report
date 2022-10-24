@@ -169,9 +169,16 @@ printf '################################################################    \r'
 printf '##################################################################  \r'
 printf '####################################################################\r'
 
-filename="$(dmidecode -s system-manufacturer)"
-filename+=" $(dmidecode -s system-product-name)"
-filename+=" $(dmidecode -s bios-version)"
+#filename="$(dmidecode -s system-manufacturer)"
+filename="$(dmidecode -s system-product-name)"
+#filename+=" $(dmidecode -s bios-version)"
+uuid_string=`cat /sys/class/net/*/address | sed -n '2p'`
+uuid_string+="_$(dmidecode -s system-product-name)"
+uuid_string+="_$(dmidecode -s system-manufacturer)"
+
+uuid=`uuidgen -n @x500 -N $uuid_string -s`
+
+filename+="_$uuid"
 
 filename+="_$(date +'%Y_%m_%d_%H_%M_%S_%N')"
 
