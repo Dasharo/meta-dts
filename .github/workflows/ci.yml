@@ -13,3 +13,22 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: "meta-dts-ce"
+      - name: Install kas-container
+        run: |
+          mkdir ~/bin
+          wget -O ~/bin/kas-container https://raw.githubusercontent.com/siemens/kas/3.1/kas-container
+          chmod +x ~/bin/kas-container
+      - name: Add kas-container to PATH
+        run: echo "${HOME}/bin" >> $GITHUB_PATH
+      - name: Build DTS CE image
+        shell: bash
+        run: |
+          kas-container build meta-dts-ce/kas.yml
+  deploy:
+    name: Deploy system image
+    runs-on: self-hosted
+    steps:
+      - name: Copy image to boot.dasharo.com
+        shell: bash
+        run: |
+          cp build/tmp/deploy/images/genericx86-64/dts-base-image-ce-genericx86-64.cpio.gz ../projects/dts/boot/dts-base-image-ce-genericx86-64-latest.cpio.gz
