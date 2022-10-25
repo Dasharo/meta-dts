@@ -118,7 +118,7 @@ cbmem > logs/cbmem.log 2> logs/cbmem.log
 printf '############################################                        \r'
 
 # echo "Getting TPM information..."
-echo "`find . -type f -print -exec cat {} \;`\n" > logs/tpm_version.log 2> logs/tpm_version.err.log
+find `realpath /sys/class/tpm/tpm*` -type f -print -exec cat {} \; > logs/tpm_version.log 2> logs/tpm_version.err.log
 printf '############################################                        \r'
 
 # echo "Checking MEI-AMT..."
