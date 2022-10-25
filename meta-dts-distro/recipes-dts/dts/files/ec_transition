@@ -82,6 +82,16 @@ board_config() {
           BIOS_LINK="https://cloud.3mdeb.com/index.php/s/SKpqSNzfFNY7AbK/download"
           EC_LINK="https://cloud.3mdeb.com/index.php/s/GK2KbXaYprkCCWM/download"
           ;;
+        "NS5x_NS7xPU")
+          HAVE_EC="true"
+          NEED_EC_RESET="true"
+          COMPATIBLE_EC_FW_VERSION="TBD"
+          # for NS5x_NS7xPU we need to flash Dasharo BIOS externally, boot DTS
+          # and then use it to perform EC transition
+          EC_HASH="TBD  /tmp/ecupdate.rom"
+          PROGRAMMER_EC="ite_ec"
+          EC_LINK="TBD"
+          ;;
         "NV4XMB,ME,MZ")
           HAVE_EC="true"
           NEED_EC_RESET="true"
@@ -118,11 +128,15 @@ download_files()
   check_network_connection
   BIOS_UPDATE_PATH="/tmp/biosupdate.rom"
   EC_UPDATE_PATH="/tmp/ecupdate.rom"
-  wget -O $EC_UPDATE_PATH $EC_LINK
-  error_check "Cannot download EC update file. Aborting..."
-  wget -O $BIOS_UPDATE_PATH $BIOS_LINK
-  error_check "Cannot download FW update file. Aborting..."
-  echo "Successfully downloaded EC and FW files."
+  if [ -n "$EC_LINK" ]; then
+    wget -O $EC_UPDATE_PATH $EC_LINK
+    error_check "Cannot download EC update file. Aborting..."
+  fi
+  if [ -n "$BIOS_LINK" ]; then
+    wget -O $BIOS_UPDATE_PATH $BIOS_LINK
+    error_check "Cannot download FW update file. Aborting..."
+  fi
+  echo "Successfully downloaded files."
 }
 
 update_ec() {
@@ -137,23 +151,28 @@ update_ec() {
 }
 
 install() {
-  sha256sum --check <(echo "$BIOS_HASH")
-  error_check "Failed to verify Dasharo firmware"
 
-  if [ "$HAVE_EC" = "true" ]; then
-    _ec_fw_version=$(flashrom -p ${PROGRAMMER_EC} | grep "Mainboard EC Version" | tr -d ' ' | cut -d ':' -f 2)
+  if [ -n "$EC_LINK" ]; then
+    if [ "$HAVE_EC" = "true" ]; then
+      _ec_fw_version=$(flashrom -p ${PROGRAMMER_EC} | grep "Mainboard EC Version" | tr -d ' ' | cut -d ':' -f 2)
 
-    if [ "$_ec_fw_version" != "$COMPATIBLE_EC_FW_VERSION" ]; then
-      echo "EC version: $_ec_fw_version is not supported, update required"
-      update_ec
+      if [ "$_ec_fw_version" != "$COMPATIBLE_EC_FW_VERSION" ]; then
+        echo "EC version: $_ec_fw_version is not supported, update required"
+        update_ec
+      fi
     fi
   fi
 
-  echo "Installing Dasharo firmware..."
-  flashrom -p ${PROGRAMMER_BIOS} --ifd -i bios -w /tmp/biosupdate.rom
-  error_check "Failed to install Dasharo firmware"
+  if [ -n "$BIOS_LINK" ]; then
+    sha256sum --check <(echo "$BIOS_HASH")
+    error_check "Failed to verify Dasharo firmware"
 
-  echo "Successfully installed Dasharo firmware"
+    echo "Installing Dasharo firmware..."
+    flashrom -p ${PROGRAMMER_BIOS} --ifd -i bios -w /tmp/biosupdate.rom
+    error_check "Failed to install Dasharo firmware"
+
+    echo "Successfully installed Dasharo firmware"
+  fi
 
   echo "Powering off"
   sleep 1
