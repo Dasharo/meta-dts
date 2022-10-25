@@ -135,6 +135,10 @@ filename+="_$(date +'%Y_%m_%d_%H_%M_%S_%N')"
 filename="${filename// /_}"
 
 echo "Creating archive with logs..."
+
+# remove MAC address from logs and create second archive
+MAC_ADDR=`cat /sys/class/net/enp1s0/address`
+grep -rl ${MAC_ADDR} logs | xargs sed -i 's/'${MAC_ADDR}'/MAC ADDRESS REMOVED/g'
 tar -zcf "$filename.tar.gz" logs/*
 rm -rf logs
 
