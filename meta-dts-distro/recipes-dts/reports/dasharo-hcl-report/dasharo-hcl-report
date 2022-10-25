@@ -142,7 +142,6 @@ grep -rl ${MAC_ADDR} logs | xargs sed -i 's/'${MAC_ADDR}'/MAC ADDRESS REMOVED/g'
 tar -zcf "$filename.tar.gz" logs/*
 rm -rf logs
 
-
 echo "Done! Logs saved to: $(readlink -f $filename.tar.gz)"
 
 if [ "$SEND_LOGS" = "true" ]; then
