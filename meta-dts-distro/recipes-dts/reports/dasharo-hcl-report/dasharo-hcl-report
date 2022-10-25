@@ -135,19 +135,13 @@ filename+="_$(date +'%Y_%m_%d_%H_%M_%S_%N')"
 filename="${filename// /_}"
 
 echo "Creating archive with logs..."
-if [ "$SEND_LOGS" = "true" ]; then
-  # save logs without modifications
-  tar -zcf "$filename-local.tar.gz" logs/*
 
-  # remove MAC address from logs and create second archive
-  MAC_ADDR=`cat /sys/class/net/enp1s0/address`
-  grep -rl ${MAC_ADDR} logs | xargs sed -i 's/'${MAC_ADDR}'/MAC ADDRESS REMOVED/g'
-  tar -zcf "$filename.tar.gz" logs/*
-  rm -rf logs
-else
-  tar -zcf "$filename.tar.gz" logs/*
-  rm -rf logs
-fi
+# remove MAC address from logs and create second archive
+MAC_ADDR=`cat /sys/class/net/enp1s0/address`
+grep -rl ${MAC_ADDR} logs | xargs sed -i 's/'${MAC_ADDR}'/MAC ADDRESS REMOVED/g'
+tar -zcf "$filename.tar.gz" logs/*
+rm -rf logs
+
 
 echo "Done! Logs saved to: $(readlink -f $filename.tar.gz)"
 
@@ -166,10 +160,4 @@ if [ "$SEND_LOGS" = "true" ]; then
     exit 1
   fi
   echo "Thank you for supporting Dasharo!"
-fi
-
-if [ "$SEND_LOGS" = "true" ]; then
-  # remove logs with removed MAC and bring back local copy
-  rm "$filename.tar.gz"
-  mv "$filename-local.tar.gz" "$filename.tar.gz"
 fi
