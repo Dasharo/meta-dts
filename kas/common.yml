@@ -1,7 +1,5 @@
 header:
   version: 11
-  includes:
-  - cache.yml
 
 repos:
   meta-dts-ce:
