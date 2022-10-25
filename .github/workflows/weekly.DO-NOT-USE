@@ -1,0 +1,29 @@
+name: Weekly clean & rebuild
+on:
+  push:
+    branches:
+      - master
+  schedule:
+     - cron: '0 8 * * 6'
+
+jobs:
+  build:
+    name: Build system image
+    runs-on: self-hosted
+    steps:
+      - name: Checkout meta-dts-ce repo
+        uses: actions/checkout@v2
+        with:
+          path: "meta-dts-ce"
+      - name: Cleanup previous builds
+        shell: bash
+        run: |
+          rm -rf build
+      - name: Build DTS CE image
+        shell: bash
+        run: |
+          kas-container build meta-dts-ce/kas.yml
+#      - name: Copy image to boot.dasharo.com
+#        shell: bash
+#        run: |
+#          cp build/tmp/deploy/images/genericx86-64/dts-base-image-ce-genericx86-64.cpio.gz ../projects/dts/boot/dts-base-image-ce-genericx86-64-latest.cpio.gz
