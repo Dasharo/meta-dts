@@ -6,17 +6,17 @@ LICENSE = "MIT"
 inherit packagegroup
 
 PACKAGES = " \
-  packagegroup-coreboot-utils \
+    packagegroup-coreboot-utils \
 "
 
 RDEPENDS:${PN} = " \
-  ectool \
-  ifdtool \
-  superiotool \
-  inteltool \
-  msrtool \
-  intelp2m \
-  nvramtool \
-  cbmem \
-  intelmetool \
+    cbfstool \
+    ectool \
+    futil \
+    ifdtool \
+    intelp2m \
+    inteltool \
+    msrtool \
+    nvramtool \
+    superiotool \
 "
