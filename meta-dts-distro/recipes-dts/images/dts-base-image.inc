@@ -7,10 +7,11 @@ LICENSE = "MIT"
 inherit core-image
 
 IMAGE_INSTALL:append = " \
-  packagegroup-dts-system \
-  packagegroup-dts-tests \
-  packagegroup-dts-tools-base \
-  packagegroup-dts-tools-ce \
+    packagegroup-dts-python \
+    packagegroup-dts-system \
+    packagegroup-dts-tests \
+    packagegroup-dts-tools-base \
+    packagegroup-dts-tools-dts \
 "
 
 # Enable local auto-login of the root user (local = serial port and
