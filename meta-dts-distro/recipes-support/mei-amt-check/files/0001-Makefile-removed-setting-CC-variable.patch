@@ -1,0 +1,22 @@
+From 79e57b90e573826015ffca75562ce05e073c6359 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C5=82=20Kotyla?= <michal.kotyla@3mdeb.com>
+Date: Tue, 25 Oct 2022 11:21:10 +0200
+Subject: [PATCH] Makefile: removed setting CC variable
+
+---
+ Makefile | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index c98d181..e1700dc 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,5 +1,3 @@
+-CC := $(CROSS_COMPILE)gcc
+-
+ PROGS := mei-amt-check
+ 
+ all: $(PROGS)
+-- 
+2.38.0
+

@@ -117,8 +117,18 @@ printf '##########################################                          \r'
 cbmem > logs/cbmem.log 2> logs/cbmem.log
 printf '############################################                        \r'
 
-printf '##############################################                      \r'
+# echo "Getting TPM information..."
+find `realpath /sys/class/tpm/tpm*` -type f -print -exec cat {} \; > logs/tpm_version.log 2> logs/tpm_version.err.log
+printf '#############################################                       \r'
+
+# echo "Checking AMT..."
+mei-amt-check > logs/amt-check.log 2> logs/amt-check.err.log
+printf '###############################################                     \r'
+
+# echo "Checking ME..."
+intelmetool -m > logs/intelmetool.log 2> logs/intelmetool.err.log
 printf '################################################                    \r'
+
 printf '##################################################                  \r'
 printf '####################################################                \r'
 printf '######################################################              \r'

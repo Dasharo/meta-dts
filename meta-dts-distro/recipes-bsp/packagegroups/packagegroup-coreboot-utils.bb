@@ -18,4 +18,5 @@ RDEPENDS:${PN} = " \
   intelp2m \
   nvramtool \
   cbmem \
+  intelmetool \
 "
