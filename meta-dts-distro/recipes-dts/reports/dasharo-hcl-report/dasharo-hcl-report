@@ -126,7 +126,7 @@ mei-amt-check > logs/amt-check.log 2> logs/amt-check.err.log
 printf '###############################################                     \r'
 
 # echo "Checking ME..."
-intelmetool -m > logs/intelmetool.log logs/intelmetool.err.log
+intelmetool -m > logs/intelmetool.log 2> logs/intelmetool.err.log
 printf '################################################                    \r'
 
 printf '##################################################                  \r'
