@@ -79,6 +79,10 @@ board_config() {
     "Notebook")
       case "$BOARD_MODEL" in
         "NV4XMB,ME,MZ")
+	  DASHARO_REL_NAME="novacustom_nv4x"
+	  DASHARO_REL_VER="1.3.0"
+          BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/{$DASHARO_REL_NAME}_v{$DASHARO_REL_VER}.rom"
+          EC_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/{$DASHARO_REL_NAME}_ec_v{$DASHARO_REL_VER}.rom"
           HAVE_EC="true"
           COMPATIBLE_EC_FW_VERSION="1.07.08"
           EC_HASH_EVAL="c7618c116a762cd19d167e985d154fe47135006ff762eaf886277e4306215566  /tmp/ecupdate.rom"
@@ -97,6 +101,9 @@ board_config() {
       case "$BOARD_MODEL" in
 	"MS-7D25" | "PRO Z690-A WIFI DDR4(MS-7D25)")
           HAVE_EC="false"
+	  DASHARO_REL_NAME="msi_ms7d25"
+	  DASHARO_REL_VER="1.0.0"
+          BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/{$DASHARO_REL_NAME}_v{$DASHARO_REL_VER}.rom"
           BIOS_HASH_PROD="adee8e0f3c71f40a4d834eafc18231f20924f12dc4ab35b01d9c683b34b32626  /tmp/biosupdate.rom"
           NEED_SMBIOS_MIGRATION="true"
           NEED_BLOB_TRANSMISSION="false"
