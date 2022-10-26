@@ -7,10 +7,11 @@ LICENSE = "MIT"
 inherit core-image
 
 IMAGE_INSTALL:append = " \
-  packagegroup-dts-system \
-  packagegroup-dts-tests \
-  packagegroup-dts-tools-base \
-  packagegroup-dts-tools-ce \
+    packagegroup-dts-python \
+    packagegroup-dts-system \
+    packagegroup-dts-tests \
+    packagegroup-dts-tools-base \
+    packagegroup-dts-tools-dts \
 "
 # to avoid getting to IP's - we use DHCP in networkctl already
 IMAGE_INSTALL:remove = "dhcpcd"
