@@ -37,6 +37,37 @@ function error_file_check {
   fi
 }
 
+# Method to access IT5570 IO Depth 2 registers
+it5570_i2ec() {
+  # TODO: Use /dev/port instead of iotools
+
+  # Address high byte
+  iotools io_write8 0x2e 0x2e
+  iotools io_write8 0x2f 0x11
+  iotools io_write8 0x2e 0x2f
+  iotools io_write8 0x2f $(($2>>8 & 0xff))
+
+  # Address low byte
+  iotools io_write8 0x2e 0x2e
+  iotools io_write8 0x2f 0x10
+  iotools io_write8 0x2e 0x2f
+  iotools io_write8 0x2f $(($2 & 0xff))
+
+  # Data
+  iotools io_write8 0x2e 0x2e
+  iotools io_write8 0x2f 0x12
+  iotools io_write8 0x2e 0x2f
+
+  case $1 in
+    "r")
+      iotools io_read8 0x2f
+      ;;
+    "w")
+      iotools io_write8 0x2f $3
+      ;;
+  esac
+}
+
 # not used anymore, we save packages with fw as fw_backup.tar.gz
 # commented out as it may be use later, maybe for uploading the backup
 # to the cloud
@@ -46,6 +77,7 @@ BOARD_VENDOR="$(dmidecode -s system-manufacturer)"
 BOARD_MODEL="$(dmidecode -s system-product-name)"
 BIOS_UPDATE_DIR="/tmp/biosupdate.rom"
 BIOS_UPDATE_CONFIG_DIR="/tmp/biosupdate_config"
+EC_UPDATE_DIR="/tmp/ecupdate.rom"
 FW_BACKUP_NAME="fw_backup"
 FW_BACKUP_DIR="${ROOT_DIR}${FW_BACKUP_NAME}"
 FW_BACKUP_TAR="${FW_BACKUP_DIR}.tar.gz"
@@ -63,34 +95,39 @@ SERIAL_NUMBER_DIR="/tmp/serial_number.txt"
 CMD="$1"
 CMD_POWEROFF="/sbin/poweroff"
 
-#SE_credential_file="/etc/cloud-pass"
-
-#if [ -a "${SE_credential_file}" ]; then
-#    CLOUD_DOWNLOAD_URL=`sed -n '2p' < ${SE_credential_file} | tr -d '\n'`
-#    CLOUD_PASSWORD=`sed -n '3p' < ${SE_credential_file} | tr -d '\n'`
-#    USER_DETAILS="$CLOUD_DOWNLOAD_URL:$CLOUD_PASSWORD"
-#    CLOUD_REQUEST="X-Requested-With: XMLHttpRequest"
-#else
-#    error_exit "SE credential file doesnt exist!"
-#fi
-
 board_config() {
   case "$BOARD_VENDOR" in
     "Notebook")
       case "$BOARD_MODEL" in
         "NV4XMB,ME,MZ")
-	  DASHARO_REL_NAME="novacustom_nv4x"
-	  DASHARO_REL_VER="1.3.0"
+          DASHARO_REL_NAME="novacustom_nv4x"
+          DASHARO_REL_VER="1.3.0"
           BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/{$DASHARO_REL_NAME}_v{$DASHARO_REL_VER}.rom"
           EC_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/{$DASHARO_REL_NAME}_ec_v{$DASHARO_REL_VER}.rom"
           HAVE_EC="true"
-          COMPATIBLE_EC_FW_VERSION="1.07.08"
-          EC_HASH_EVAL="c7618c116a762cd19d167e985d154fe47135006ff762eaf886277e4306215566  /tmp/ecupdate.rom"
-          BIOS_HASH_EVAL="9c8de699c6ce60346adbe6a3b579cd4b983e1c00387225eab2538115991fc477  /tmp/biosupdate.rom"
+          NEED_EC_RESET="true"
+          COMPATIBLE_EC_FW_VERSION="2022-10-07_c662165"
+          EC_HASH_PROD="7a75fd9afd81012f7c1485cc335298979509e5929d931d898465fbddb4ce105c  $EC_UPDATE_DIR"
+          BIOS_HASH_PROD="7271b638c87cba658162931f55bdaa6987eb5b0555075ce8e2297a79a505c8b0  $BIOS_UPDATE_DIR"
           NEED_SMBIOS_MIGRATION="false"
           NEED_BLOB_TRANSMISSION="false"
-          PROGRAMMER_BIOS="internal:boardmismatch=force"
-          PROGRAMMER_EC="ite_ec:boardmismatch=force,romsize=128K,autoload=disable"
+          PROGRAMMER_BIOS="internal"
+          PROGRAMMER_EC="ite_ec"
+          ;;
+        "NS50_70MU")
+          DASHARO_REL_NAME="novacustom_ns5x"
+          DASHARO_REL_VER="1.3.0"
+          BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/{$DASHARO_REL_NAME}_v{$DASHARO_REL_VER}.rom"
+          EC_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/{$DASHARO_REL_NAME}_ec_v{$DASHARO_REL_VER}.rom"
+          HAVE_EC="true"
+          NEED_EC_RESET="true"
+          COMPATIBLE_EC_FW_VERSION="2022-08-31_cbff21b"
+          EC_HASH_PROD="d1001465cea74a550914c14f0c8f901b14827a3b5fa0b612ae6d11594ac2b405  $EC_UPDATE_DIR"
+          BIOS_HASH_PROD="d4c30660c53bac505997de30b9eac4c5ac15f3212c62366730dc2ca3974bba18  $BIOS_UPDATE_DIR"
+          PROGRAMMER_BIOS="internal"
+          PROGRAMMER_EC="ite_ec"
+          BIOS_LINK="https://cloud.3mdeb.com/index.php/s/SKpqSNzfFNY7AbK/download"
+          EC_LINK="https://cloud.3mdeb.com/index.php/s/GK2KbXaYprkCCWM/download"
           ;;
         *)
           error_exit "Board model $BOARD_MODEL is currently not supported"
@@ -99,12 +136,13 @@ board_config() {
       ;;
     "Micro-Star International Co., Ltd.")
       case "$BOARD_MODEL" in
-	"MS-7D25" | "PRO Z690-A WIFI DDR4(MS-7D25)")
-          HAVE_EC="false"
-	  DASHARO_REL_NAME="msi_ms7d25"
-	  DASHARO_REL_VER="1.0.0"
+        "MS-7D25" | "PRO Z690-A WIFI DDR4(MS-7D25)")
+          DASHARO_REL_NAME="msi_ms7d25"
+          DASHARO_REL_VER="1.0.0"
           BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/{$DASHARO_REL_NAME}_v{$DASHARO_REL_VER}.rom"
-          BIOS_HASH_PROD="adee8e0f3c71f40a4d834eafc18231f20924f12dc4ab35b01d9c683b34b32626  /tmp/biosupdate.rom"
+          HAVE_EC="false"
+          NEED_EC_RESET="false"
+          BIOS_HASH_PROD="adee8e0f3c71f40a4d834eafc18231f20924f12dc4ab35b01d9c683b34b32626  $BIOS_UPDATE_DIR"
           NEED_SMBIOS_MIGRATION="true"
           NEED_BLOB_TRANSMISSION="false"
           PROGRAMMER_BIOS="internal"
@@ -118,9 +156,10 @@ board_config() {
     "Dell Inc.")
       DASHARO_REL_NAME="dell_optiplex_9010"
       DASHARO_REL_VER="0.1.0"
-      HAVE_EC="false"
       BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER.rom"
-      BIOS_HASH_PROD="a880504dfb0497f31e898f62ae5c9f3b145bca0b4fa601e41cddc54bea22ee36  /tmp/biosupdate.rom"
+      HAVE_EC="false"
+      NEED_EC_RESET="false"
+      BIOS_HASH_PROD="a880504dfb0497f31e898f62ae5c9f3b145bca0b4fa601e41cddc54bea22ee36  $BIOS_UPDATE_DIR"
       NEED_SMBIOS_MIGRATION="true"
       NEED_BLOB_TRANSMISSION="true"
       PROGRAMMER_BIOS="internal"
@@ -240,14 +279,14 @@ backup() {
 
 update_ec() {
   echo "Downloading EC firmware update..."
-  curl -f "$EC_LINK" -o /tmp/ecupdate.rom
+  curl -f "$EC_LINK" -o "$EC_UPDATE_DIR"
   error_check "Cannot access $FW_STORE_URL. Please check your internet
  connection"
   sha256sum --check <(echo "$EC_HASH")
   error_check "Failed to download EC firmware update"
 
   echo "Updating EC..."
-  flashrom -p ${PROGRAMMER_EC} -w /tmp/ecupdate.rom
+  flashrom -p "$PROGRAMMER_EC" -w "$EC_UPDATE_DIR"
   error_check "Failed to update EC firmware"
 
   echo "Successfully updated EC firmware"
@@ -409,7 +448,11 @@ install() {
   sleep 0.5
   echo "Powering off"
   sleep 1
-  ${CMD_POWEROFF}
+  if [ "$NEED_EC_RESET" = "true" ]; then
+    it5570_shutdown
+  else
+    ${CMD_POWEROFF}
+  fi
 }
 
 restore() {
@@ -419,11 +462,11 @@ restore() {
 
   echo "Restoring BIOS firmware..."
   # Write to entire flash when restoring
-  flashrom -p ${PROGRAMMER_BIOS} -w "/tmp/${FW_BACKUP_NAME}/bios.rom"
+  flashrom -p "$PROGRAMMER_BIOS" -w "/tmp/${FW_BACKUP_NAME}/bios.rom"
 
   if [ "$HAVE_EC" = "true" ]; then
     echo "Restoring EC firmware..."
-    flashrom -p ${PROGRAMMER_EC} -w "/tmp/${FW_BACKUP_NAME}/ec.rom"
+    flashrom -p "$PROGRAMMER_EC" -w "/tmp/${FW_BACKUP_NAME}/ec.rom"
   fi
 
   print_green "Successfully restored firmware"
