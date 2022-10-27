@@ -61,3 +61,4 @@ jobs:
         shell: bash
         run: |
           rm -rf ~/.ssh/dts-ci.tmp
+          rm -rf build
