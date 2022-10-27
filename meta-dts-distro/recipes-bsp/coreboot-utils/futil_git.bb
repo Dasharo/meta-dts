@@ -29,6 +29,8 @@ EXTRA_OEMAKE = " \
     PREFIX="${prefix}" \
 "
 
+INSANE_SKIP:${PN} = "textrel"
+
 do_compile() {
   oe_runmake futil
 }
