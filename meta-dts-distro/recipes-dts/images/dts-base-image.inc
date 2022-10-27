@@ -12,6 +12,8 @@ IMAGE_INSTALL:append = " \
   packagegroup-dts-tools-base \
   packagegroup-dts-tools-ce \
 "
+# to avoid getting to IP's - we use DHCP in networkctl already
+IMAGE_INSTALL:remove = "dhcpcd"
 
 # Enable local auto-login of the root user (local = serial port and
 # virtual console)
