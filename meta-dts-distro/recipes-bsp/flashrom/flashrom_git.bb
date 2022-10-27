@@ -4,16 +4,15 @@ HOMEPAGE = "http://flashrom.org"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
-SRC_URI = "git://github.com/Dasharo/flashrom.git;branch=dasharo-develop;protocol=https"
-SRCREV = "5618d826826f86f2d3eb3190c65baf3e2dac968f"
+BRANCH="dasharo-release"
+SRCREV = "9bddf6233d8eda26b0cbc508745fc9a7738c9e73"
+SRC_URI = " \
+    git://github.com/Dasharo/flashrom.git;branch=${BRANCH};protocol=https \
+    file://0001-meson.build-correctly-access-build-options.patch \
+"
 
 S = "${WORKDIR}/git"
 
-inherit meson pkgconfig
+DEPENDS = "pciutils libusb libftdi"
 
-# TODO: this verions of flashrom uses different switches than what's in the
-# recipe v1.2
-PACKAGECONFIG ??= "pci usb ftdi"
-PACKAGECONFIG[ftdi] = ",,libftdi"
-PACKAGECONFIG[pci] = "-Dpciutils=true,-Dpciutils=false,pciutils"
-PACKAGECONFIG[usb] = "-Dusb=true,-Dusb=false,libusb"
+inherit meson pkgconfig
