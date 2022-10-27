@@ -25,7 +25,7 @@ jobs:
       - name: Prepare SSH key
         shell: bash
         env:
-          SSH_KEY: ${{secrets.SSH_CACHE}}
+          SSH_KEY: ${{secrets.SSH_KEY}}
         run: |
           echo -e ${SSH_KEY} | sed 's/^ *//' > ~/.ssh/dts-ci.tmp
           chmod 600 ~/.ssh/dts-ci.tmp
@@ -47,7 +47,7 @@ jobs:
       - name: Prepare SSH key
         shell: bash
         env:
-          SSH_KEY: ${{secrets.SSH_CACHE}}
+          SSH_KEY: ${{secrets.SSH_KEY}}
         run: |
           echo -e ${SSH_KEY} | sed 's/^ *//' > ~/.ssh/dts-ci.tmp
           chmod 600 ~/.ssh/dts-ci.tmp
@@ -61,11 +61,8 @@ jobs:
         shell: bash
         run: |
           DTS_VER="${{steps.dts-ver.outputs.DTS_VER}}"
-          echo ${DTS_VER}
           ssh -i ~/.ssh/dts-ci.tmp builder@10.1.40.2 "mkdir -p boot/dts-ce/${DTS_VER}"
           cd build/tmp/deploy/images/genericx86-64/
-          pwd
-          ls -lah
           cp bzImage bzImage-${DTS_VER}
           cp dts-base-image-ce-genericx86-64.cpio.gz dts-base-image-ce-${DTS_VER}.cpio.gz
           scp -i ~/.ssh/dts-ci.tmp bzImage-${DTS_VER} builder@10.1.40.2:boot/dts-ce/${DTS_VER}/
