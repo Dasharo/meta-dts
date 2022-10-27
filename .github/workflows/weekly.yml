@@ -1,0 +1,87 @@
+name: Weekly clean & rebuild
+on:
+  schedule:
+    - cron: '0 8 * * 6'
+
+jobs:
+  build:
+    name: Build system image
+    runs-on: self-hosted
+    steps:
+      - name: Checkout meta-dts-ce repo
+        uses: actions/checkout@v2
+        with:
+          path: "meta-dts-ce-rebuild"
+      - name: Build DTS CE image
+        shell: bash
+        run: |
+          kas-container shell meta-dts-ce/kas.yml -c "bitbake dts-base-image-ce"
+  deploy-cache:
+    name: Deploy cache on cache.dasharo.com
+    if: always()
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Prepare SSH key
+        shell: bash
+        env:
+          SSH_KEY: ${{secrets.SSH_CACHE}}
+        run: |
+          echo -e ${SSH_KEY} | sed 's/^ *//' > ~/.ssh/dts-ci.tmp
+          chmod 600 ~/.ssh/dts-ci.tmp
+      - name: Send sstate-cache folder to cache.dasharo.com
+        shell: bash
+        run: |
+          ssh -i ~/.ssh/dts-ci.tmp builder@10.1.40.2 "mkdir -p cache/yocto/dts-ce"
+          rsync -P -e "ssh -i ~/.ssh/dts-ci.tmp" -rlptD --delete build/sstate-cache builder@10.1.40.2:cache/yocto/dts-ce
+      - name: Send downloads folder to cache.dasharo.com
+        shell: bash
+        run: |
+          rsync -P -e "ssh -i ~/.ssh/dts-ci.tmp" -rlptD --delete build/downloads builder@10.1.40.2:cache/yocto/dts-ce
+  deploy-images:
+    name: Deploy DTS-CE images on boot.dasharo.com
+    if: always()
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Prepare SSH key
+        shell: bash
+        env:
+          SSH_KEY: ${{secrets.SSH_CACHE}}
+        run: |
+          echo -e ${SSH_KEY} | sed 's/^ *//' > ~/.ssh/dts-ci.tmp
+          chmod 600 ~/.ssh/dts-ci.tmp
+      - name: Get DTS-CE version
+        id: dts-ver
+        shell: bash
+        run: |
+          DTS_VER=`cat meta-dts-ce/meta-dts-distro/conf/distro/dts-distro.conf | grep DISTRO_VERSION | tr -d "\" [A-Z]_="`
+          echo "DTS_VER=${DTS_VER}" >> $GITHUB_OUTPUT
+      - name: Deploy DTS-CE on boot.dasharo.com
+        shell: bash
+        run: |
+          DTS_VER="${{steps.dts-ver.outputs.DTS_VER}}"
+          echo ${DTS_VER}
+          ssh -i ~/.ssh/dts-ci.tmp builder@10.1.40.2 "mkdir -p boot/dts-ce/${DTS_VER}"
+          cd build/tmp/deploy/images/genericx86-64/
+          pwd
+          ls -lah
+          cp bzImage bzImage-${DTS_VER}
+          cp dts-base-image-ce-genericx86-64.cpio.gz dts-base-image-ce-${DTS_VER}.cpio.gz
+          scp -i ~/.ssh/dts-ci.tmp bzImage-${DTS_VER} builder@10.1.40.2:boot/dts-ce/${DTS_VER}/
+          scp -i ~/.ssh/dts-ci.tmp dts-base-image-ce-${DTS_VER}.cpio.gz builder@10.1.40.2:boot/dts-ce/${DTS_VER}/
+      - name: Update iPXE menu
+        shell: bash
+        run: |
+          ./meta-dts-ce/scripts/generate-ipxe-menu.sh ${{steps.dts-ver.outputs.DTS_VER}}
+          scp -i ~/.ssh/dts-ci.tmp dts.ipxe builder@10.1.40.2:boot/dts-ce/
+  cleanup:
+    name: Cleanup
+    if: always()
+    needs: [deploy-cache, deploy-images]
+    runs-on: self-hosted
+    steps:
+      - name: Cleanup after deployment
+        shell: bash
+        run: |
+          rm -rf ~/.ssh/dts-ci.tmp
