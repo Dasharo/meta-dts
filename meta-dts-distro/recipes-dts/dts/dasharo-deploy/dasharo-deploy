@@ -113,6 +113,7 @@ board_config() {
           NEED_BLOB_TRANSMISSION="false"
           PROGRAMMER_BIOS="internal"
           PROGRAMMER_EC="ite_ec"
+          FLASHROM_ADD_OPT="--ifd -i bios"
           ;;
         "NS50_70MU")
           DASHARO_REL_NAME="novacustom_ns5x"
@@ -124,10 +125,11 @@ board_config() {
           COMPATIBLE_EC_FW_VERSION="2022-08-31_cbff21b"
           EC_HASH_PROD="d1001465cea74a550914c14f0c8f901b14827a3b5fa0b612ae6d11594ac2b405  $EC_UPDATE_DIR"
           BIOS_HASH_PROD="d4c30660c53bac505997de30b9eac4c5ac15f3212c62366730dc2ca3974bba18  $BIOS_UPDATE_DIR"
+          NEED_SMBIOS_MIGRATION="false"
+          NEED_BLOB_TRANSMISSION="false"
           PROGRAMMER_BIOS="internal"
           PROGRAMMER_EC="ite_ec"
-          BIOS_LINK="https://cloud.3mdeb.com/index.php/s/SKpqSNzfFNY7AbK/download"
-          EC_LINK="https://cloud.3mdeb.com/index.php/s/GK2KbXaYprkCCWM/download"
+          FLASHROM_ADD_OPT="--ifd -i bios"
           ;;
         *)
           error_exit "Board model $BOARD_MODEL is currently not supported"
@@ -147,6 +149,7 @@ board_config() {
           NEED_BLOB_TRANSMISSION="false"
           PROGRAMMER_BIOS="internal"
           PROGRAMMER_EC=""
+          FLASHROM_ADD_OPT="--ifd -i bios"
           ;;
         *)
           error_exit "Board model $BOARD_MODEL is currently not supported"
@@ -167,6 +170,7 @@ board_config() {
       SINIT_ACM_URL="https://cdrdv2.intel.com/v1/dl/getContent/630744"
       SINIT_ACM_HASH="b23c5e6bd70bdcfde4215a5a252e56c4966f0e06cacf388e654ca906c4ecdad1 $SINIT_ACM_FILENAME"
       SINIT_ACM="/tmp/630744_002/SNB_IVB_SINIT_20190708_PW.bin"
+      FLASHROM_ADD_OPT="--ifd -i bios"
       case "$BOARD_MODEL" in
         "OptiPlex 7010")
           DBT_BIOS_UPDATE_FILENAME="/tmp/O7010A29.exe"
@@ -191,6 +195,25 @@ board_config() {
           DBT_UEFI_IMAGE="/tmp/_T1650A28.exe.extracted/65C10"
           SCH5545_FW="/tmp/_T1650A28.exe.extracted/65C10_output/pfsobject/section-7ec6c2b0-3fe3-42a0-a316-22dd0517c1e8/volume-0x50000/file-d386beb8-4b54-4e69-94f5-06091f67e0d3/section0.raw"
           ACM_BIN="/tmp/_T1650A28.exe.extracted/65C10_output/pfsobject/section-7ec6c2b0-3fe3-42a0-a316-22dd0517c1e8/volume-0x500000/file-2d27c618-7dcd-41f5-bb10-21166be7e143/object-0.raw"
+          ;;
+        *)
+          error_exit "Board model $BOARD_MODEL is currently not supported"
+          ;;
+      esac
+      ;;
+    "Protectli")
+      case "$BOARD_MODEL" in
+        "VP4630" | "VP4650")
+          DASHARO_REL_NAME="protectli_vault_cml"
+          DASHARO_REL_VER="1.0.16"
+          BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/{$DASHARO_REL_NAME}_v{$DASHARO_REL_VER}.rom"
+          HAVE_EC="false"
+          NEED_EC_RESET="false"
+          BIOS_HASH_PROD="1f47f8b8a3b6b4dbb27e9f3affc2bbf50f4b5563b77e90e1af98c803ea98b2ed  $BIOS_UPDATE_DIR"
+          NEED_SMBIOS_MIGRATION="false"
+          NEED_BLOB_TRANSMISSION="false"
+          PROGRAMMER_BIOS="internal"
+          FLASHROM_ADD_OPT=""
           ;;
         *)
           error_exit "Board model $BOARD_MODEL is currently not supported"
@@ -270,7 +293,7 @@ backup() {
       echo "Device has already Open Source Embedded Controller firmware, do not backup EC..."
     else
       echo "Backing up EC firmware..."
-      flashrom -p ite_ec:boardmismatch=force -r ${FW_BACKUP_DIR}/ec.rom
+      flashrom -p "$PROGRAMMER_EC" -r ${FW_BACKUP_DIR}/ec.rom
       error_check "Failed to read EC firmware backup"
     fi
   fi
@@ -441,7 +464,7 @@ install() {
   fi
 
   echo "Installing Dasharo firmware..."
-  flashrom -p ${PROGRAMMER_BIOS} --ifd -i bios -w $BIOS_UPDATE_DIR
+  flashrom -p "$PROGRAMMER_BIOS" "$FLASHROM_ADD_OPT" -w "$BIOS_UPDATE_DIR"
   error_check "Failed to install Dasharo firmware"
 
   print_green "Successfully installed Dasharo firmware"
