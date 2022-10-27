@@ -264,9 +264,15 @@ backup() {
   error_check "Failed to read BIOS firmware backup"
 
   if [ "$HAVE_EC" = "true" ]; then
-    echo "Backing up EC firmware..."
-    flashrom -p ite_ec:boardmismatch=force -r ${FW_BACKUP_DIR}/ec.rom
-    error_check "Failed to read EC firmware backup"
+    echo "Checking for Open Source Embedded Controller firmware"
+    system76_ectool info >> /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+      echo "Device has already Open Source Embedded Controller firmware, do not backup EC..."
+    else
+      echo "Backing up EC firmware..."
+      flashrom -p ite_ec:boardmismatch=force -r ${FW_BACKUP_DIR}/ec.rom
+      error_check "Failed to read EC firmware backup"
+    fi
   fi
 
   echo "Saving backup to: $FW_BACKUP_TAR"
@@ -407,11 +413,17 @@ install() {
   error_check "Failed to verify Dasharo firmware"
 
   if [ "$HAVE_EC" = "true" ]; then
-    _ec_fw_version=$(flashrom -p ${PROGRAMMER_EC} | grep "Mainboard EC Version" | tr -d ' ' | cut -d ':' -f 2)
+    echo "Checking for Open Source Embedded Controller firmware"
+    system76_ectool info >> /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+      echo "Device has already Open Source Embedded Controller firmware, do not flash EC..."
+    else
+      _ec_fw_version=$(flashrom -p ${PROGRAMMER_EC} | grep "Mainboard EC Version" | tr -d ' ' | cut -d ':' -f 2)
 
-    if [ "$_ec_fw_version" != "$COMPATIBLE_EC_FW_VERSION" ]; then
-      print_warning "EC version: $_ec_fw_version is not supported, update required"
-      update_ec
+      if [ "$_ec_fw_version" != "$COMPATIBLE_EC_FW_VERSION" ]; then
+        print_warning "EC version: $_ec_fw_version is not supported, update required"
+        update_ec
+      fi
     fi
   fi
 
