@@ -120,7 +120,7 @@ printf '########################                                            \r'
 # echo "Dumping Audio devices configuration..."
 
 # This is a workaround to soundcard's files absence in short time after booting.
-# Thread is continued in issue <TBD>
+# Thread is continued here https://github.com/Dasharo/dasharo-issues/issues/247
 for t in {1..12}
 do
   SND_HW_FILES=/sys/class/sound/card0/hw*/init_pin_configs
