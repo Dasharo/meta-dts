@@ -164,7 +164,6 @@ while : ; do
       fi
 
       if [ -n "${logs_sent}" ]; then
-          ${CMD_DASHARO_DEPLOY} backup
           ${CMD_DASHARO_DEPLOY} install
       fi
       ;;
