@@ -33,12 +33,12 @@ jobs:
       - name: Send sstate-cache folder to cache.dasharo.com
         shell: bash
         run: |
-          ssh -i ~/.ssh/dts-ci.tmp builder@10.1.40.2 "mkdir -p cache/yocto/dts-ce"
-          rsync -P -e "ssh -i ~/.ssh/dts-ci.tmp" -rlptD --delete build/sstate-cache builder@10.1.40.2:cache/yocto/dts-ce
+          ssh -i ~/.ssh/dts-ci.tmp builder@10.1.40.2 "mkdir -p cache/yocto/dts"
+          rsync -P -e "ssh -i ~/.ssh/dts-ci.tmp" -rlptD --delete build/sstate-cache builder@10.1.40.2:cache/yocto/dts
       - name: Send downloads folder to cache.dasharo.com
         shell: bash
         run: |
-          rsync -P -e "ssh -i ~/.ssh/dts-ci.tmp" -rlptD --delete build/downloads builder@10.1.40.2:cache/yocto/dts-ce
+          rsync -P -e "ssh -i ~/.ssh/dts-ci.tmp" -rlptD --delete build/downloads builder@10.1.40.2:cache/yocto/dts
   cleanup:
     name: Cleanup
     if: always()
