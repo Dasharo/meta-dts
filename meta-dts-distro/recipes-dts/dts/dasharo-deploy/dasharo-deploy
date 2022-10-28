@@ -7,15 +7,15 @@ GREEN='\033[0;32m'
 
 ### Color functions
 print_warning() {
-  echo -e $YELLOW"$1"$COLOR_OFF
+  echo -e "$YELLOW""$1""$COLOR_OFF"
 }
 
 print_error() {
-  echo -e $RED"$1"$COLOR_OFF
+  echo -e "$RED""$1""$COLOR_OFF"
 }
 
 print_green() {
-  echo -e $GREEN"$1"$COLOR_OFF
+  echo -e "$GREEN""$1""$COLOR_OFF"
 }
 
 ### Error checks
@@ -63,7 +63,7 @@ it5570_i2ec() {
       iotools io_read8 0x2f
       ;;
     "w")
-      iotools io_write8 0x2f $3
+      iotools io_write8 0x2f "$3"
       ;;
   esac
 }
@@ -93,7 +93,7 @@ FLASH_INFO_FILE="/tmp/flash_info"
 FW_BACKUP_NAME="fw_backup"
 FW_BACKUP_DIR="${ROOT_DIR}${FW_BACKUP_NAME}"
 FW_BACKUP_TAR="${FW_BACKUP_DIR}.tar.gz"
-FW_BACKUP_TAR="$(echo $FW_BACKUP_TAR | sed 's/\ /_/g')"
+FW_BACKUP_TAR="$(echo "$FW_BACKUP_TAR" | sed 's/\ /_/g')"
 FW_STORE_URL="https://3mdeb.com/open-source-firmware/Dasharo"
 KEYS_DIR="/tmp/devkeys"
 RESIGNED_BIOS_UPDATE_DIR="/tmp/biosupdate_resigned.rom"
@@ -254,7 +254,7 @@ ask_for_version()
     fi
     echo "  b) Back to main menu"
     echo
-    read -p "Enter an option: " OPTION
+    read -r -p "Enter an option: " OPTION
     echo
 
     case ${OPTION} in
@@ -297,7 +297,7 @@ backup() {
   mkdir -p "$FW_BACKUP_DIR"
 
   echo "Backing up BIOS firmware..."
-  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r ${FW_BACKUP_DIR}/bios.rom
+  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r "${FW_BACKUP_DIR}"/bios.rom
   error_check "Failed to read BIOS firmware backup"
 
   if [ "$HAVE_EC" = "true" ]; then
@@ -307,7 +307,7 @@ backup() {
       echo "Device has already Open Source Embedded Controller firmware, do not backup EC..."
     else
       echo "Backing up EC firmware..."
-      flashrom -p "$PROGRAMMER_EC" ${FLASH_CHIP_SELECT} -r ${FW_BACKUP_DIR}/ec.rom
+      flashrom -p "$PROGRAMMER_EC" ${FLASH_CHIP_SELECT} -r "${FW_BACKUP_DIR}"/ec.rom
       error_check "Failed to read EC firmware backup"
     fi
   fi
@@ -337,8 +337,8 @@ update_ec() {
 
 smbios_migration()
 {
-  echo -n `dmidecode -s system-uuid` > $SYSTEM_UUID_DIR
-  echo -n `dmidecode -s baseboard-serial-number` > $SERIAL_NUMBER_DIR
+  echo -n "$(dmidecode -s system-uuid)" > $SYSTEM_UUID_DIR
+  echo -n "$(dmidecode -s baseboard-serial-number)" > $SERIAL_NUMBER_DIR
 
   COREBOOT_SEC=$(cbfstool $BIOS_UPDATE_DIR layout -w | grep "COREBOOT")
   FW_MAIN_A_SEC=$(cbfstool $BIOS_UPDATE_DIR layout -w | grep "FW_MAIN_A")
@@ -478,7 +478,7 @@ install() {
   fi
 
   echo "Installing Dasharo firmware..."
-  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} "$FLASHROM_ADD_OPT" -w "$BIOS_UPDATE_DIR"
+  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT} -w "$BIOS_UPDATE_DIR"
   error_check "Failed to install Dasharo firmware"
 
   print_green "Successfully installed Dasharo firmware"
@@ -531,7 +531,7 @@ check_flash_chip() {
   if [ $? -eq 0 ]; then
     echo "Chipset found"
     tail -n1 "$FLASH_INFO_FILE"
-    FLASH_CHIP_SIZE=$(expr $(flashrom -p "$PROGRAMMER_BIOS" --flash-size | tail -n1) / 1024 / 1024)
+    FLASH_CHIP_SIZE=$(($(flashrom -p "$PROGRAMMER_BIOS" --flash-size | tail -n1) / 1024 / 1024))
     echo "Chipset size"
     echo ${FLASH_CHIP_SIZE}M
   else
@@ -542,7 +542,7 @@ check_flash_chip() {
         echo "Chipset found"
         tail -n1 "$FLASH_INFO_FILE"
         FLASH_CHIP_SELECT="-c ${flash_name}"
-        FLASH_CHIP_SIZE=$(expr $(flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} --flash-size | tail -n1) / 1024 / 1024)
+        FLASH_CHIP_SIZE=$(($(flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} --flash-size | tail -n1) / 1024 / 1024))
         echo "Chipset size"
         echo ${FLASH_CHIP_SIZE}M
         break
@@ -566,6 +566,7 @@ board_config
 
 case "$CMD" in
   install)
+    backup
     install
     ;;
   backup)
