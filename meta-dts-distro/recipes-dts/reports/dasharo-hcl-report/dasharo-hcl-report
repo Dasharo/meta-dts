@@ -118,6 +118,23 @@ update_result "ACPI tables" logs/acpidump.err.log
 printf '########################                                            \r'
 
 # echo "Dumping Audio devices configuration..."
+for t in {1..12}
+do
+  SND_HW_FILES=/sys/class/sound/card0/hw*/init_pin_configs
+  SND_CODEC_FILES=/proc/asound/card0/codec#*
+  SND_HW_FILE=`echo $SND_HW_FILES | cut -d ' ' -f 1`
+  SND_CODEC_FILE=`echo $SND_CODEC_FILES | cut -d ' ' -f 1`
+
+  if [ -f "$SND_HW_FILE" ] && [ -f "$SND_CODEC_FILE" ]; then
+    break
+  else
+    sleep 5
+    if [ $t -eq 12 ]; then
+      echo "Sound card files are missing!"
+    fi
+  fi
+done
+
 for x in /sys/class/sound/card0/hw*; do cat "$x/init_pin_configs" > logs/pin_"$(basename "$x")"; done
 for x in /proc/asound/card0/codec#*; do cat "$x" > logs/"$(basename "$x")"; done
 update_result "Audio devices configuration" 0 UNKNOWN
