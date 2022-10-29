@@ -263,4 +263,3 @@ if [ "$SEND_LOGS" = "true" ]; then
   fi
   echo "Thank you for supporting Dasharo!"
 fi
-
