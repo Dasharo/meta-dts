@@ -177,19 +177,23 @@ update_result "DIMMs information" logs/decode-dimms.err.log
 printf '##########################################                          \r'
 
 # echo "Getting CBMEM table..."
-cbmem > logs/cbmem.log 2> logs/cbmem.log
+cbmem > logs/cbmem.log 2> logs/cbmem.err.log
+update_result "CBMEM table information" logs/cbmem.err.log
 printf '############################################                        \r'
 
 # echo "Getting TPM information..."
 find `realpath /sys/class/tpm/tpm*` -type f -print -exec cat {} \; > logs/tpm_version.log 2> logs/tpm_version.err.log
+update_result "TPM information" logs/tpm_version.err.log
 printf '#############################################                       \r'
 
 # echo "Checking AMT..."
 mei-amt-check > logs/amt-check.log 2> logs/amt-check.err.log
+update_result "AMT information" logs/amt-check.err.log
 printf '###############################################                     \r'
 
 # echo "Checking ME..."
 intelmetool -m > logs/intelmetool.log 2> logs/intelmetool.err.log
+update_result "ME information" logs/intelmetool.err.log
 printf '################################################                    \r'
 
 printf '##################################################                  \r'
@@ -235,7 +239,7 @@ filename="${filename// /_}"
 
 echo "Creating archive with logs..."
 
-# remove MAC address from logs and create second archive
+# remove MAC address from logs as sensitive data
 MAC_ADDR=`cat /sys/class/net/enp1s0/address`
 grep -rl ${MAC_ADDR} logs | xargs sed -i 's/'${MAC_ADDR}'/MAC ADDRESS REMOVED/g'
 tar -zcf "$filename.tar.gz" logs/*
