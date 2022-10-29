@@ -18,21 +18,16 @@ update_result() {
 
   ERR=$(stat -c%s "$ERRORFILE" 2> /dev/null)
   LOG=$(stat -c%s "$LOGFILE" 2> /dev/null)
-
   # specific check for firmware dump
   if [ $LOGFILE == "logs/flashrom_read.log" ]; then
-
     BIN=$(stat -c%s "logs/rom.bin" 2> /dev/null)
-
     if [ $LOG -ne 0 ] && [ $BIN -ne 0 ]; then
       echo -e [$GREEN"OK"$COLOR_OFF]"\t\t"$TOOL >> result
     else
       echo -e [$RED"ERROR"$COLOR_OFF]"\t\t"$TOOL >> result
     fi
-
     return
   fi
-
 
   # generic checks
   if [ $LOG -ne 0 ] && [ $ERR -eq 0 ]; then
@@ -217,19 +212,25 @@ echo -e [$RED"ERROR"$COLOR_OFF]"\t\t Error during getting data\n" >> result
 mv result logs/result
 cat logs/result
 
-#filename="$(dmidecode -s system-manufacturer)"
-filename="$(dmidecode -s system-product-name)"
-#filename+=" $(dmidecode -s bios-version)"
-uuid_string=`cat /sys/class/net/*/address | sed -n '2p'`
+# Create name for generated report
+filename="$(dmidecode -s system-manufacturer)"
+filename+=" $(dmidecode -s system-product-name)"
+filename+=" $(dmidecode -s bios-version)"
+
+# MAC address of device that is used to connect the internet
+# it could return none only when there is no internet connection but
+# in those cases report will be stored locally only
+uuid_string=`cat /sys/class/net/$(ip route show default | awk '/default/ {print $5}')/address`
+# next two values are hardware related so they will be always the same
 uuid_string+="_$(dmidecode -s system-product-name)"
 uuid_string+="_$(dmidecode -s system-manufacturer)"
 
+# using values from above should generate the same uuid all the time if only
+# the MAC address will not change
 uuid=`uuidgen -n @x500 -N $uuid_string -s`
 
 filename+="_$uuid"
-
 filename+="_$(date +'%Y_%m_%d_%H_%M_%S_%N')"
-
 filename="${filename// /_}"
 
 echo "Creating archive with logs..."
