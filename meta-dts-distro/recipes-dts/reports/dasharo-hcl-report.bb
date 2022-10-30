@@ -7,21 +7,21 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 
 SRC_URI = " \
-  file://dasharo-hcl-report \
+    file://dasharo-hcl-report \
 "
 
 S = "${WORKDIR}"
 
 RDEPENDS:${PN} = " \
-  packagegroup-coreboot-utils \
-  flashrom \
-  iasl \
-  tar \
-  i2c-tools \
-  i2c-tools-misc \
-  bash \
-  touchpad-info \
-  dmidecode \
+    packagegroup-coreboot-utils \
+    flashrom \
+    iasl \
+    tar \
+    i2c-tools \
+    i2c-tools-misc \
+    bash \
+    touchpad-info \
+    dmidecode \
 "
 
 do_install () {

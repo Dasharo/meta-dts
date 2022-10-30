@@ -1,5 +1,44 @@
 #!/usr/bin/env bash
 
+COLOR_OFF='\033[0m'       # Text Reset
+RED='\033[0;31m'
+YELLOW='\033[0;33m'
+GREEN='\033[0;32m'
+
+update_result() {
+  TOOL=$1
+  ERRORFILE=$2
+  LOGFILE=`printf $2 | sed 's/[.].*$//' && echo ".log"`
+
+  # check if status was set as a unknown
+  if [ ! -v $3 ]; then
+   echo -e [$YELLOW"UNKNOWN"$COLOR_OFF]"\t"$TOOL >> result
+   return
+  fi
+
+  ERR=$(stat -c%s "$ERRORFILE" 2> /dev/null)
+  LOG=$(stat -c%s "$LOGFILE" 2> /dev/null)
+  # specific check for firmware dump
+  if [ $LOGFILE == "logs/flashrom_read.log" ]; then
+    BIN=$(stat -c%s "logs/rom.bin" 2> /dev/null)
+    if [ $LOG -ne 0 ] && [ $BIN -ne 0 ]; then
+      echo -e [$GREEN"OK"$COLOR_OFF]"\t\t"$TOOL >> result
+    else
+      echo -e [$RED"ERROR"$COLOR_OFF]"\t\t"$TOOL >> result
+    fi
+    return
+  fi
+
+  # generic checks
+  if [ $LOG -ne 0 ] && [ $ERR -eq 0 ]; then
+   echo -e [$GREEN"OK"$COLOR_OFF]"\t\t"$TOOL >> result
+  elif [ $LOG -eq 0 ] && [ $ERR -ne 0 ]; then
+   echo -e [$RED"ERROR"$COLOR_OFF]"\t\t"$TOOL >> result
+  else
+   echo -e [$YELLOW"UNKNOWN"$COLOR_OFF]"\t"$TOOL >> result
+  fi
+}
+
 CMD_DASHARO_DEPLOY="/usr/sbin/dasharo-deploy"
 
 if [ "$(id -u)" -ne 0 ]; then
@@ -17,38 +56,47 @@ mkdir logs
 echo "Getting hardware information. It will take a few minutes..."
 # echo "Dumping PCI configuration space and topology..."
 lspci -nnvvvxxxx > logs/lspci.log 2> logs/lspci.err.log
+update_result "PCI configuration space and topology" logs/lspci.err.log
 printf '##                                                                  \r'
 
 # echo "Dumping USB devices and topology..."
 lsusb -vvv > logs/lsusb.log 2> logs/lsusb.err.log
+update_result "USB devices and topology" logs/lsusb.err.log
 printf '####                                                                \r'
 
 # echo "Dumping Super I/O configuration..."
 superiotool -deV > logs/superiotool.log 2> logs/superiotool.err.log
+update_result "Super I/O configuration" logs/superiotool.err.log
 printf '######                                                              \r'
 
 # echo "Dumping Embedded Controller configuration (this may take a while if EC is not present)..."
 ectool -ip > logs/ectool.log 2> logs/ectool.err.log
+update_result "EC configuration" logs/ectool.err.log
 printf '########                                                            \r'
 
 # echo "Dumping MSRs..."
 msrtool > logs/msrtool.log 2> logs/msrtool.err.log
+update_result "MSRs" logs/msrtool.err.log
 printf '##########                                                          \r'
 
 # echo "Dumping SMBIOS tables..."
 dmidecode > logs/dmidecode.log 2> logs/dmidecode.err.log
+update_result "SMBIOS tables" logs/dmidecode.err.log
 printf '############                                                        \r'
 
 # echo "Decoding BIOS information..."
 biosdecode > logs/biosdecode.log 2> logs/biosdecode.err.log
+update_result "BIOS information" logs/biosdecode.err.log
 printf '##############                                                      \r'
 
 # echo "Extracting CMOS NVRAM..."
 nvramtool -x > logs/nvramtool.log 2> logs/nvramtool.err.log
+update_result "CMOS NVRAM" logs/nvramtool.err.log
 printf '################                                                    \r'
 
 # echo "Dumping Intel configuration registers..."
 inteltool -a > logs/inteltool.log 2> logs/inteltool.err.log
+update_result "Intel configuration registers" logs/inteltool.err.log
 printf '##################                                                  \r'
 
 # echo "Generating GPIO configuration C header files for coreboot..."
@@ -56,35 +104,66 @@ intelp2m -file logs/inteltool.log -fld cb -i -p snr -o logs/gpio_snr.h > logs/in
 intelp2m -file logs/inteltool.log -fld cb -i -p cnl -o logs/gpio_cnl.h >> logs/intelp2m.log 2>> logs/intelp2m.err.log
 intelp2m -file logs/inteltool.log -fld cb -i -p apl -o logs/gpio_apl.h >> logs/intelp2m.log 2>> logs/intelp2m.err.log
 intelp2m -file logs/inteltool.log -fld cb -i -p lbg -o logs/gpio_lbg.h >> logs/intelp2m.log 2>> logs/intelp2m.err.log
+update_result "GPIO configuration C header files" logs/intelp2m.err.log
 printf '####################                                                \r'
 
 # echo "Dumping kernel dmesg..."
 dmesg > logs/dmesg.log 2> logs/dmesg.err.log
+update_result "kernel dmesg" logs/dmesg.err.log
 printf '######################                                              \r'
 
 # echo "Dumping ACPI tables..."
 acpidump > logs/acpidump.log 2> logs/acpidump.err.log
+update_result "ACPI tables" logs/acpidump.err.log
 printf '########################                                            \r'
 
 # echo "Dumping Audio devices configuration..."
+
+# This is a workaround to soundcard's files absence in short time after booting.
+# Thread is continued here https://github.com/Dasharo/dasharo-issues/issues/247
+for t in {1..12}
+do
+  SND_HW_FILES=/sys/class/sound/card0/hw*/init_pin_configs
+  SND_CODEC_FILES=/proc/asound/card0/codec#*
+  SND_HW_FILE=`echo $SND_HW_FILES | cut -d ' ' -f 1`
+  SND_CODEC_FILE=`echo $SND_CODEC_FILES | cut -d ' ' -f 1`
+
+  if [ -f "$SND_HW_FILE" ] && [ -f "$SND_CODEC_FILE" ]; then
+    break
+  else
+    sleep 5
+    if [ $t -eq 12 ]; then
+      echo "Sound card files are missing!"
+    fi
+  fi
+done
+
 for x in /sys/class/sound/card0/hw*; do cat "$x/init_pin_configs" > logs/pin_"$(basename "$x")"; done
 for x in /proc/asound/card0/codec#*; do cat "$x" > logs/"$(basename "$x")"; done
+update_result "Audio devices configuration" 0 UNKNOWN
 printf '##########################                                          \r'
 
 # echo "Dumping CPU info..."
 cat /proc/cpuinfo > logs/cpuinfo.log 2> logs/cpuinfo.err.log
+update_result "CPU info" logs/cpuinfo.err.log
 printf '############################                                        \r'
 
 # echo "Dumping I/O ports..."
 cat /proc/ioports > logs/ioports.log 2> logs/ioports.err.log
+update_result "I/O ports" logs/ioports.err.log
 printf '##############################                                      \r'
 
 # echo "Dumping input bus types..."
 cat /sys/class/input/input*/id/bustype > logs/input_bustypes.log
+update_result "Input bus types"  logs/ioports.err.log
 printf '################################                                    \r'
 
 # echo "Trying to read firmware image with flashrom..."
 flashrom -V -p internal:laptop=force_I_want_a_brick -r logs/rom.bin > logs/flashrom_read.log 2> logs/flashrom_read.err.log
+if [ $? -ne 0 ]; then
+  echo "CRITICAL ERROR: cannot dump firmware"
+fi
+update_result "Firmware image" logs/flashrom_read.err.log
 printf '##################################                                  \r'
 
 # echo "Probing all I2C buses..."
@@ -94,6 +173,7 @@ do
   echo "I2C bus number: $bus" >> logs/i2cdetect.log 2>> logs/i2cdetect.err.log
   i2cdetect -y "$bus" >> logs/i2cdetect.log 2>> logs/i2cdetect.err.log
 done
+update_result "I2C bus" logs/i2cdetect.err.log
 printf '####################################                                \r'
 
 # echo "Decompiling ACPI tables..."
@@ -103,19 +183,39 @@ if pushd logs/acpi &> /dev/null; then
   iasl -d ./*.dat &>/dev/null
   popd &> /dev/null
 fi
+update_result "ACPI tables" 0 UNKNOWN
 printf '######################################                              \r'
 
 # echo "Getting touchpad information..."
 touchpad-info > logs/touchpad.log 2> logs/touchpad.err.log
+update_result "Touchpad information" logs/touchpad.err.log
 printf '########################################                            \r'
 
 # echo "Getting DIMMs information..."
 decode-dimms > logs/decode-dimms.log 2> logs/decode-dimms.err.log
+update_result "DIMMs information" logs/decode-dimms.err.log
 printf '##########################################                          \r'
 
+# echo "Getting CBMEM table..."
+cbmem > logs/cbmem.log 2> logs/cbmem.err.log
+update_result "CBMEM table information" logs/cbmem.err.log
 printf '############################################                        \r'
-printf '##############################################                      \r'
+
+# echo "Getting TPM information..."
+find `realpath /sys/class/tpm/tpm*` -type f -print -exec cat {} \; > logs/tpm_version.log 2> logs/tpm_version.err.log
+update_result "TPM information" logs/tpm_version.err.log
+printf '#############################################                       \r'
+
+# echo "Checking AMT..."
+mei-amt-check > logs/amt-check.log 2> logs/amt-check.err.log
+update_result "AMT information" logs/amt-check.err.log
+printf '###############################################                     \r'
+
+# echo "Checking ME..."
+intelmetool -m > logs/intelmetool.log 2> logs/intelmetool.err.log
+update_result "ME information" logs/intelmetool.err.log
 printf '################################################                    \r'
+
 printf '##################################################                  \r'
 printf '####################################################                \r'
 printf '######################################################              \r'
@@ -127,14 +227,41 @@ printf '################################################################    \r'
 printf '##################################################################  \r'
 printf '####################################################################\r'
 
+echo "Results of getting data:" >> result
+echo -e "\nLegend:" >> result
+echo -e [$GREEN"OK"$COLOR_OFF]"\t\t Data get successfully" >> result
+echo -e [$YELLOW"UNKNOWN"$COLOR_OFF]"\t Result is unknown" >> result
+echo -e [$RED"ERROR"$COLOR_OFF]"\t\t Error during getting data\n" >> result
+
+mv result logs/result
+cat logs/result
+
+# Create name for generated report
 filename="$(dmidecode -s system-manufacturer)"
 filename+=" $(dmidecode -s system-product-name)"
 filename+=" $(dmidecode -s bios-version)"
-filename+="_$(date +'%Y_%m_%d_%H_%M_%S_%N')"
 
+# MAC address of device that is used to connect the internet
+# it could return none only when there is no internet connection but
+# in those cases report will be stored locally only
+uuid_string=`cat /sys/class/net/$(ip route show default | awk '/default/ {print $5}')/address`
+# next two values are hardware related so they will be always the same
+uuid_string+="_$(dmidecode -s system-product-name)"
+uuid_string+="_$(dmidecode -s system-manufacturer)"
+
+# using values from above should generate the same uuid all the time if only
+# the MAC address will not change
+uuid=`uuidgen -n @x500 -N $uuid_string -s`
+
+filename+="_$uuid"
+filename+="_$(date +'%Y_%m_%d_%H_%M_%S_%N')"
 filename="${filename// /_}"
 
 echo "Creating archive with logs..."
+
+# remove MAC address from logs as sensitive data
+MAC_ADDR=`cat /sys/class/net/enp1s0/address`
+grep -rl ${MAC_ADDR} logs | xargs sed -i 's/'${MAC_ADDR}'/MAC ADDRESS REMOVED/g'
 tar -zcf "$filename.tar.gz" logs/*
 rm -rf logs
 

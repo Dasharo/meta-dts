@@ -30,7 +30,9 @@ What is inside the HCL report? We gather information about:\r
   - PCI, Super I/O, GPIO, EC, audio, and Intel configuration,\r
   - MSRs, CMOS NVRAM, CPU info, DIMMs, state of touchpad, SMBIOS and ACPI tables,\r
   - Decoded BIOS information, full firmware image backup, kernel dmesg,\r
-  - IO ports, input bus types, and topology - including I2C and USB,\r"
+  - IO ports, input bus types, and topology - including I2C and USB,\r
+\r
+You can find more info about HCL in docs.dasharo.com/glossary\r"
 }
 
 print_banner() {
