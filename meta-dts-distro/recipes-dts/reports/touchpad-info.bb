@@ -12,9 +12,9 @@ SRC_URI = "file://touchpad-info"
 S = "${WORKDIR}"
 
 RDEPENDS:${PN} = " \
-  bash  \
-  i2c-tools \
-  acpi-call-dkms \
+    bash  \
+    i2c-tools \
+    acpi-call-dkms \
 "
 
 do_install () {
