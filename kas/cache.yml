@@ -7,4 +7,4 @@ local_conf_header:
     SOURCE_MIRROR_URL ?= "http://${LOCAL_PREMIRROR_SERVER}/${PROJECT_NAME}/downloads"
     INHERIT += "own-mirrors"
     LOCAL_PREMIRROR_SERVER ?= "cache.dasharo.com"
-    PROJECT_NAME ?= "yocto/dts-ce"
+    PROJECT_NAME ?= "yocto/dts"
