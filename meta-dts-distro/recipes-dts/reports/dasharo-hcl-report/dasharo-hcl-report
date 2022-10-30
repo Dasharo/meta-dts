@@ -5,6 +5,41 @@ RED='\033[0;31m'
 YELLOW='\033[0;33m'
 GREEN='\033[0;32m'
 
+PROGRAMMER_BIOS="internal"
+# most the time one flash chipset will be detected, for other cases (like for
+# ASUS KGPE-D16) we will test the following list in check_flash_chip function
+FLASH_CHIP_LIST="W25Q64BV/W25Q64CV/W25Q64FV W25Q64JV-.Q W25Q128.V..M"
+FLASH_INFO_FILE="/tmp/flash_info"
+
+check_flash_chip() {
+  echo "Check information about flash chipset."
+  flashrom -p "$PROGRAMMER_BIOS" --flash-name > "$FLASH_INFO_FILE"
+  if [ $? -eq 0 ]; then
+    echo "Chipset found"
+    tail -n1 "$FLASH_INFO_FILE"
+    FLASH_CHIP_SIZE=$(($(flashrom -p "$PROGRAMMER_BIOS" --flash-size | tail -n1) / 1024 / 1024))
+    echo "Chipset size"
+    echo ${FLASH_CHIP_SIZE}M
+  else
+    for flash_name in $FLASH_CHIP_LIST
+    do
+      flashrom -p "$PROGRAMMER_BIOS" -c "$flash_name" --flash-name > "$FLASH_INFO_FILE"
+      if [ $? -eq 0 ]; then
+        echo "Chipset found"
+        tail -n1 "$FLASH_INFO_FILE"
+        FLASH_CHIP_SELECT="-c ${flash_name}"
+        FLASH_CHIP_SIZE=$(($(flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} --flash-size | tail -n1) / 1024 / 1024))
+        echo "Chipset size"
+        echo ${FLASH_CHIP_SIZE}M
+        break
+      fi
+    done
+    if [ -z "$FLASH_CHIP_SELECT" ]; then
+      error_exit "No supported chipset found, exit."
+    fi
+  fi
+}
+
 update_result() {
   TOOL=$1
   ERRORFILE=$2
@@ -20,8 +55,7 @@ update_result() {
   LOG=$(stat -c%s "$LOGFILE" 2> /dev/null)
   # specific check for firmware dump
   if [ $LOGFILE == "logs/flashrom_read.log" ]; then
-    BIN=$(stat -c%s "logs/rom.bin" 2> /dev/null)
-    if [ $LOG -ne 0 ] && [ $BIN -ne 0 ]; then
+    if [ $LOG -ne 0 ] && [ -f "logs/rom.bin" ]; then
       echo -e [$GREEN"OK"$COLOR_OFF]"\t\t"$TOOL >> result
     else
       echo -e [$RED"ERROR"$COLOR_OFF]"\t\t"$TOOL >> result
@@ -159,7 +193,7 @@ update_result "Input bus types"  logs/ioports.err.log
 printf '################################                                    \r'
 
 # echo "Trying to read firmware image with flashrom..."
-flashrom -V -p internal:laptop=force_I_want_a_brick -r logs/rom.bin > logs/flashrom_read.log 2> logs/flashrom_read.err.log
+flashrom -V -p internal:laptop=force_I_want_a_brick ${FLASH_CHIP_SELECT} -r logs/rom.bin > logs/flashrom_read.log 2> logs/flashrom_read.err.log
 if [ $? -ne 0 ]; then
   echo "CRITICAL ERROR: cannot dump firmware"
 fi
@@ -260,7 +294,7 @@ filename="${filename// /_}"
 echo "Creating archive with logs..."
 
 # remove MAC address from logs as sensitive data
-MAC_ADDR=`cat /sys/class/net/enp1s0/address`
+MAC_ADDR=`cat /sys/class/net/$(ip route show default | awk '/default/ {print $5}')/address`
 grep -rl ${MAC_ADDR} logs | xargs sed -i 's/'${MAC_ADDR}'/MAC ADDRESS REMOVED/g'
 tar -zcf "$filename.tar.gz" logs/*
 rm -rf logs
