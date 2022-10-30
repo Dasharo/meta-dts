@@ -115,7 +115,7 @@ while : ; do
   echo
   echo "  1) Dasharo HCL report - dump hardware information from this device"
   echo "  2) Install Dasharo firmware"
-  echo "  3) Restore original firmware"
+  echo "  3) Restore firmware from Dasharo HCL report"
   if [ -n "${SE_IS_LOGGED}" ]; then
       echo "  4) Edit SE keys"
       echo "  5) Update Dasharo firmware"
