@@ -1,0 +1,596 @@
+#!/usr/bin/env bash
+
+COLOR_OFF='\033[0m'       # Text Reset
+RED='\033[0;31m'
+YELLOW='\033[0;33m'
+GREEN='\033[0;32m'
+
+### Color functions
+print_warning() {
+  echo -e "$YELLOW""$1""$COLOR_OFF"
+}
+
+print_error() {
+  echo -e "$RED""$1""$COLOR_OFF"
+}
+
+print_green() {
+  echo -e "$GREEN""$1""$COLOR_OFF"
+}
+
+### Error checks
+error_exit() {
+  _error_msg="$1"
+  print_error "$_error_msg"
+  exit 1
+}
+
+error_check() {
+  _error_code=$?
+  _error_msg="$1"
+  [ "$_error_code" -ne 0 ] && error_exit "$_error_msg : ($_error_code)"
+}
+
+function error_file_check {
+  if [ ! -f "$1" ]; then
+    print_error "$2"
+  fi
+}
+
+# Method to access IT5570 IO Depth 2 registers
+it5570_i2ec() {
+  # TODO: Use /dev/port instead of iotools
+
+  # Address high byte
+  iotools io_write8 0x2e 0x2e
+  iotools io_write8 0x2f 0x11
+  iotools io_write8 0x2e 0x2f
+  iotools io_write8 0x2f $(($2>>8 & 0xff))
+
+  # Address low byte
+  iotools io_write8 0x2e 0x2e
+  iotools io_write8 0x2f 0x10
+  iotools io_write8 0x2e 0x2f
+  iotools io_write8 0x2f $(($2 & 0xff))
+
+  # Data
+  iotools io_write8 0x2e 0x2e
+  iotools io_write8 0x2f 0x12
+  iotools io_write8 0x2e 0x2f
+
+  case $1 in
+    "r")
+      iotools io_read8 0x2f
+      ;;
+    "w")
+      iotools io_write8 0x2f "$3"
+      ;;
+  esac
+}
+
+it5570_shutdown() {
+  # shut down using EC external watchdog reset
+  it5570_i2ec w 0x1f01 0x20
+  it5570_i2ec w 0x1f07 0x01
+}
+
+# not used anymore, we save packages with fw as fw_backup.tar.gz
+# commented out as it may be use later, maybe for uploading the backup
+# to the cloud
+#BIOS_VENDOR=$(dmidecode -s bios-vendor)
+#BIOS_VERSION=$(dmidecode -s bios-version)
+BOARD_VENDOR="$(dmidecode -s system-manufacturer)"
+BOARD_MODEL="$(dmidecode -s system-product-name)"
+BIOS_UPDATE_DIR="/tmp/biosupdate.rom"
+BIOS_UPDATE_CONFIG_DIR="/tmp/biosupdate_config"
+EC_UPDATE_DIR="/tmp/ecupdate.rom"
+FLASH_CHIP_SELECT=""
+FLASH_CHIP_SIZE=""
+# most the time one flash chipset will be detected, for other cases (like for
+# ASUS KGPE-D16) we will test the following list in check_flash_chip function
+FLASH_CHIP_LIST="W25Q64BV/W25Q64CV/W25Q64FV W25Q64JV-.Q W25Q128.V..M"
+FLASH_INFO_FILE="/tmp/flash_info"
+FW_BACKUP_NAME="fw_backup"
+FW_BACKUP_DIR="${ROOT_DIR}${FW_BACKUP_NAME}"
+FW_BACKUP_TAR="${FW_BACKUP_DIR}.tar.gz"
+FW_BACKUP_TAR="$(echo "$FW_BACKUP_TAR" | sed 's/\ /_/g')"
+FW_STORE_URL="https://3mdeb.com/open-source-firmware/Dasharo"
+KEYS_DIR="/tmp/devkeys"
+RESIGNED_BIOS_UPDATE_DIR="/tmp/biosupdate_resigned.rom"
+ROOT_DIR="/"
+SYSTEM_UUID_DIR="/tmp/system_uuid.txt"
+SERIAL_NUMBER_DIR="/tmp/serial_number.txt"
+# default values for flashrom programmer
+PROGRAMMER_BIOS="internal"
+PROGRAMMER_EC="ite_ec"
+
+[ -z "$BOARD_VENDOR" ] && error_exit "BOARD_VENDOR not given"
+[ -z "$BOARD_MODEL" ] && error_exit "BOARD_MODEL not given"
+
+CMD="$1"
+CMD_POWEROFF="/sbin/poweroff"
+
+board_config() {
+  case "$BOARD_VENDOR" in
+    "Notebook")
+      case "$BOARD_MODEL" in
+        "NV4XMB,ME,MZ")
+          DASHARO_REL_NAME="novacustom_nv4x"
+          DASHARO_REL_VER="1.3.0"
+          BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
+          EC_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_ec_v${DASHARO_REL_VER}.rom"
+          HAVE_EC="true"
+          NEED_EC_RESET="true"
+          COMPATIBLE_EC_FW_VERSION="2022-10-07_c662165"
+          EC_HASH_PROD="7a75fd9afd81012f7c1485cc335298979509e5929d931d898465fbddb4ce105c  $EC_UPDATE_DIR"
+          BIOS_HASH_PROD="7271b638c87cba658162931f55bdaa6987eb5b0555075ce8e2297a79a505c8b0  $BIOS_UPDATE_DIR"
+          NEED_SMBIOS_MIGRATION="false"
+          NEED_BLOB_TRANSMISSION="false"
+          PROGRAMMER_BIOS="internal"
+          PROGRAMMER_EC="ite_ec"
+          FLASHROM_ADD_OPT="--ifd -i bios"
+          ;;
+        "NS50_70MU")
+          DASHARO_REL_NAME="novacustom_ns5x"
+          DASHARO_REL_VER="1.3.0"
+          BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
+          EC_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_ec_v${DASHARO_REL_VER}.rom"
+          HAVE_EC="true"
+          NEED_EC_RESET="true"
+          COMPATIBLE_EC_FW_VERSION="2022-08-31_cbff21b"
+          EC_HASH_PROD="d1001465cea74a550914c14f0c8f901b14827a3b5fa0b612ae6d11594ac2b405  $EC_UPDATE_DIR"
+          BIOS_HASH_PROD="d4c30660c53bac505997de30b9eac4c5ac15f3212c62366730dc2ca3974bba18  $BIOS_UPDATE_DIR"
+          NEED_SMBIOS_MIGRATION="false"
+          NEED_BLOB_TRANSMISSION="false"
+          PROGRAMMER_BIOS="internal"
+          PROGRAMMER_EC="ite_ec"
+          FLASHROM_ADD_OPT="--ifd -i bios"
+          ;;
+        *)
+          error_exit "Board model $BOARD_MODEL is currently not supported"
+          ;;
+      esac
+      ;;
+    "Micro-Star International Co., Ltd.")
+      case "$BOARD_MODEL" in
+        "MS-7D25" | "PRO Z690-A WIFI DDR4(MS-7D25)")
+          DASHARO_REL_NAME="msi_ms7d25"
+          DASHARO_REL_VER="1.0.0"
+          BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
+          HAVE_EC="false"
+          NEED_EC_RESET="false"
+          BIOS_HASH_PROD="adee8e0f3c71f40a4d834eafc18231f20924f12dc4ab35b01d9c683b34b32626  $BIOS_UPDATE_DIR"
+          NEED_SMBIOS_MIGRATION="true"
+          NEED_BLOB_TRANSMISSION="false"
+          PROGRAMMER_BIOS="internal"
+          PROGRAMMER_EC=""
+          FLASHROM_ADD_OPT="--ifd -i bios"
+          ;;
+        *)
+          error_exit "Board model $BOARD_MODEL is currently not supported"
+          ;;
+      esac
+      ;;
+    "Dell Inc.")
+      DASHARO_REL_NAME="dell_optiplex_9010"
+      DASHARO_REL_VER="0.1.0"
+      BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER.rom"
+      HAVE_EC="false"
+      NEED_EC_RESET="false"
+      BIOS_HASH_PROD="a880504dfb0497f31e898f62ae5c9f3b145bca0b4fa601e41cddc54bea22ee36  $BIOS_UPDATE_DIR"
+      NEED_SMBIOS_MIGRATION="true"
+      NEED_BLOB_TRANSMISSION="true"
+      PROGRAMMER_BIOS="internal"
+      SINIT_ACM_FILENAME="/tmp/630744_002.zip"
+      SINIT_ACM_URL="https://cdrdv2.intel.com/v1/dl/getContent/630744"
+      SINIT_ACM_HASH="b23c5e6bd70bdcfde4215a5a252e56c4966f0e06cacf388e654ca906c4ecdad1 $SINIT_ACM_FILENAME"
+      SINIT_ACM="/tmp/630744_002/SNB_IVB_SINIT_20190708_PW.bin"
+      FLASHROM_ADD_OPT="--ifd -i bios"
+      case "$BOARD_MODEL" in
+        "OptiPlex 7010")
+          DBT_BIOS_UPDATE_FILENAME="/tmp/O7010A29.exe"
+          DBT_BIOS_UPDATE_URL="https://dl.dell.com/FOLDER05066036M/1/O7010A29.exe"
+          DBT_BIOS_UPDATE_HASH="ceb82586c67cd8d5933ac858c12e0cb52f6e0e4cb3249f964f1c0cfc06d16f52  $DBT_BIOS_UPDATE_FILENAME"
+          DBT_UEFI_IMAGE="/tmp/_O7010A29.exe.extracted/65C10"
+          SCH5545_FW="/tmp/_O7010A29.exe.extracted/65C10_output/pfsobject/section-7ec6c2b0-3fe3-42a0-a316-22dd0517c1e8/volume-0x50000/file-d386beb8-4b54-4e69-94f5-06091f67e0d3/section0.raw"
+          ACM_BIN="/tmp/_O7010A29.exe.extracted/65C10_output/pfsobject/section-7ec6c2b0-3fe3-42a0-a316-22dd0517c1e8/volume-0x500000/file-2d27c618-7dcd-41f5-bb10-21166be7e143/object-0.raw"
+          ;;
+        "OptiPlex 9010")
+          DBT_BIOS_UPDATE_FILENAME="/tmp/O9010A30.exe"
+          DBT_BIOS_UPDATE_URL="https://dl.dell.com/FOLDER05066009M/1/O9010A30.exe"
+          DBT_BIOS_UPDATE_HASH="b11952f43d0ad66f3ce79558b8c5dd43f30866158ed8348e3b2dae1bbb07701b  $DBT_BIOS_UPDATE_FILENAME"
+          DBT_UEFI_IMAGE="/tmp/_O9010A30.exe.extracted/65C10"
+          SCH5545_FW="/tmp/_O9010A30.exe.extracted/65C10_output/pfsobject/section-7ec6c2b0-3fe3-42a0-a316-22dd0517c1e8/volume-0x50000/file-d386beb8-4b54-4e69-94f5-06091f67e0d3/section0.raw"
+          ACM_BIN="/tmp/_O9010A30.exe.extracted/65C10_output/pfsobject/section-7ec6c2b0-3fe3-42a0-a316-22dd0517c1e8/volume-0x500000/file-2d27c618-7dcd-41f5-bb10-21166be7e143/object-0.raw"
+          ;;
+        "Precision T1650")
+          DBT_BIOS_UPDATE_FILENAME="/tmp/T1650A28.exe"
+          DBT_BIOS_UPDATE_URL="https://dl.dell.com/FOLDER05065992M/1/T1650A28.exe"
+          DBT_BIOS_UPDATE_HASH="40a66210b8882f523885849c1d879e726dc58aa14718168b1e75f3e2caaa523b  $DBT_BIOS_UPDATE_FILENAME"
+          DBT_UEFI_IMAGE="/tmp/_T1650A28.exe.extracted/65C10"
+          SCH5545_FW="/tmp/_T1650A28.exe.extracted/65C10_output/pfsobject/section-7ec6c2b0-3fe3-42a0-a316-22dd0517c1e8/volume-0x50000/file-d386beb8-4b54-4e69-94f5-06091f67e0d3/section0.raw"
+          ACM_BIN="/tmp/_T1650A28.exe.extracted/65C10_output/pfsobject/section-7ec6c2b0-3fe3-42a0-a316-22dd0517c1e8/volume-0x500000/file-2d27c618-7dcd-41f5-bb10-21166be7e143/object-0.raw"
+          ;;
+        *)
+          error_exit "Board model $BOARD_MODEL is currently not supported"
+          ;;
+      esac
+      ;;
+    "ASUS")
+      case "$BOARD_MODEL" in
+        "KGPE-D16")
+          DASHARO_REL_NAME="asus_kgpe-d16"
+          DASHARO_REL_VER="0.4.0"
+          HAVE_EC="false"
+          NEED_EC_RESET="false"
+          case "$FLASH_CHIP_SIZE" in
+          "2")
+            BIOS_HASH_PROD="65e5370e9ea6b8ae7cd6cc878a031a4ff3a8f5d36830ef39656b8e5a6e37e889  $BIOS_UPDATE_DIR"
+            BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_vboot_notpm.rom"
+            ;;
+          "8")
+            BIOS_HASH_PROD="da4e6217d50f2ac199dcb9a927a0bc02aa4e792ed73c8c9bac8ba74fc787dbef  $BIOS_UPDATE_DIR"
+            BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_${FLASH_CHIP_SIZE}M_vboot_notpm.rom"
+            ;;
+          "16")
+            BIOS_HASH_PROD="20055cf57185f149259706f58d5e9552a1589259c6617999c1ac7d8d3c960020  $BIOS_UPDATE_DIR"
+            BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_${FLASH_CHIP_SIZE}M_vboot_notpm.rom"
+            ;;
+          *)
+            error_exit "Platform uses chipset with not supported size"
+            ;;
+          esac
+          NEED_SMBIOS_MIGRATION="true"
+          NEED_BLOB_TRANSMISSION="false"
+          PROGRAMMER_BIOS="internal"
+          ;;
+        *)
+          error_exit "Board model $BOARD_MODEL is currently not supported"
+          ;;
+      esac
+      ;;
+    *)
+      error_exit "Board vendor: $BOARD_VENDOR is currently not supported"
+      ;;
+  esac
+}
+
+ask_for_version()
+{
+  while : ; do
+    echo
+    echo "Please, select Dasharo firmware version to install"
+
+    if [ -v BIOS_HASH_PROD ]; then
+      echo "  p) Production version"
+    fi
+    if [ -v BIOS_HASH_EVAL ]; then
+      echo "  e) Evaluation version"
+    fi
+    echo "  b) Back to main menu"
+    echo
+    read -r -p "Enter an option: " OPTION
+    echo
+
+    case ${OPTION} in
+      p|P|prod|production|PRODUCTION|PROD|Production)
+        if [ -v BIOS_HASH_PROD ]; then
+          BIOS_HASH=$BIOS_HASH_PROD
+          BIOS_LINK=$BIOS_LINK_PROD
+          EC_HASH=$EC_HASH_PROD
+          EC_LINK=$EC_LINK_PROD
+          echo "Production version selected"
+          break
+        else
+          error_exit "Bad option or resignation. Returning to main menu..."
+        fi
+        ;;
+      e|E|eval|EVAL|evaluation|EVALUATION|Evaluation)
+        if [ -v BIOS_HASH_EVAL ]; then
+          BIOS_HASH=$BIOS_HASH_EVAL
+          BIOS_LINK=$BIOS_LINK_EVAL
+          EC_HASH=$EC_HASH_EVAL
+          EC_LINK=$EC_LINK_EVAL
+          echo "Evaluation version selected"
+          break
+        else
+          error_exit "Bad option. Returning to main menu..."
+        fi
+        ;;
+      b|B)
+        echo "Returning to main menu..."
+        exit 0
+        ;;
+      *)
+        ;;
+    esac
+  done
+}
+
+backup() {
+  rm -rf "$FW_BACKUP_DIR"
+  mkdir -p "$FW_BACKUP_DIR"
+
+  echo "Backing up BIOS firmware..."
+  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r "${FW_BACKUP_DIR}"/bios.rom
+  error_check "Failed to read BIOS firmware backup"
+
+  if [ "$HAVE_EC" = "true" ]; then
+    echo "Checking for Open Source Embedded Controller firmware"
+    system76_ectool info >> /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+      echo "Device has already Open Source Embedded Controller firmware, do not backup EC..."
+    else
+      echo "Backing up EC firmware..."
+      flashrom -p "$PROGRAMMER_EC" ${FLASH_CHIP_SELECT} -r "${FW_BACKUP_DIR}"/ec.rom
+      error_check "Failed to read EC firmware backup"
+    fi
+  fi
+
+  echo "Saving backup to: $FW_BACKUP_TAR"
+  tar --gzip -cf "$FW_BACKUP_TAR" "$FW_BACKUP_DIR"
+  error_check "Failed to create firmware backup archive"
+  rm -rf "${FW_BACKUP_DIR}"
+
+  echo "Successfully backed up firmware at: $FW_BACKUP_TAR"
+}
+
+update_ec() {
+  echo "Downloading EC firmware update..."
+  curl -f "$EC_LINK" -o "$EC_UPDATE_DIR"
+  error_check "Cannot access $FW_STORE_URL. Please check your internet
+ connection"
+  sha256sum --check <(echo "$EC_HASH")
+  error_check "Failed to download EC firmware update"
+
+  echo "Updating EC..."
+  flashrom -p "$PROGRAMMER_EC" ${FLASH_CHIP_SELECT} -w "$EC_UPDATE_DIR"
+  error_check "Failed to update EC firmware"
+
+  echo "Successfully updated EC firmware"
+}
+
+smbios_migration()
+{
+  echo -n "$(dmidecode -s system-uuid)" > $SYSTEM_UUID_DIR
+  echo -n "$(dmidecode -s baseboard-serial-number)" > $SERIAL_NUMBER_DIR
+
+  COREBOOT_SEC=$(cbfstool $BIOS_UPDATE_DIR layout -w | grep "COREBOOT")
+  FW_MAIN_A_SEC=$(cbfstool $BIOS_UPDATE_DIR layout -w | grep "FW_MAIN_A")
+  FW_MAIN_B_SEC=$(cbfstool $BIOS_UPDATE_DIR layout -w | grep "FW_MAIN_B")
+
+  if [ -n "$COREBOOT_SEC" ]; then
+    # if the migration can be done there for sure will be COREBOOT section
+    echo "Beginning SMBIOS migration process..."
+    echo "Migrate to COREBOOT section."
+    cbfstool $BIOS_UPDATE_DIR add -f $SERIAL_NUMBER_DIR -n serial_number -t raw -r COREBOOT
+    cbfstool $BIOS_UPDATE_DIR add -f $SYSTEM_UUID_DIR -n system_uuid -t raw -r COREBOOT
+  fi
+
+  if [ -n "$FW_MAIN_A_SEC" ]; then
+    echo "Migrate to FW_MAIN_A section."
+    cbfstool $BIOS_UPDATE_DIR expand -r FW_MAIN_A
+    cbfstool $BIOS_UPDATE_DIR add -f $SERIAL_NUMBER_DIR -n serial_number -t raw -r FW_MAIN_A
+    cbfstool $BIOS_UPDATE_DIR add -f $SYSTEM_UUID_DIR -n system_uuid -t raw -r FW_MAIN_A
+    cbfstool $BIOS_UPDATE_DIR truncate -r FW_MAIN_A
+  fi
+
+  if [ -n "$FW_MAIN_B_SEC" ]; then
+    echo "Migrate to FW_MAIN_B section."
+    cbfstool $BIOS_UPDATE_DIR expand -r FW_MAIN_B
+    cbfstool $BIOS_UPDATE_DIR add -f $SERIAL_NUMBER_DIR -n serial_number -t raw -r FW_MAIN_B
+    cbfstool $BIOS_UPDATE_DIR add -f $SYSTEM_UUID_DIR -n system_uuid -t raw -r FW_MAIN_B
+    cbfstool $BIOS_UPDATE_DIR truncate -r FW_MAIN_B
+  fi
+}
+
+resign_binary()
+{
+  if [ "$HAVE_VBOOT" -eq 0 ]; then
+    download_keys
+    sign_firmware.sh $BIOS_UPDATE_DIR $KEYS_DIR $RESIGNED_BIOS_UPDATE_DIR
+    error_check "Cannot resign binary file. Please, make sure if you have proper keys. Aborting..."
+    BIOS_UPDATE_DIR="$RESIGNED_BIOS_UPDATE_DIR"
+  fi
+}
+
+download_keys()
+{
+  mkdir $KEYS_DIR
+  wget -O $KEYS_DIR/recovery_key.vbpubk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/recovery_key.vbpubk > /dev/null 2>&1
+  wget -O $KEYS_DIR/firmware.keyblock https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/firmware.keyblock > /dev/null 2>&1
+  wget -O $KEYS_DIR/firmware_data_key.vbprivk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/firmware_data_key.vbprivk > /dev/null 2>&1
+  wget -O $KEYS_DIR/kernel_subkey.vbpubk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/kernel_subkey.vbpubk > /dev/null 2>&1
+  wget -O $KEYS_DIR/root_key.vbpubk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/root_key.vbpubk> /dev/null 2>&1
+}
+
+blob_transmission()
+{
+  echo "Extracting the UEFI image from BIOS update"
+  wget -O "$DBT_BIOS_UPDATE_FILENAME" "$DBT_BIOS_UPDATE_URL" > /dev/null 2>&1
+  error_file_check "$DBT_BIOS_UPDATE_FILENAME" "Failed to download BIOS for $BOARD_MODEL"
+
+  sha256sum --check <(echo "$DBT_BIOS_UPDATE_HASH")
+  error_check "Failed SHA-256 sum check on the downloaded BIOS for $BOARD_MODEL"
+
+  binwalk --run-as=root -e "$DBT_BIOS_UPDATE_FILENAME" -C /tmp > /dev/null 2>&1
+  error_file_check "$DBT_UEFI_IMAGE" "Failed to extract UEFI image from BIOS update"
+
+  uefi-firmware-parser -e "$DBT_UEFI_IMAGE" -O > /dev/null 2>&1
+
+  if [ -n "$SINIT_ACM_FILENAME" ] && [ -n "$SINIT_ACM_URL" ]; then
+    echo "Downloading the Intel SINIT ACM"
+    wget -O "$SINIT_ACM_FILENAME" "$SINIT_ACM_URL" > /dev/null 2>&1
+    error_file_check "$SINIT_ACM_FILENAME" "Failed to download Intel SINIT ACM."
+
+    # Intel does not provide hash of the package, use SHA256 we know is good
+    sha256sum --check <(echo "$SINIT_ACM_HASH")
+    error_check "Failed SHA-256 sum check on the downloaded Intel SINIT ACM."
+
+    unzip -o "$SINIT_ACM_FILENAME" -d /tmp > /dev/null 2>&1
+    error_check "Failed to decompress Intel SINIT ACM package."
+  fi
+
+  echo "Beginning Dasharo Blobs Transmission process..."
+
+  if [ -n "$SCH5545_FW" ]; then
+    error_file_check "$SCH5545_FW" "Failed to find SCH5545 EC firmware binary."
+    echo -n "Adding SCH5545 EC firmware..."
+    cbfstool "$BIOS_UPDATE_DIR" add -f "$SCH5545_FW" -n sch5545_ecfw.bin -t raw
+    print_green "Done"
+  fi
+
+  if [ -n "$ACM_BIN" ]; then
+    error_file_check "$ACM_BIN" "Failed to find BIOS ACM binary."
+    echo -n "Adding BIOS ACM..."
+    cbfstool "$BIOS_UPDATE_DIR" add -f "$ACM_BIN" -n txt_bios_acm.bin -t raw
+    print_green "Done"
+  fi
+
+  if [ -n "$SINIT_ACM" ]; then
+    error_file_check "$SINIT_ACM" "Failed to find Intel SINIT ACM binary."
+    echo -n "Adding SINIT ACM..."
+    cbfstool "$BIOS_UPDATE_DIR" add -f "$SINIT_ACM" -n txt_sinit_acm.bin -t raw
+    print_green "Done"
+  fi
+}
+
+install() {
+  ask_for_version
+  echo "Downloading update"
+  curl -f "$BIOS_LINK" -o $BIOS_UPDATE_DIR
+  error_check "Cannot access $FW_STORE_URL. Please check your internet
+ connection"
+  sha256sum --check <(echo "$BIOS_HASH")
+  error_check "Failed to verify Dasharo firmware"
+
+  if [ "$HAVE_EC" = "true" ]; then
+    echo "Checking for Open Source Embedded Controller firmware"
+    system76_ectool info >> /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+      echo "Device has already Open Source Embedded Controller firmware, do not flash EC..."
+    else
+      _ec_fw_version=$(flashrom -p "$PROGRAMMER_EC" ${FLASH_CHIP_SELECT} | grep "Mainboard EC Version" | tr -d ' ' | cut -d ':' -f 2)
+
+      if [ "$_ec_fw_version" != "$COMPATIBLE_EC_FW_VERSION" ]; then
+        print_warning "EC version: $_ec_fw_version is not supported, update required"
+        update_ec
+      fi
+    fi
+  fi
+
+  cbfstool "$BIOS_UPDATE_DIR" extract -r COREBOOT -n config -f "$BIOS_UPDATE_CONFIG_DIR"
+  grep "CONFIG_VBOOT=y" "$BIOS_UPDATE_CONFIG_DIR"
+  HAVE_VBOOT="$?"
+
+  if [ "$NEED_SMBIOS_MIGRATION" = "true" ]; then
+    smbios_migration
+    resign_binary
+  fi
+
+  if [ "$NEED_BLOB_TRANSMISSION" = "true" ]; then
+    blob_transmission
+  fi
+
+  echo "Installing Dasharo firmware..."
+  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT} -w "$BIOS_UPDATE_DIR"
+  error_check "Failed to install Dasharo firmware"
+
+  print_green "Successfully installed Dasharo firmware"
+
+  echo -n "Syncing disks... "
+  sync
+  echo "Done."
+  echo "The computer will shut down automatically in 5 seconds"
+  sleep 0.5
+  echo "Powering off in 5s:"
+  echo "5..."
+  sleep 1
+  echo "4..."
+  sleep 1
+  echo "3..."
+  sleep 1
+  echo "2..."
+  sleep 1
+  echo "1..."
+  sleep 0.5
+  echo "Powering off"
+  sleep 1
+  if [ "$NEED_EC_RESET" = "true" ]; then
+    it5570_shutdown
+  else
+    ${CMD_POWEROFF}
+  fi
+}
+
+restore() {
+  echo "Restoring from backup"
+  tar -zxf "$FW_BACKUP_TAR" -C /tmp
+  error_check "Cannot decompress package with backup firmware"
+
+  echo "Restoring BIOS firmware..."
+  # Write to entire flash when restoring
+  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -w "/tmp/${FW_BACKUP_NAME}/bios.rom"
+
+  if [ "$HAVE_EC" = "true" ]; then
+    echo "Restoring EC firmware..."
+    flashrom -p "$PROGRAMMER_EC" ${FLASH_CHIP_SELECT} -w "/tmp/${FW_BACKUP_NAME}/ec.rom"
+  fi
+
+  print_green "Successfully restored firmware"
+}
+
+check_flash_chip() {
+  echo "Check information about flash chipset."
+  flashrom -p "$PROGRAMMER_BIOS" --flash-name > "$FLASH_INFO_FILE"
+  if [ $? -eq 0 ]; then
+    echo "Chipset found"
+    tail -n1 "$FLASH_INFO_FILE"
+    FLASH_CHIP_SIZE=$(($(flashrom -p "$PROGRAMMER_BIOS" --flash-size | tail -n1) / 1024 / 1024))
+    echo "Chipset size"
+    echo ${FLASH_CHIP_SIZE}M
+  else
+    for flash_name in $FLASH_CHIP_LIST
+    do
+      flashrom -p "$PROGRAMMER_BIOS" -c "$flash_name" --flash-name > "$FLASH_INFO_FILE"
+      if [ $? -eq 0 ]; then
+        echo "Chipset found"
+        tail -n1 "$FLASH_INFO_FILE"
+        FLASH_CHIP_SELECT="-c ${flash_name}"
+        FLASH_CHIP_SIZE=$(($(flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} --flash-size | tail -n1) / 1024 / 1024))
+        echo "Chipset size"
+        echo ${FLASH_CHIP_SIZE}M
+        break
+      fi
+    done
+    if [ -z "$FLASH_CHIP_SELECT" ]; then
+      error_exit "No supported chipset found, exit."
+    fi
+  fi
+}
+
+usage() {
+  echo "Usage:"
+  echo "  $0 install  - Install Dasharo on this device"
+  echo "  $0 backup   - Backup current firmware"
+  echo "  $0 restore  - Restore from a previously saved backup"
+}
+
+check_flash_chip
+board_config
+
+case "$CMD" in
+  install)
+    backup
+    install
+    ;;
+  backup)
+    backup
+    ;;
+  restore)
+    restore
+    ;;
+  *)
+    usage
+    ;;
+esac

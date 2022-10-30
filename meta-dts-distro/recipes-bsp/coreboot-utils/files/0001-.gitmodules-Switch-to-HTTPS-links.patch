@@ -1,0 +1,90 @@
+From 1e9cd4b9b376dca74bf8f7e73c1bb8d6613370d2 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C5=82=20=C5=BBygowski?= <michal.zygowski@3mdeb.com>
+Date: Tue, 14 Jul 2020 17:38:56 +0200
+Subject: [PATCH] .gitmodules: Switch to HTTPS links
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: Michał Żygowski <michal.zygowski@3mdeb.com>
+---
+ .gitmodules | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/.gitmodules b/.gitmodules
+index 68230b92edf9..d629759a2827 100644
+--- a/.gitmodules
++++ b/.gitmodules
+@@ -1,56 +1,56 @@
+ [submodule "3rdparty/blobs"]
+ 	path = 3rdparty/blobs
+-	url = ../blobs.git
++	url = https://review.coreboot.org//blobs.git
+ 	update = none
+ 	ignore = dirty
+ [submodule "util/nvidia-cbootimage"]
+ 	path = util/nvidia/cbootimage
+-	url = ../nvidia-cbootimage.git
++	url = https://review.coreboot.org//nvidia-cbootimage.git
+ [submodule "vboot"]
+ 	path = 3rdparty/vboot
+-	url = ../vboot.git
++	url = https://review.coreboot.org//vboot.git
+ 	branch = main
+ [submodule "arm-trusted-firmware"]
+ 	path = 3rdparty/arm-trusted-firmware
+-	url = ../arm-trusted-firmware.git
++	url = https://review.coreboot.org//arm-trusted-firmware.git
+ [submodule "3rdparty/chromeec"]
+ 	path = 3rdparty/chromeec
+-	url = ../chrome-ec.git
++	url = https://review.coreboot.org//chrome-ec.git
+ [submodule "libhwbase"]
+ 	path = 3rdparty/libhwbase
+-	url = ../libhwbase.git
++	url = https://review.coreboot.org//libhwbase.git
+ [submodule "libgfxinit"]
+ 	path = 3rdparty/libgfxinit
+-	url = ../libgfxinit.git
++	url = https://review.coreboot.org//libgfxinit.git
+ [submodule "3rdparty/fsp"]
+ 	path = 3rdparty/fsp
+-	url = ../fsp.git
++	url = https://review.coreboot.org//fsp.git
+ 	update = none
+ 	ignore = dirty
+ [submodule "opensbi"]
+ 	path = 3rdparty/opensbi
+-	url = ../opensbi.git
++	url = https://review.coreboot.org//opensbi.git
+ [submodule "intel-microcode"]
+ 	path = 3rdparty/intel-microcode
+-	url = ../intel-microcode.git
++	url = https://review.coreboot.org//intel-microcode.git
+ 	update = none
+ 	ignore = dirty
+ 	branch = main
+ [submodule "3rdparty/ffs"]
+ 	path = 3rdparty/ffs
+-	url = ../ffs.git
++	url = https://review.coreboot.org//ffs.git
+ [submodule "3rdparty/amd_blobs"]
+ 	path = 3rdparty/amd_blobs
+-	url = ../amd_blobs
++	url = https://review.coreboot.org//amd_blobs
+ 	update = none
+ 	ignore = dirty
+ [submodule "3rdparty/cmocka"]
+ 	path = 3rdparty/cmocka
+-	url = ../cmocka.git
++	url = https://review.coreboot.org//cmocka.git
+ 	update = none
+ [submodule "3rdparty/qc_blobs"]
+ 	path = 3rdparty/qc_blobs
+-	url = ../qc_blobs.git
++	url = https://review.coreboot.org//qc_blobs.git
+ 	update = none
+ 	ignore = dirty
+ [submodule "3rdparty/intel-sec-tools"]
+-- 
+2.25.1

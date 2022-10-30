@@ -8,16 +8,24 @@ CMD_SHELL="/bin/bash"
 CMD_POWEROFF="/sbin/poweroff"
 CMD_REBOOT="/sbin/reboot"
 CMD_NCMENU="/usr/sbin/novacustom_menu"
+CMD_DASHARO_DEPLOY="/usr/sbin/dasharo-deploy"
 
 OS_VERSION_FILE="/etc/os-release"
 
 BOARD_VENDOR="$(dmidecode -s system-manufacturer)"
 BOARD_MODEL="$(dmidecode -s system-product-name)"
 
+SE_credential_file="/etc/cloud-pass"
+
 check_os_version() {
   local os_version=$(grep "VERSION_ID" ${OS_VERSION_FILE} | cut -d "=" -f 2-)
 
-  echo "  DTS CE version v${os_version}"
+  if [ ${SE_IS_LOGGED} ]; then
+    echo "  Logs key:        " ${CLOUDSEND_LOGS_URL}
+    echo "  Download key:    " ${CLOUDSEND_DOWNLOAD_URL}
+    echo "  Password:        " ${CLOUDSEND_PASSWORD}
+  fi
+  echo "  DTS version v${os_version}"
 }
 
 print_disclaimer() {
@@ -90,15 +98,31 @@ logs_sent=""
 
 Cloud_base_url="https://cloud.3mdeb.com/index.php/s/"
 
-# base values for CE
+# base values
 export CLOUDSEND_LOGS_URL="39d4biH4SkXD8Zm"
 export CLOUDSEND_PASSWORD="1{\[\k6G"
+
+if [ -a "${SE_credential_file}" ]; then
+    export CLOUDSEND_LOGS_URL=$(head -1 ${SE_credential_file})
+    export CLOUDSEND_DOWNLOAD_URL=$(head -2 ${SE_credential_file} | tail -1 )
+    export CLOUDSEND_PASSWORD=$(head -3 ${SE_credential_file} | tail -1 )
+    SE_IS_LOGGED=true
+fi
 
 while : ; do
   echo
   check_os_version
   echo
   echo "  1) Dasharo HCL report - dump hardware information from this device"
+  echo "  2) Install Dasharo firmware"
+  echo "  3) Restore original firmware"
+  if [ -n "${SE_IS_LOGGED}" ]; then
+      echo "  4) Edit SE keys"
+      echo "  5) Update Dasharo firmware"
+  else
+      echo "  4) Load SE keys"
+  fi
+
   vendor_menu "print"
   echo "  9) Shell"
   echo "  10) Power off system"
@@ -126,6 +150,69 @@ while : ; do
       else
           ${CMD_DASHARO_HCL_REPORT}
       fi
+      ;;
+    2)
+      if check_network_connection; then
+        echo "Preparing ..."
+        if [ -z "${logs_sent}" ]; then
+          export SEND_LOGS="true"
+          if ! ${CMD_DASHARO_HCL_REPORT} > /dev/null 2>&1; then
+            echo -e "Cannot reach 3mdeb cloud to leave HCL report. Please
+                      \rrecheck your internet connection."
+          else
+            logs_sent="1"
+          fi
+        fi
+      fi
+
+      if [ -n "${logs_sent}" ]; then
+          ${CMD_DASHARO_DEPLOY} install
+      fi
+      ;;
+    3)
+      ${CMD_DASHARO_DEPLOY} restore
+      ;;
+    4)
+      echo ""
+      read -p "Enter logs key:                " tmpUPURL
+      echo ""
+      read -p "Enter firmware download key:   " tmpDOWNLOADURL
+      echo ""
+      read -p "Enter password:                " tmpPASSWD
+
+      echo ${tmpUPURL} > ${SE_credential_file}
+      echo ${tmpDOWNLOADURL} >> ${SE_credential_file}
+      echo ${tmpPASSWD} >> ${SE_credential_file}
+
+      tmpDownloadURL="https://cloud.3mdeb.com/public.php/webdav/biosupdate.rom"
+
+      tmpLogsURL="https://cloud.3mdeb.com/index.php/s/${CLOUDSEND_LOGS_URL}/authenticate/showShare"
+
+      CLOUD_DOWNLOAD_URL=`sed -n '2p' < ${SE_credential_file} | tr -d '\n'`
+      CLOUD_PASSWORD=`sed -n '3p' < ${SE_credential_file} | tr -d '\n'`
+      USER_DETAILS="$CLOUD_DOWNLOAD_URL:$CLOUD_PASSWORD"
+      CLOUD_REQUEST="X-Requested-With: XMLHttpRequest"
+
+      if check_network_connection; then
+        CHECK_DOWNLOAD_REQUEST_RESPONSE=$( curl -I -s -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$tmpDownloadURL" -o /dev/null -w "%{http_code}")
+        CHECK_LOGS_REQUEST_RESPONSE=$( curl -I -s -f -H "$CLOUD_REQUEST" "$tmpLogsURL" -o /dev/null -w "%{http_code}")
+        if [ ${CHECK_DOWNLOAD_REQUEST_RESPONSE} -eq 200 ] && [ ${CHECK_LOGS_REQUEST_RESPONSE} -eq 200 ]; then
+          echo ""
+          echo "Cloud credentials are saved and ready to use"
+          SE_IS_LOGGED=true
+          export CLOUDSEND_PASSWORD="${tmpPASSWD}"
+          export CLOUDSEND_LOGS_URL="${tmpUPURL}"
+          export CLOUDSEND_DOWNLOAD_URL="${tmpDOWNLOADURL}"
+        else
+          echo ""
+          echo -e "Something may be wrong with credentials. Please use option 4 to change SE keys
+                    \rand make sure that there is no typo."
+          rm ${SE_credential_file}
+        fi
+      fi
+      ;;
+    5)
+      echo "TBD"
       ;;
     6)
       vendor_menu "action"
