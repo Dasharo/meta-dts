@@ -11,11 +11,13 @@ PACKAGES = " \
 
 RDEPENDS:${PN} = " \
     cbfstool \
+    cbmem \
     ectool \
     futil \
     ifdtool \
     intelp2m \
     inteltool \
+    intelmetool \
     msrtool \
     nvramtool \
     superiotool \
