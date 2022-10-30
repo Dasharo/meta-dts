@@ -11,6 +11,8 @@ EXTRA_OEMAKE = " \
     PREFIX="${prefix}" \
 "
 
+INSANE_SKIP:${PN} = "textrel"
+
 do_configure:prepend () {
     cd ${S}
     git submodule update --init 3rdparty/vboot
