@@ -2,7 +2,7 @@ DESCRIPTION = "AMT status checker for Linux"
 SECTION = "tools"
 HOMEPAGE = "https://github.com/mjg59/mei-amt-check"
 
-LICENSE = "GPL-2.0"
+LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=39f5702df600d6d1b1d6d138dc62347d"
 
 SRC_URI = " \
