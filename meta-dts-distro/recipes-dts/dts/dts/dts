@@ -106,7 +106,7 @@ if [ -a "${SE_credential_file}" ]; then
     export CLOUDSEND_LOGS_URL=$(head -1 ${SE_credential_file})
     export CLOUDSEND_DOWNLOAD_URL=$(head -2 ${SE_credential_file} | tail -1 )
     export CLOUDSEND_PASSWORD=$(head -3 ${SE_credential_file} | tail -1 )
-    SE_IS_LOGGED=true
+    export SE_IS_LOGGED=true
 fi
 
 while : ; do
@@ -115,7 +115,7 @@ while : ; do
   echo
   echo "  1) Dasharo HCL report - dump hardware information from this device"
   echo "  2) Install Dasharo firmware"
-  echo "  3) Restore original firmware"
+  echo "  3) Restore firmware from Dasharo HCL report"
   if [ -n "${SE_IS_LOGGED}" ]; then
       echo "  4) Edit SE keys"
       echo "  5) Update Dasharo firmware"
@@ -200,7 +200,7 @@ while : ; do
         if [ ${CHECK_DOWNLOAD_REQUEST_RESPONSE} -eq 200 ] && [ ${CHECK_LOGS_REQUEST_RESPONSE} -eq 200 ]; then
           echo ""
           echo "Cloud credentials are saved and ready to use"
-          SE_IS_LOGGED=true
+          export SE_IS_LOGGED=true
           export CLOUDSEND_PASSWORD="${tmpPASSWD}"
           export CLOUDSEND_LOGS_URL="${tmpUPURL}"
           export CLOUDSEND_DOWNLOAD_URL="${tmpDOWNLOADURL}"

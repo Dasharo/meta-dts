@@ -109,6 +109,7 @@ PROGRAMMER_EC="ite_ec"
 
 CMD="$1"
 CMD_POWEROFF="/sbin/poweroff"
+CMD_CLOUD_LIST="/usr/sbin/cloud_list"
 
 board_config() {
   case "$BOARD_VENDOR" in
@@ -524,20 +525,94 @@ install() {
 }
 
 restore() {
-  echo "Restoring from backup"
+  while : ; do
+    echo
+    echo "Restoring firmware from HCL report."
+    echo "Please select one of available options."
+
+    echo "  1) Check for HCL report stored locally"
+    if [ -n SE_IS_LOGGED ]; then
+      echo "  2) Check for HCL report stored on 3mdeb cloud"
+    fi
+    echo "  b) Back to main menu"
+    echo
+    read -r -p "Enter an option: " OPTION
+    echo
+
+    # HCL report should be named as in dasharo-hcl-report so we can find
+    # the package based on uuid saved in name, we need to check two options
+    # with and without MAC address
+    uuid_string=`cat /sys/class/net/$(ip route show default | awk '/default/ {print $5}')/address`
+    # if above gives error then there is no internet connection and first
+    # part of uuid should be blank
+    if [ ! $? -eq 0 ]; then
+      uuid_string=""
+    fi
+    uuid_string+="_$(dmidecode -s system-product-name)"
+    uuid_string+="_$(dmidecode -s system-manufacturer)"
+    uuid=`uuidgen -n @x500 -N $uuid_string -s`
+
+    case ${OPTION} in
+      1)
+        echo
+        echo "Searching for HCL report on device..."
+
+        HCL_REPORT_PACKAGE="$(find / -name *$uuid* | head -n1)"
+        if [ ! -z $HCL_REPORT_PACKAGE ]; then
+          tar -zxf "$HCL_REPORT_PACKAGE" -C /tmp
+          echo "Restoring BIOS firmware..."
+          if [ -f "/tmp/logs/bios.rom" ]; then
+            # Write to entire flash when restoring
+            flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -w "/tmp/logs/bios.rom"
+
+            if [ "$HAVE_EC" = "true" ]; then
+              echo "Restoring EC firmware..."
+              flashrom -p "$PROGRAMMER_EC" ${FLASH_CHIP_SELECT} -w "/tmp/logs/ec.rom"
+            fi
+            print_green "Successfully restored firmware"
+          else
+            print_error "Report does not have firmware backup!"
+          fi
+        else
+          print_warning "No HCL report found, cannot restore firmware"
+          echo "Returning to main menu..."
+          exit 0
+        fi
+        ;;
+      2)
+        echo
+        echo "Searching for HCL report on cloud..."
+
+        ${CMD_CLOUD_LIST} $uuid
+        error_check "Could not download HCL report from cloud."
+
+        HCL_REPORT_PACKAGE="$(find / -name *$uuid* | head -n1)"
+        tar -zxf "$HCL_REPORT_PACKAGE" -C /tmp
+        echo "Restoring BIOS firmware..."
+        if [ -f "/tmp/logs/bios.rom" ]; then
+          # Write to entire flash when restoring
+          flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -w "/tmp/logs/bios.rom"
+
+          if [ "$HAVE_EC" = "true" ]; then
+            echo "Restoring EC firmware..."
+            flashrom -p "$PROGRAMMER_EC" ${FLASH_CHIP_SELECT} -w "/tmp/logs/ec.rom"
+          fi
+          print_green "Successfully restored firmware"
+        else
+          print_error "Report does not have firmware backup!"
+        fi
+        ;;
+      b|B)
+        echo "Returning to main menu..."
+        exit 0
+        ;;
+      *)
+        ;;
+    esac
+  done
+
   tar -zxf "$FW_BACKUP_TAR" -C /tmp
   error_check "Cannot decompress package with backup firmware"
-
-  echo "Restoring BIOS firmware..."
-  # Write to entire flash when restoring
-  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -w "/tmp/${FW_BACKUP_NAME}/bios.rom"
-
-  if [ "$HAVE_EC" = "true" ]; then
-    echo "Restoring EC firmware..."
-    flashrom -p "$PROGRAMMER_EC" ${FLASH_CHIP_SELECT} -w "/tmp/${FW_BACKUP_NAME}/ec.rom"
-  fi
-
-  print_green "Successfully restored firmware"
 }
 
 check_flash_chip() {
