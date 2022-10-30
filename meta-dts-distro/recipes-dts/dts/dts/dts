@@ -213,7 +213,16 @@ while : ; do
       fi
       ;;
     5)
-      echo "TBD"
+      echo "There is no Dasharo firmware update available now for your platform"
+      read -r -p "Please, type any key to back to main menu " OPTION
+      echo
+
+      case ${OPTION} in
+        *)
+          echo "Returning to main menu..."
+          exit 0
+          ;;
+      esac
       ;;
     6)
       vendor_menu "action"
