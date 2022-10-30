@@ -36,6 +36,7 @@ RDEPENDS:${PN}-tools-base = " \
 "
 
 RDEPENDS:${PN}-tools-dts = " \
+    mei-amt-check \
     cloudsend \
     dasharo-deploy \
     dasharo-hcl-report \
