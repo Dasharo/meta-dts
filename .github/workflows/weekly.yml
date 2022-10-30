@@ -1,0 +1,52 @@
+name: Weekly clean & rebuild
+on:
+  schedule:
+    - cron: '0 8 * * 6'
+
+jobs:
+  build:
+    name: Build system image without using cache
+    runs-on: self-hosted
+    steps:
+      - name: Checkout meta-dts-ce repo
+        uses: actions/checkout@v2
+        with:
+          path: "meta-dts-ce-rebuild"
+      - name: Build DTS image
+        shell: bash
+        run: |
+          sed -i '/cache.yml/d' meta-dts-ce/kas.yml
+          kas-container shell meta-dts-ce/kas.yml -c "bitbake dts-base-image-ce"
+  deploy-cache:
+    name: Deploy cache on cache.dasharo.com
+    if: always()
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Prepare SSH key
+        shell: bash
+        env:
+          SSH_KEY: ${{secrets.SSH_KEY}}
+        run: |
+          echo -e ${SSH_KEY} | sed 's/^ *//' > ~/.ssh/dts-ci.tmp
+          chmod 600 ~/.ssh/dts-ci.tmp
+      - name: Send sstate-cache folder to cache.dasharo.com
+        shell: bash
+        run: |
+          ssh -i ~/.ssh/dts-ci.tmp builder@10.1.40.2 "mkdir -p cache/yocto/dts"
+          rsync -P -e "ssh -i ~/.ssh/dts-ci.tmp" -rlptD --delete build/sstate-cache builder@10.1.40.2:cache/yocto/dts
+      - name: Send downloads folder to cache.dasharo.com
+        shell: bash
+        run: |
+          rsync -P -e "ssh -i ~/.ssh/dts-ci.tmp" -rlptD --delete build/downloads builder@10.1.40.2:cache/yocto/dts
+  cleanup:
+    name: Cleanup
+    if: always()
+    needs: [deploy-cache, deploy-images]
+    runs-on: self-hosted
+    steps:
+      - name: Cleanup after deployment
+        shell: bash
+        run: |
+          rm -rf ~/.ssh/dts-ci.tmp
+          rm -rf build
