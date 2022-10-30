@@ -11,6 +11,4 @@ SRC_URI[sha256sum] = "234119dd92780c67cce3b664e86119c41d0b2af188d7f372b69789b32c
 
 S = "${WORKDIR}/uefi_firmware-1.9"
 
-RDEPENDS_${PN} = ""
-
 inherit setuptools3
