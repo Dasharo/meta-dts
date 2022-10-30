@@ -141,6 +141,7 @@ while : ; do
           echo "Thank you for contributing to the Dasharo development! "
           ;;
           *)
+          export SEND_LOGS="false"
           echo "Logs will be saved in root directory."
           echo "Please consider supporting Dasharo by sending the logs next time."
           ;;
