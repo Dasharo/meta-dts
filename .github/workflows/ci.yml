@@ -13,12 +13,12 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: "meta-dts-ce-rebuild"
-      - name: Build DTS CE image
+      - name: Build DTS image
         shell: bash
         run: |
           kas-container shell meta-dts-ce/kas.yml -c "bitbake dts-base-image-ce"
   deploy-images:
-    name: Deploy DTS-CE images on boot.dasharo.com
+    name: Deploy DTS artifacts on boot.dasharo.com
     if: always()
     needs: build
     runs-on: self-hosted
@@ -30,13 +30,13 @@ jobs:
         run: |
           echo -e ${SSH_KEY} | sed 's/^ *//' > ~/.ssh/dts-ci.tmp
           chmod 600 ~/.ssh/dts-ci.tmp
-      - name: Get DTS-CE version
+      - name: Get DTS version
         id: dts-ver
         shell: bash
         run: |
           DTS_VER=`cat meta-dts-ce/meta-dts-distro/conf/distro/dts-distro.conf | grep DISTRO_VERSION | tr -d "\" [A-Z]_="`
           echo "DTS_VER=${DTS_VER}" >> $GITHUB_OUTPUT
-      - name: Deploy DTS-CE on boot.dasharo.com
+      - name: Deploy DTS on boot.dasharo.com
         shell: bash
         run: |
           DTS_VER="${{steps.dts-ver.outputs.DTS_VER}}"
