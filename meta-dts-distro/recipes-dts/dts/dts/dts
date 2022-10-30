@@ -25,7 +25,7 @@ check_os_version() {
     echo "  Download key:    " ${CLOUDSEND_DOWNLOAD_URL}
     echo "  Password:        " ${CLOUDSEND_PASSWORD}
   fi
-  echo "  DTS CE version v${os_version}"
+  echo "  DTS version v${os_version}"
 }
 
 print_disclaimer() {
@@ -98,7 +98,7 @@ logs_sent=""
 
 Cloud_base_url="https://cloud.3mdeb.com/index.php/s/"
 
-# base values for CE
+# base values
 export CLOUDSEND_LOGS_URL="39d4biH4SkXD8Zm"
 export CLOUDSEND_PASSWORD="1{\[\k6G"
 
@@ -157,8 +157,8 @@ while : ; do
         if [ -z "${logs_sent}" ]; then
           export SEND_LOGS="true"
           if ! ${CMD_DASHARO_HCL_REPORT} > /dev/null 2>&1; then
-            echo -e "Something may be wrong with credentials. Please use option 4 to change SE keys
-                      \rand make sure that there is no typo."
+            echo -e "Cannot reach 3mdeb cloud to leave HCL report. Please
+                      \rrecheck your internet connection."
           else
             logs_sent="1"
           fi
