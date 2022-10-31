@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: Checkout meta-dts-ce repo
         uses: actions/checkout@v2
+        with:
+          path: "meta-dts-ce"
       - name: Build DTS image
         shell: bash
         run: |
