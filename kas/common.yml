@@ -2,7 +2,7 @@ header:
   version: 11
 
 repos:
-  meta-dts-ce:
+  meta-dts:
     layers:
       meta-dts-distro:
 

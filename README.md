@@ -1,4 +1,4 @@
-# meta-dts-ce
+# meta-dts
 
 ## Prerequisites
 
@@ -6,49 +6,33 @@
 
 * [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/) installed
 
-* [kas-container 2.6.3](https://raw.githubusercontent.com/siemens/kas/2.6.3/kas-container)
+* [kas-container 3.0.2](https://raw.githubusercontent.com/siemens/kas/3.0.2/kas-container)
   script downloaded and available in [PATH](https://en.wikipedia.org/wiki/PATH_(variable))
 
 ```bash
-wget -O ~/bin/kas-container https://raw.githubusercontent.com/siemens/kas/2.6.3/kas-container
+wget -O ~/bin/kas-container https://raw.githubusercontent.com/siemens/kas/3.0.2/kas-container
 ```
 
 ```bash
 chmod +x ~/bin/kas-container
 ```
 
-* `meta-dts-ce` repository cloned
+* `meta-dts` repository cloned
 
 ```bash
 mkdir yocto && cd yocto
 ```
 
 ```bash
-git clone https://github.com/Dasharo/meta-dts-ce.git
+git clone https://github.com/Dasharo/meta-dts.git
 ```
-
-or if you have SSH access:
-
-```bash
-git clone git@github.com:Dasharo/meta-dts-ce.git
-```
-
-* [bmaptool](https://source.tizen.org/documentation/reference/bmaptool) installed
-
-```bash
-sudo apt install bmap-tools
-```
-
-> You can also use `bmap-tools`
-> [from github](https://github.com/intel/bmap-tools) if it is not available in
-> your distro.
 
 ## Build
 
 From `yocto` directory run:
 
 ```shell
-$ SHELL=/bin/bash kas-container build meta-dts-ce/kas.yml
+$ SHELL=/bin/bash kas-container build meta-dts/kas.yml
 ```
 
 - Image build takes time, so be patient and after build's finish you should see
@@ -85,31 +69,34 @@ damage your system!.**
 - From where you ran image build type:
 
 ```shell
-$ cd build/tmp/deploy/images/genericx86-64
-$ sudo umount /dev/sdx*
-$ sudo bmaptool copy --nobmap dts-base-image-ce-genericx86-64.wic.gz /dev/sdx
+sudo umount /dev/sdx*
 ```
-
-and you should see output similar to this (the exact size number may differ):
 
 ```shell
-bmaptool: info: no bmap given, copy entire image to '/dev/sdx'
-/
-bmaptool: info: synchronizing '/dev/sdx'
-bmaptool: info: copying time: 33.2s, copying speed 31.9 MiB/sec
+cd build/tmp/deploy/images/genericx86-64
 ```
 
+Here the file `dts-base-image-genericx86-64.wic.gz` should be available which
+is the image of DTS. To flash image you can use the same command as showed in
+[running
+section](https://docs.dasharo.com/dasharo-tools-suite/documentation/#launching-dts_1),
+just change the file name.
 - Boot the platform
 
 ## Supported Hardware
 
-Below are list of platforms on which the operation of Dasharo Tools Suite has
-been confirmed.
+Dasharo Tools Suite was prepared to run on x86 platforms, but we can confirm
+that it boots on the following platforms:
 
-* **CE**
-  - NovaCustom NV4x
-  - Dell OptiPlex 7010/9010
-  - NS50 70MU
+* ASUS KGPE-D16
+* Dell OptiPlex 7010/9010
+* MSI PRO Z690-A DDR4 ([test
+  report](https://docs.google.com/spreadsheets/d/16wokQYhtS7XA1DQC3Om7FY-IImG6SZisGK7NnzyRGVY/edit#gid=0&range=A75))
+* NovaCustom NV4x ([test
+  report](https://docs.google.com/spreadsheets/d/1LOXY9HCu-fMitkYwX08iLsQdSNenzyU0LnMdVbZB5Do/edit#gid=536764189&range=A161))
+* NovaCustom NS5x/7x ([test
+  report](https://docs.google.com/spreadsheets/d/1LOXY9HCu-fMitkYwX08iLsQdSNenzyU0LnMdVbZB5Do/edit#gid=38447675&range=A174))
+* Protectli FW6/VP46xx
 
 ## Reporting issues
 

@@ -8,15 +8,15 @@ jobs:
     name: Build system image without using cache
     runs-on: self-hosted
     steps:
-      - name: Checkout meta-dts-ce repo
+      - name: Checkout meta-dts repo
         uses: actions/checkout@v2
         with:
-          path: "meta-dts-ce"
+          path: "meta-dts"
       - name: Build DTS image
         shell: bash
         run: |
-          sed -i '/cache.yml/d' meta-dts-ce/kas.yml
-          kas-container shell meta-dts-ce/kas.yml -c "bitbake dts-base-image-ce"
+          sed -i '/cache.yml/d' meta-dts/kas.yml
+          kas-container build meta-dts/kas.yml
   deploy-cache:
     name: Deploy cache on cache.dasharo.com
     if: always()

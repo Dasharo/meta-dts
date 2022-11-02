@@ -7,4 +7,4 @@ header:
 distro: dts-distro
 machine: genericx86-64
 target:
-  - dts-base-image-ce
+  - dts-base-image
