@@ -21,6 +21,7 @@ repos:
       meta-oe:
       meta-networking:
       meta-python:
+      meta-perl:
 
   meta-security:
     url: https://git.yoctoproject.org/git/meta-security
@@ -33,6 +34,8 @@ repos:
     refspec: fa438247c3e61d7f746687d85ef3b0dd66dc6b3f
     layers:
       meta-efi-secure-boot:
+      meta:
+      meta-signing-key:
 
 bblayers_conf_header:
   standard: |
