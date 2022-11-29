@@ -278,7 +278,7 @@ filename+=" $(dmidecode -s bios-version)"
 # MAC address of device that is used to connect the internet
 # it could return none only when there is no internet connection but
 # in those cases report will be stored locally only
-uuid_string=`cat /sys/class/net/$(ip route show default | awk '/default/ {print $5}')/address`
+uuid_string=`cat /sys/class/net/$(ip route show default | head -1 | awk '/default/ {print $5}')/address`
 # next two values are hardware related so they will be always the same
 uuid_string+="_$(dmidecode -s system-product-name)"
 uuid_string+="_$(dmidecode -s system-manufacturer)"
@@ -294,8 +294,8 @@ filename="${filename// /_}"
 echo "Creating archive with logs..."
 
 # remove MAC address from logs as sensitive data
-MAC_ADDR=`cat /sys/class/net/$(ip route show default | awk '/default/ {print $5}')/address`
-grep -rl ${MAC_ADDR} logs | xargs sed -i 's/'${MAC_ADDR}'/MAC ADDRESS REMOVED/g'
+MAC_ADDR=`cat /sys/class/net/$(ip route show default | head -1 | awk '/default/ {print $5}')/address`
+grep -rl "${MAC_ADDR}" logs | xargs sed -i 's/'${MAC_ADDR}'/MAC ADDRESS REMOVED/g'
 tar -zcf "$filename.tar.gz" logs/*
 rm -rf logs
 
