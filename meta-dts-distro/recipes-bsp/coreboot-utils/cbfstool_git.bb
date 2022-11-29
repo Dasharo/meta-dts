@@ -1,7 +1,7 @@
 require coreboot-utils.inc
 
 SRC_URI += " \
-    file://0001-.gitmodules-Switch-to-HTTPS-links.patch \
+    file://0001-.gitmodules-switch-to-HTTPS-links.patch \
 "
 
 TARGET_CC_ARCH += "${LDFLAGS}"

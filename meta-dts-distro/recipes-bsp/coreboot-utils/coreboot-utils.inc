@@ -6,9 +6,9 @@ LICENSE = "LGPL-2.1-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
 SRC_URI = " \
-    git://github.com/Dasharo/coreboot.git;protocol=https;branch=coreboot-utils \
+    git://github.com/Dasharo/coreboot.git;protocol=https;branch=utils-patches \
     "
 
-SRCREV = "3ab63163007c0be7c8d93948f29a409055cda66c"
+SRCREV = "1d1be231f152525fbe1740a77b361132c39b5be8"
 
 S = "${WORKDIR}/git"
