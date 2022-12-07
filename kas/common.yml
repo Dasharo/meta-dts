@@ -36,6 +36,7 @@ repos:
       meta-efi-secure-boot:
       meta:
       meta-signing-key:
+      meta-tpm2:
 
 bblayers_conf_header:
   standard: |
