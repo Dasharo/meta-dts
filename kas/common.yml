@@ -21,22 +21,12 @@ repos:
       meta-oe:
       meta-networking:
       meta-python:
-      meta-perl:
 
   meta-security:
     url: https://git.yoctoproject.org/git/meta-security
     refspec: c79262a30bd385f5dbb009ef8704a1a01644528e
     layers:
       meta-tpm:
-
-  meta-secure-core:
-    url: https://github.com/jiazhang0/meta-secure-core
-    refspec: fa438247c3e61d7f746687d85ef3b0dd66dc6b3f
-    layers:
-      meta-efi-secure-boot:
-      meta:
-      meta-signing-key:
-      meta-tpm2:
 
 bblayers_conf_header:
   standard: |
