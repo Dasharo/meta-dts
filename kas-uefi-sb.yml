@@ -1,0 +1,29 @@
+header:
+  version: 11
+  includes:
+    - kas/common.yml
+    - kas/cache.yml
+
+distro: dts-sb-distro
+machine: genericx86-64
+target:
+  - dts-base-sb-image
+
+repos:
+  meta-secure-core:
+    url: https://github.com/jiazhang0/meta-secure-core
+    refspec: fa438247c3e61d7f746687d85ef3b0dd66dc6b3f
+    layers:
+      meta-efi-secure-boot:
+      meta:
+      meta-signing-key:
+      meta-tpm2:
+
+  meta-openembedded:
+    url: https://git.openembedded.org/meta-openembedded
+    refspec: 0b78362654262145415df8211052442823b9ec9b
+    layers:
+      meta-oe:
+      meta-networking:
+      meta-python:
+      meta-perl:

@@ -45,6 +45,36 @@ NOTE: Executing Tasks
 NOTE: Tasks Summary: Attempted 2532 tasks of which 2524 didn't need to be rerun and all succeeded.
 ```
 
+### Build image with UEFI Secure Boot support
+
+From `yocto` directory run:
+
+```shell
+$ SHELL=/bin/bash kas-container build meta-dts/kas-uefi-sb.yml
+```
+
+- Image build takes time, so be patient and after build's finish you should see
+something similar to (the exact tasks numbers may differ):
+
+```shell
+Initialising tasks: 100% |###########################################################################################| Time: 0:00:04
+Checking sstate mirror object availability: 100% |###################################################################| Time: 0:00:03
+Sstate summary: Wanted 892 Local 672 Mirrors 212 Missed 8 Current 1560 (99% match, 99% complete)
+NOTE: Executing Tasks
+NOTE: Tasks Summary: Attempted 5860 tasks of which 5841 didn't need to be rerun and all succeeded.
+```
+
+Image created with `kas-uefi-sb.yml` configuration file enable integration of
+UEFI Secure Boot into DTS using
+[meta-secure-core](https://github.com/jiazhang0/meta-secure-core/). Building the
+image allow to prepare a PoC version with [uses sample
+keys](https://github.com/jiazhang0/meta-secure-core/tree/master/meta-efi-secure-boot#sample-keys)
+which by no mean should used in production. For user keys the script
+[create-user-key-store.sh](https://github.com/jiazhang0/meta-secure-core/blob/master/meta-signing-key/scripts/create-user-key-store.sh
+can be used but it was not tested yet. Quick start with instructions on how to
+use image are described in
+[meta-efi-secure-boot](https://github.com/jiazhang0/meta-secure-core/tree/master/meta-efi-secure-boot#quick-start-for-the-first-boot).
+
 ## Flash
 
 - Find out your device name:
