@@ -1,6 +1,6 @@
 DESCRIPTION = "dts image"
 
-IMAGE_FEATURES += "ssh-server-openssh"
+IMAGE_FEATURES += "ssh-server-openssh debug-tweaks"
 
 LICENSE = "MIT"
 
