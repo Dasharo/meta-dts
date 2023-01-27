@@ -1,0 +1,10 @@
+[Unit]
+Description=iPXE commands autostart on boot
+ConditionPathExists=/sbin/ipxe-commands
+
+[Service]
+Type=simple
+ExecStart=/bin/bash /sbin/ipxe-commands
+
+[Install]
+WantedBy=multi-user.target
