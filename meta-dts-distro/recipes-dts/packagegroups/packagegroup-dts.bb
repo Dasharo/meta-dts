@@ -21,6 +21,7 @@ RDEPENDS:${PN}-system = " \
     chronyc \
     gnupg \
     wget \
+    ipxe-commands \
 "
 
 RDEPENDS:${PN}-tests = " \
