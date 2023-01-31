@@ -77,8 +77,10 @@ it5570_shutdown() {
 # not used anymore, we save packages with fw as fw_backup.tar.gz
 # commented out as it may be use later, maybe for uploading the backup
 # to the cloud
-#BIOS_VENDOR=$(dmidecode -s bios-vendor)
-#BIOS_VERSION=$(dmidecode -s bios-version)
+BIOS_VENDOR=$(dmidecode -s bios-vendor)
+BIOS_VERSION=$(dmidecode -s bios-version)
+
+
 BOARD_VENDOR="$(dmidecode -s system-manufacturer)"
 BOARD_MODEL="$(dmidecode -s system-product-name)"
 BIOS_UPDATE_DIR="/tmp/biosupdate.rom"
@@ -104,13 +106,28 @@ SERIAL_NUMBER_DIR="/tmp/serial_number.txt"
 PROGRAMMER_BIOS="internal"
 PROGRAMMER_EC="ite_ec"
 
+DASHARO_VENDOR="3mdeb"
+DASHARO_NAME="Dasharo"
+
+look_for_dasharo() {
+  if [[ $BIOS_VENDOR == *$DASHARO_VENDOR* && $BIOS_VERSION == *$DASHARO_NAME* ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+if look_for_dasharo; then
+  error_exit "Dasharo Firmware is already installed. This script is only for\r
+initial deployment of Dasharo Firmware. Aborting..."
+fi
+
 [ -z "$BOARD_VENDOR" ] && error_exit "BOARD_VENDOR not given"
 [ -z "$BOARD_MODEL" ] && error_exit "BOARD_MODEL not given"
 
 CMD="$1"
 CMD_POWEROFF="/sbin/poweroff"
 CMD_CLOUD_LIST="/usr/sbin/cloud_list"
-
 board_config() {
   case "$BOARD_VENDOR" in
     "Notebook")
