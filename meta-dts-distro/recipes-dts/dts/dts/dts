@@ -17,6 +17,20 @@ BOARD_MODEL="$(dmidecode -s system-product-name)"
 
 SE_credential_file="/etc/cloud-pass"
 
+BIOS_VENDOR="$(dmidecode -s bios-vendor)"
+BIOS_VERSION="$(dmidecode -s bios-version)"
+
+DASHARO_VENDOR="3mdeb"
+DASHARO_NAME="Dasharo"
+
+look_for_dasharo() {
+  if [[ $BIOS_VENDOR == *$DASHARO_VENDOR* && $BIOS_VERSION == *$DASHARO_NAME* ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
 check_os_version() {
   local os_version=$(grep "VERSION_ID" ${OS_VERSION_FILE} | cut -d "=" -f 2-)
 
@@ -114,7 +128,9 @@ while : ; do
   check_os_version
   echo
   echo "  1) Dasharo HCL report - dump hardware information from this device"
-  echo "  2) Install Dasharo firmware"
+  if ! look_for_dasharo; then
+    echo "  2) Install Dasharo firmware"
+  fi
   echo "  3) Restore firmware from Dasharo HCL report"
   if [ -n "${SE_IS_LOGGED}" ]; then
       echo "  4) Edit SE keys"
@@ -153,15 +169,17 @@ while : ; do
       fi
       ;;
     2)
-      if check_network_connection; then
-        echo "Preparing ..."
-        if [ -z "${logs_sent}" ]; then
-          export SEND_LOGS="true"
-          if ! ${CMD_DASHARO_HCL_REPORT} > /dev/null 2>&1; then
-            echo -e "Cannot reach 3mdeb cloud to leave HCL report. Please
-                      \rrecheck your internet connection."
-          else
-            logs_sent="1"
+      if ! look_for_dasharo; then
+        if check_network_connection; then
+          echo "Preparing ..."
+          if [ -z "${logs_sent}" ]; then
+            export SEND_LOGS="true"
+            if ! ${CMD_DASHARO_HCL_REPORT} > /dev/null 2>&1; then
+              echo -e "Cannot reach 3mdeb cloud to leave HCL report. Please
+                        \rrecheck your internet connection."
+            else
+              logs_sent="1"
+            fi
           fi
         fi
       fi
