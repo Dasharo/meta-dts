@@ -148,18 +148,28 @@ board_config() {
       ;;
     "Micro-Star International Co., Ltd.")
       case "$SYSTEM_MODEL" in
-        "MS-7D25" | "PRO Z690-A WIFI DDR4(MS-7D25)")
-          DASHARO_REL_NAME="msi_ms7d25"
-          DASHARO_REL_VER="1.0.0"
-          BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
-          HAVE_EC="false"
-          NEED_EC_RESET="false"
-          BIOS_HASH_PROD="adee8e0f3c71f40a4d834eafc18231f20924f12dc4ab35b01d9c683b34b32626  $BIOS_UPDATE_DIR"
-          NEED_SMBIOS_MIGRATION="true"
-          NEED_BLOB_TRANSMISSION="false"
-          PROGRAMMER_BIOS="internal"
-          PROGRAMMER_EC=""
-          FLASHROM_ADD_OPT="--ifd -i bios"
+        "MS-7D25")
+          case "$BOARD_MODEL" in
+             "PRO Z690-A WIFI DDR4(MS-7D25)" | "PRO Z690-A DDR4(MS-7D25)")
+                DASHARO_REL_NAME="msi_ms7d25"
+                DASHARO_REL_VER="1.0.0"
+                BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
+                HAVE_EC="false"
+                NEED_EC_RESET="false"
+                BIOS_HASH_PROD="adee8e0f3c71f40a4d834eafc18231f20924f12dc4ab35b01d9c683b34b32626  $BIOS_UPDATE_DIR"
+                NEED_SMBIOS_MIGRATION="true"
+                NEED_BLOB_TRANSMISSION="false"
+                PROGRAMMER_BIOS="internal"
+                PROGRAMMER_EC=""
+                FLASHROM_ADD_OPT="--ifd -i bios"
+                ;;
+            "PRO Z690-A WIFI (MS-7D25)" | "PRO Z690-A (MS-7D25)")
+              error_exit "Board model $BOARD_MODEL (DDR5 variant) is currently not supported"
+              ;;
+            *)
+              error_exit "Board model $BOARD_MODEL is currently not supported"
+              ;;
+          esac
           ;;
         *)
           error_exit "Board model $SYSTEM_MODEL is currently not supported"
