@@ -150,21 +150,31 @@ board_config() {
       case "$SYSTEM_MODEL" in
         "MS-7D25")
           case "$BOARD_MODEL" in
-             "PRO Z690-A WIFI DDR4(MS-7D25)" | "PRO Z690-A DDR4(MS-7D25)")
-                DASHARO_REL_NAME="msi_ms7d25"
-                DASHARO_REL_VER="1.0.0"
-                BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
-                HAVE_EC="false"
-                NEED_EC_RESET="false"
-                BIOS_HASH_PROD="adee8e0f3c71f40a4d834eafc18231f20924f12dc4ab35b01d9c683b34b32626  $BIOS_UPDATE_DIR"
-                NEED_SMBIOS_MIGRATION="true"
-                NEED_BLOB_TRANSMISSION="false"
-                PROGRAMMER_BIOS="internal"
-                PROGRAMMER_EC=""
-                FLASHROM_ADD_OPT="--ifd -i bios"
-                ;;
+            "PRO Z690-A WIFI DDR4(MS-7D25)" | "PRO Z690-A DDR4(MS-7D25)")
+              DASHARO_REL_NAME="msi_ms7d25"
+              DASHARO_REL_VER="1.0.0"
+              BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
+              HAVE_EC="false"
+              NEED_EC_RESET="false"
+              BIOS_HASH_PROD="adee8e0f3c71f40a4d834eafc18231f20924f12dc4ab35b01d9c683b34b32626  $BIOS_UPDATE_DIR"
+              NEED_SMBIOS_MIGRATION="true"
+              NEED_BLOB_TRANSMISSION="false"
+              PROGRAMMER_BIOS="internal"
+              PROGRAMMER_EC=""
+              FLASHROM_ADD_OPT="--ifd -i bios"
+              ;;
             "PRO Z690-A WIFI (MS-7D25)" | "PRO Z690-A (MS-7D25)")
-              error_exit "Board model $BOARD_MODEL (DDR5 variant) is currently not supported"
+              DASHARO_REL_NAME="msi_ms7d25"
+              DASHARO_REL_VER="1.1.0"
+              BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_ddr5.rom"
+              HAVE_EC="false"
+              NEED_EC_RESET="false"
+              BIOS_HASH_PROD="b7a0ca05a860c27c8357ed29c51317f1c2ace0590f073f65978296d2036e68dd  $BIOS_UPDATE_DIR"
+              NEED_SMBIOS_MIGRATION="true"
+              NEED_BLOB_TRANSMISSION="false"
+              PROGRAMMER_BIOS="internal"
+              PROGRAMMER_EC=""
+              FLASHROM_ADD_OPT="--ifd -i bios"
               ;;
             *)
               error_exit "Board model $BOARD_MODEL is currently not supported"
@@ -271,6 +281,7 @@ ask_for_version()
     echo
     echo "Please, select Dasharo firmware version to install"
 
+    # -v: True if the shell variable varname is set (has been assigned a value).
     if [ -v BIOS_HASH_PROD ]; then
       echo "  p) Production version"
     fi
@@ -308,6 +319,60 @@ ask_for_version()
         fi
         ;;
       b|B)
+        echo "Returning to main menu..."
+        exit 0
+        ;;
+      *)
+        ;;
+    esac
+  done
+}
+
+display_flashing_warning() {
+  while : ; do
+    echo
+    echo "Please, verify detected hardware! Does it match your actual specification? (Y|n)"
+    echo
+
+    if [ -v BOARD_VENDOR ]; then
+      echo "Board vendor: $BOARD_VENDOR"
+    fi
+    if [ -v SYSTEM_MODEL ]; then
+      echo "System model: $SYSTEM_MODEL"
+    fi
+    if [ -v BOARD_MODEL ]; then
+      echo "Board model: $BOARD_MODEL"
+    fi
+    echo
+    read -r -p "Enter an option: " OPTION
+    echo
+
+    case ${OPTION} in
+      yes|y|Y|Yes|YES)
+        continue
+        ;;
+      n|N)
+        echo "Returning to main menu..."
+        exit 0
+        ;;
+      *)
+        ;;
+    esac
+  done
+
+  while : ; do
+    echo
+    echo "Do you want to install Dasharo Firmware on your hardware? (Y|n)"
+
+    echo
+    read -r -p "Enter an option: " OPTION
+    echo
+
+    case ${OPTION} in
+      yes|y|Y|Yes|YES)
+        continue
+        ;;
+      n|N)
         echo "Returning to main menu..."
         exit 0
         ;;
@@ -468,20 +533,7 @@ blob_transmission()
 
 install() {
   ask_for_version
-  print_green "Information about detected hardware:"
-  print_warning "System manufacturer: $BOARD_VENDOR"
-  print_warning "System product name: $SYSTEM_MODEL"
-  print_warning "Baseboard product name: $BOARD_MODEL"
-  read -p "Do you want to initially deploy Dasharo Firmware on this platform? [N/y] "
-  case ${REPLY} in
-    yes|y|Y|Yes|YES)
-    continue
-    ;;
-  *)
-    echo "Returning to main menu..."
-    exit 0
-    ;;
-  esac
+  display_flashing_warning
   echo "Downloading update"
   curl -f "$BIOS_LINK" -o $BIOS_UPDATE_DIR
   error_check "Cannot access $FW_STORE_URL. Please check your internet
