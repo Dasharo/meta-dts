@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 BOARD_VENDOR="$(dmidecode -s system-manufacturer)"
-BOARD_MODEL="$(dmidecode -s system-product-name)"
+SYSTEM_MODEL="$(dmidecode -s system-product-name)"
+BOARD_MODEL="$(dmidecode -s baseboard-product-name)"
 
 BIOS_VENDOR="$(dmidecode -s bios-vendor)"
 BIOS_VERSION="$(dmidecode -s bios-version)"

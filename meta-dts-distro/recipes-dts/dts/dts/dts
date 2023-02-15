@@ -70,7 +70,7 @@ vendor_menu()
 {
   case "$BOARD_VENDOR" in
     "Notebook")
-      case "$BOARD_MODEL" in
+      case "$SYSTEM_MODEL" in
       "NV4XMB,ME,MZ" | "NS50_70MU")
         case "$1" in
           "print")
@@ -116,7 +116,9 @@ while : ; do
   if ! check_if_dasharo; then
     echo "  2) Install Dasharo firmware"
   fi
-  echo "  3) Restore firmware from Dasharo HCL report"
+  if check_if_dasharo; then
+    echo "  3) Restore firmware from Dasharo HCL report"
+  fi
   if [ -n "${SE_IS_LOGGED}" ]; then
       echo "  4) Edit SE keys"
       echo "  5) Update Dasharo firmware"
@@ -174,7 +176,9 @@ while : ; do
       fi
       ;;
     3)
-      ${CMD_DASHARO_DEPLOY} restore
+      if check_if_dasharo; then
+        ${CMD_DASHARO_DEPLOY} restore
+      fi
       ;;
     4)
       echo ""
