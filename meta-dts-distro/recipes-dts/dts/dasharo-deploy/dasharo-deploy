@@ -460,8 +460,8 @@ install() {
   ask_for_version
   print_green "Information about detected hardware:"
   print_warning "System manufacturer: $BOARD_VENDOR"
-  print_warning "System product name: $BOARD_VENDOR"
-  print_warning "Baseboard product name: $BOARD_VENDOR"
+  print_warning "System product name: $SYSTEM_MODEL"
+  print_warning "Baseboard product name: $BOARD_MODEL"
   read -p "Do you want to initially deploy Dasharo Firmware on this platform? [N/y] "
   case ${REPLY} in
     yes|y|Y|Yes|YES)
@@ -572,7 +572,7 @@ restore() {
         echo
         echo "Searching for HCL report on device..."
 
-        HCL_REPORT_PACKAGE="$(find / -name *$uuid* | head -n1)"
+        HCL_REPORT_PACKAGE="$(find / -name "*$uuid*" | head -n1)"
         if [ ! -z $HCL_REPORT_PACKAGE ]; then
           tar -zxf "$HCL_REPORT_PACKAGE" -C /tmp
           echo "Restoring BIOS firmware..."
