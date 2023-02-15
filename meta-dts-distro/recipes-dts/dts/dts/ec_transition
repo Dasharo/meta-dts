@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+source /usr/sbin/dts-environment.sh
+source /usr/sbin/dts-functions.sh
+
 error_exit() {
   _error_msg="$1"
   echo "$_error_msg"
@@ -70,7 +73,7 @@ check_network_connection() {
 board_config() {
   case "$BOARD_VENDOR" in
     "Notebook")
-      case "$BOARD_MODEL" in
+      case "$SYSTEM_MODEL" in
         "NS50_70MU")
           HAVE_EC="true"
           NEED_EC_RESET="true"
@@ -94,7 +97,7 @@ board_config() {
           EC_LINK="https://cloud.3mdeb.com/index.php/s/9S5Tmy6kwFjpcNm/download"
           ;;
         *)
-          error_exit "Board model $BOARD_MODEL is currently not supported"
+          error_exit "Board model $SYSTEM_MODEL is currently not supported"
 	;;
       esac
       ;;
@@ -170,12 +173,10 @@ usage() {
   exit 1
 }
 
-BOARD_VENDOR="$(dmidecode -s system-manufacturer)"
-BOARD_MODEL="$(dmidecode -s system-product-name)"
 ROOT_DIR="/"
 
 [ -z "$BOARD_VENDOR" ] && error_exit "BOARD_VENDOR not given"
-[ -z "$BOARD_MODEL" ] && error_exit "BOARD_MODEL not given"
+[ -z "$SYSTEM_MODEL" ] && error_exit "SYSTEM_MODEL not given"
 
 CMD_POWEROFF="/sbin/poweroff"
 

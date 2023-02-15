@@ -1,19 +1,18 @@
 #!/usr/bin/env bash
 
+source /usr/sbin/dts-environment.sh
+source /usr/sbin/dts-functions.sh
+
 trap : 2
 trap : 3
 
 CMD_DASHARO_HCL_REPORT="/usr/sbin/dasharo-hcl-report"
 CMD_SHELL="/bin/bash"
-CMD_POWEROFF="/sbin/poweroff"
 CMD_REBOOT="/sbin/reboot"
 CMD_NCMENU="/usr/sbin/novacustom_menu"
 CMD_DASHARO_DEPLOY="/usr/sbin/dasharo-deploy"
 
 OS_VERSION_FILE="/etc/os-release"
-
-BOARD_VENDOR="$(dmidecode -s system-manufacturer)"
-BOARD_MODEL="$(dmidecode -s system-product-name)"
 
 SE_credential_file="/etc/cloud-pass"
 
@@ -71,7 +70,7 @@ vendor_menu()
 {
   case "$BOARD_VENDOR" in
     "Notebook")
-      case "$BOARD_MODEL" in
+      case "$SYSTEM_MODEL" in
       "NV4XMB,ME,MZ" | "NS50_70MU")
         case "$1" in
           "print")
@@ -114,8 +113,12 @@ while : ; do
   check_os_version
   echo
   echo "  1) Dasharo HCL report - dump hardware information from this device"
-  echo "  2) Install Dasharo firmware"
-  echo "  3) Restore firmware from Dasharo HCL report"
+  if ! check_if_dasharo; then
+    echo "  2) Install Dasharo firmware"
+  fi
+  if check_if_dasharo; then
+    echo "  3) Restore firmware from Dasharo HCL report"
+  fi
   if [ -n "${SE_IS_LOGGED}" ]; then
       echo "  4) Edit SE keys"
       echo "  5) Update Dasharo firmware"
@@ -153,15 +156,17 @@ while : ; do
       fi
       ;;
     2)
-      if check_network_connection; then
-        echo "Preparing ..."
-        if [ -z "${logs_sent}" ]; then
-          export SEND_LOGS="true"
-          if ! ${CMD_DASHARO_HCL_REPORT} > /dev/null 2>&1; then
-            echo -e "Cannot reach 3mdeb cloud to leave HCL report. Please
-                      \rrecheck your internet connection."
-          else
-            logs_sent="1"
+      if ! check_if_dasharo; then
+        if check_network_connection; then
+          echo "Preparing ..."
+          if [ -z "${logs_sent}" ]; then
+            export SEND_LOGS="true"
+            if ! ${CMD_DASHARO_HCL_REPORT} > /dev/null 2>&1; then
+              echo -e "Cannot reach 3mdeb cloud to leave HCL report. Please
+                        \rrecheck your internet connection."
+            else
+              logs_sent="1"
+            fi
           fi
         fi
       fi
@@ -171,7 +176,9 @@ while : ; do
       fi
       ;;
     3)
-      ${CMD_DASHARO_DEPLOY} restore
+      if check_if_dasharo; then
+        ${CMD_DASHARO_DEPLOY} restore
+      fi
       ;;
     4)
       echo ""

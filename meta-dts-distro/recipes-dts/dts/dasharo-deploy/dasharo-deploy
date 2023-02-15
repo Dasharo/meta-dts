@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+source /usr/sbin/dts-environment.sh
+source /usr/sbin/dts-functions.sh
+
 COLOR_OFF='\033[0m'       # Text Reset
 RED='\033[0;31m'
 YELLOW='\033[0;33m'
@@ -74,13 +77,6 @@ it5570_shutdown() {
   it5570_i2ec w 0x1f07 0x01
 }
 
-# not used anymore, we save packages with fw as fw_backup.tar.gz
-# commented out as it may be use later, maybe for uploading the backup
-# to the cloud
-#BIOS_VENDOR=$(dmidecode -s bios-vendor)
-#BIOS_VERSION=$(dmidecode -s bios-version)
-BOARD_VENDOR="$(dmidecode -s system-manufacturer)"
-BOARD_MODEL="$(dmidecode -s system-product-name)"
 BIOS_UPDATE_DIR="/tmp/biosupdate.rom"
 BIOS_UPDATE_CONFIG_DIR="/tmp/biosupdate_config"
 EC_UPDATE_DIR="/tmp/ecupdate.rom"
@@ -105,16 +101,14 @@ PROGRAMMER_BIOS="internal"
 PROGRAMMER_EC="ite_ec"
 
 [ -z "$BOARD_VENDOR" ] && error_exit "BOARD_VENDOR not given"
-[ -z "$BOARD_MODEL" ] && error_exit "BOARD_MODEL not given"
+[ -z "$SYSTEM_MODEL" ] && error_exit "SYSTEM_MODEL not given"
 
 CMD="$1"
-CMD_POWEROFF="/sbin/poweroff"
 CMD_CLOUD_LIST="/usr/sbin/cloud_list"
-
 board_config() {
   case "$BOARD_VENDOR" in
     "Notebook")
-      case "$BOARD_MODEL" in
+      case "$SYSTEM_MODEL" in
         "NV4XMB,ME,MZ")
           DASHARO_REL_NAME="novacustom_nv4x"
           DASHARO_REL_VER="1.3.0"
@@ -148,12 +142,12 @@ board_config() {
           FLASHROM_ADD_OPT="--ifd -i bios"
           ;;
         *)
-          error_exit "Board model $BOARD_MODEL is currently not supported"
+          error_exit "Board model $SYSTEM_MODEL is currently not supported"
           ;;
       esac
       ;;
     "Micro-Star International Co., Ltd.")
-      case "$BOARD_MODEL" in
+      case "$SYSTEM_MODEL" in
         "MS-7D25" | "PRO Z690-A WIFI DDR4(MS-7D25)")
           DASHARO_REL_NAME="msi_ms7d25"
           DASHARO_REL_VER="1.0.0"
@@ -168,7 +162,7 @@ board_config() {
           FLASHROM_ADD_OPT="--ifd -i bios"
           ;;
         *)
-          error_exit "Board model $BOARD_MODEL is currently not supported"
+          error_exit "Board model $SYSTEM_MODEL is currently not supported"
           ;;
       esac
       ;;
@@ -187,7 +181,7 @@ board_config() {
       SINIT_ACM_HASH="b23c5e6bd70bdcfde4215a5a252e56c4966f0e06cacf388e654ca906c4ecdad1 $SINIT_ACM_FILENAME"
       SINIT_ACM="/tmp/630744_002/SNB_IVB_SINIT_20190708_PW.bin"
       FLASHROM_ADD_OPT="--ifd -i bios"
-      case "$BOARD_MODEL" in
+      case "$SYSTEM_MODEL" in
         "OptiPlex 7010")
           DBT_BIOS_UPDATE_FILENAME="/tmp/O7010A29.exe"
           DBT_BIOS_UPDATE_URL="https://dl.dell.com/FOLDER05066036M/1/O7010A29.exe"
@@ -205,20 +199,25 @@ board_config() {
           ACM_BIN="/tmp/_O9010A30.exe.extracted/65C10_output/pfsobject/section-7ec6c2b0-3fe3-42a0-a316-22dd0517c1e8/volume-0x500000/file-2d27c618-7dcd-41f5-bb10-21166be7e143/object-0.raw"
           ;;
         "Precision T1650")
-          DBT_BIOS_UPDATE_FILENAME="/tmp/T1650A28.exe"
-          DBT_BIOS_UPDATE_URL="https://dl.dell.com/FOLDER05065992M/1/T1650A28.exe"
-          DBT_BIOS_UPDATE_HASH="40a66210b8882f523885849c1d879e726dc58aa14718168b1e75f3e2caaa523b  $DBT_BIOS_UPDATE_FILENAME"
-          DBT_UEFI_IMAGE="/tmp/_T1650A28.exe.extracted/65C10"
-          SCH5545_FW="/tmp/_T1650A28.exe.extracted/65C10_output/pfsobject/section-7ec6c2b0-3fe3-42a0-a316-22dd0517c1e8/volume-0x60000/file-d386beb8-4b54-4e69-94f5-06091f67e0d3/section0.raw"
-          ACM_BIN="/tmp/_T1650A28.exe.extracted/65C10_output/pfsobject/section-7ec6c2b0-3fe3-42a0-a316-22dd0517c1e8/volume-0x500000/file-2d27c618-7dcd-41f5-bb10-21166be7e143/object-0.raw"
+          # tested on Dasharo Firmware for OptiPlex 9010, will need to be
+          # enabled when build for T1650 exists
+          #
+          # DBT_BIOS_UPDATE_FILENAME="/tmp/T1650A28.exe"
+          # DBT_BIOS_UPDATE_URL="https://dl.dell.com/FOLDER05065992M/1/T1650A28.exe"
+          # DBT_BIOS_UPDATE_HASH="40a66210b8882f523885849c1d879e726dc58aa14718168b1e75f3e2caaa523b  $DBT_BIOS_UPDATE_FILENAME"
+          # DBT_UEFI_IMAGE="/tmp/_T1650A28.exe.extracted/65C10"
+          # SCH5545_FW="/tmp/_T1650A28.exe.extracted/65C10_output/pfsobject/section-7ec6c2b0-3fe3-42a0-a316-22dd0517c1e8/volume-0x60000/file-d386beb8-4b54-4e69-94f5-06091f67e0d3/section0.raw"
+          # ACM_BIN="/tmp/_T1650A28.exe.extracted/65C10_output/pfsobject/section-7ec6c2b0-3fe3-42a0-a316-22dd0517c1e8/volume-0x500000/file-2d27c618-7dcd-41f5-bb10-21166be7e143/object-0.raw"
+          print_warning "Dasharo Firmware for Precision T1650 not available yet!"
+          error_exit "Board model $SYSTEM_MODEL is currently not supported"
           ;;
         *)
-          error_exit "Board model $BOARD_MODEL is currently not supported"
+          error_exit "Board model $SYSTEM_MODEL is currently not supported"
           ;;
       esac
       ;;
     "ASUS")
-      case "$BOARD_MODEL" in
+      case "$SYSTEM_MODEL" in
         "KGPE-D16")
           DASHARO_REL_NAME="asus_kgpe-d16"
           DASHARO_REL_VER="0.4.0"
@@ -246,7 +245,7 @@ board_config() {
           PROGRAMMER_BIOS="internal"
           ;;
         *)
-          error_exit "Board model $BOARD_MODEL is currently not supported"
+          error_exit "Board model $SYSTEM_MODEL is currently not supported"
           ;;
       esac
       ;;
@@ -312,8 +311,9 @@ backup() {
   rm -rf "$FW_BACKUP_DIR"
   mkdir -p "$FW_BACKUP_DIR"
 
-  echo "Backing up BIOS firmware..."
-  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r "${FW_BACKUP_DIR}"/bios.rom
+  echo "Backing up BIOS firmware and store it locally..."
+  echo "Remember that firmware is also backed up in HCL report."
+  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r "${FW_BACKUP_DIR}"/rom.bin
   error_check "Failed to read BIOS firmware backup"
 
   if [ "$HAVE_EC" = "true" ]; then
@@ -323,7 +323,7 @@ backup() {
       echo "Device has already Open Source Embedded Controller firmware, do not backup EC..."
     else
       echo "Backing up EC firmware..."
-      flashrom -p "$PROGRAMMER_EC" ${FLASH_CHIP_SELECT} -r "${FW_BACKUP_DIR}"/ec.rom
+      flashrom -p "$PROGRAMMER_EC" ${FLASH_CHIP_SELECT} -r "${FW_BACKUP_DIR}"/ec.bin
       error_check "Failed to read EC firmware backup"
     fi
   fi
@@ -333,7 +333,7 @@ backup() {
   error_check "Failed to create firmware backup archive"
   rm -rf "${FW_BACKUP_DIR}"
 
-  echo "Successfully backed up firmware at: $FW_BACKUP_TAR"
+  echo "Successfully backed up firmware locally at: $FW_BACKUP_TAR"
 }
 
 update_ec() {
@@ -409,10 +409,10 @@ blob_transmission()
 {
   echo "Extracting the UEFI image from BIOS update"
   wget -O "$DBT_BIOS_UPDATE_FILENAME" "$DBT_BIOS_UPDATE_URL" > /dev/null 2>&1
-  error_file_check "$DBT_BIOS_UPDATE_FILENAME" "Failed to download BIOS for $BOARD_MODEL"
+  error_file_check "$DBT_BIOS_UPDATE_FILENAME" "Failed to download BIOS for $SYSTEM_MODEL"
 
   sha256sum --check <(echo "$DBT_BIOS_UPDATE_HASH")
-  error_check "Failed SHA-256 sum check on the downloaded BIOS for $BOARD_MODEL"
+  error_check "Failed SHA-256 sum check on the downloaded BIOS for $SYSTEM_MODEL"
 
   binwalk --run-as=root -e "$DBT_BIOS_UPDATE_FILENAME" -C /tmp > /dev/null 2>&1
   error_file_check "$DBT_UEFI_IMAGE" "Failed to extract UEFI image from BIOS update"
@@ -458,6 +458,20 @@ blob_transmission()
 
 install() {
   ask_for_version
+  print_green "Information about detected hardware:"
+  print_warning "System manufacturer: $BOARD_VENDOR"
+  print_warning "System product name: $SYSTEM_MODEL"
+  print_warning "Baseboard product name: $BOARD_MODEL"
+  read -p "Do you want to initially deploy Dasharo Firmware on this platform? [N/y] "
+  case ${REPLY} in
+    yes|y|Y|Yes|YES)
+    continue
+    ;;
+  *)
+    echo "Returning to main menu..."
+    exit 0
+    ;;
+  esac
   echo "Downloading update"
   curl -f "$BIOS_LINK" -o $BIOS_UPDATE_DIR
   error_check "Cannot access $FW_STORE_URL. Please check your internet
@@ -528,6 +542,7 @@ restore() {
   while : ; do
     echo
     echo "Restoring firmware from HCL report."
+    echo "Take note that this will only restore BIOS firmware, no EC."
     echo "Please select one of available options."
 
     echo "  1) Check for HCL report stored locally"
@@ -557,19 +572,26 @@ restore() {
         echo
         echo "Searching for HCL report on device..."
 
-        HCL_REPORT_PACKAGE="$(find / -name *$uuid* | head -n1)"
+        HCL_REPORT_PACKAGE="$(find / -name "*$uuid*" | head -n1)"
         if [ ! -z $HCL_REPORT_PACKAGE ]; then
           tar -zxf "$HCL_REPORT_PACKAGE" -C /tmp
           echo "Restoring BIOS firmware..."
-          if [ -f "/tmp/logs/bios.rom" ]; then
-            # Write to entire flash when restoring
-            flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -w "/tmp/logs/bios.rom"
-
-            if [ "$HAVE_EC" = "true" ]; then
-              echo "Restoring EC firmware..."
-              flashrom -p "$PROGRAMMER_EC" ${FLASH_CHIP_SELECT} -w "/tmp/logs/ec.rom"
-            fi
-            print_green "Successfully restored firmware"
+          if [ -f "/tmp/logs/rom.bin" ]; then
+            # Write to entire flash when restoring, ask if user want to restore
+            print_green "Found $HCL_REPORT_PACKAGE"
+            read -p "Do you want to restore firmware from the given HCL report? [N/y] "
+            case ${REPLY} in
+                yes|y|Y|Yes|YES)
+                flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -w "/tmp/logs/rom.bin"
+                print_green "Successfully restored firmware"
+                echo "Returning to main menu..."
+                exit 0
+                ;;
+                *)
+                echo "Returning to main menu..."
+                exit 0
+                ;;
+            esac
           else
             print_error "Report does not have firmware backup!"
           fi
@@ -589,14 +611,10 @@ restore() {
         HCL_REPORT_PACKAGE="$(find / -name *$uuid* | head -n1)"
         tar -zxf "$HCL_REPORT_PACKAGE" -C /tmp
         echo "Restoring BIOS firmware..."
-        if [ -f "/tmp/logs/bios.rom" ]; then
+        if [ -f "/tmp/logs/rom.bin" ]; then
           # Write to entire flash when restoring
-          flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -w "/tmp/logs/bios.rom"
+          flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -w "/tmp/logs/rom.bin"
 
-          if [ "$HAVE_EC" = "true" ]; then
-            echo "Restoring EC firmware..."
-            flashrom -p "$PROGRAMMER_EC" ${FLASH_CHIP_SELECT} -w "/tmp/logs/ec.rom"
-          fi
           print_green "Successfully restored firmware"
         else
           print_error "Report does not have firmware backup!"
@@ -610,9 +628,6 @@ restore() {
         ;;
     esac
   done
-
-  tar -zxf "$FW_BACKUP_TAR" -C /tmp
-  error_check "Cannot decompress package with backup firmware"
 }
 
 check_flash_chip() {
@@ -656,6 +671,10 @@ board_config
 
 case "$CMD" in
   install)
+    if check_if_dasharo; then
+      error_exit "Dasharo Firmware is already installed. This script is only for\r
+        initial deployment of Dasharo Firmware. Aborting..."
+    fi
     backup
     install
     ;;
@@ -663,6 +682,10 @@ case "$CMD" in
     backup
     ;;
   restore)
+    if ! check_if_dasharo; then
+      error_exit "Dasharo Firmware is not installed. This script is only for\r
+        restoring original firmware on platforms that runs Dasharo Firmware. Aborting..."
+    fi
     restore
     ;;
   *)
