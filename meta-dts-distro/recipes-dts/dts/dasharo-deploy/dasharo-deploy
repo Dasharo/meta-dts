@@ -349,7 +349,7 @@ display_flashing_warning() {
 
     case ${OPTION} in
       yes|y|Y|Yes|YES)
-        continue
+        break
         ;;
       n|N)
         echo "Returning to main menu..."
@@ -370,7 +370,7 @@ display_flashing_warning() {
 
     case ${OPTION} in
       yes|y|Y|Yes|YES)
-        continue
+        break
         ;;
       n|N)
         echo "Returning to main menu..."
