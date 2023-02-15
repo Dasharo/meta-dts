@@ -32,7 +32,7 @@ git clone https://github.com/Dasharo/meta-dts.git
 From `yocto` directory run:
 
 ```shell
-$ SHELL=/bin/bash kas-container build meta-dts/kas.yml
+SHELL=/bin/bash kas-container build meta-dts/kas.yml
 ```
 
 - Image build takes time, so be patient and after build's finish you should see
@@ -50,7 +50,7 @@ NOTE: Tasks Summary: Attempted 2532 tasks of which 2524 didn't need to be rerun 
 From `yocto` directory run:
 
 ```shell
-$ SHELL=/bin/bash kas-container build meta-dts/kas-uefi-sb.yml
+SHELL=/bin/bash kas-container build meta-dts/kas-uefi-sb.yml
 ```
 
 - Image build takes time, so be patient and after build's finish you should see
@@ -80,7 +80,7 @@ use image are described in
 - Find out your device name:
 
 ```shell
-$ fdisk -l
+fdisk -l
 ```
 
 output:
