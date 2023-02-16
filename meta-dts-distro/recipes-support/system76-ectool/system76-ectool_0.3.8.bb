@@ -1,11 +1,11 @@
 inherit cargo
 inherit pkgconfig
 
-SRC_URI += "gitsm://github.com/system76/ec.git;protocol=https;nobranch=1"
-SRCREV = "a8213311b19c30f7ba0a9673664d4bebc7ed64f1"
+SRC_URI += "gitsm://github.com/Dasharo/ec.git;protocol=https;nobranch=1"
+SRCREV = "6b0891ed0a38f6e4e37eb775f2fd235d45524ce4"
 S = "${WORKDIR}/git"
 CARGO_SRC_DIR = "/tool/"
-PV:append = ".AUTOINC+a8213311b1"
+PV:append = ".AUTOINC+6b0891ed0a"
 
 SRC_URI += " \
     crate://crates.io/ansi_term/0.12.1 \
