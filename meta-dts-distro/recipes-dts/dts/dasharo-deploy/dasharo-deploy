@@ -645,6 +645,7 @@ restore() {
             case ${REPLY} in
                 yes|y|Y|Yes|YES)
                 flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -w "/tmp/logs/rom.bin"
+                error_check "Failed to restore BIOS firmware!"
                 print_green "Successfully restored firmware"
                 echo "Returning to main menu..."
                 exit 0
@@ -676,7 +677,7 @@ restore() {
         if [ -f "/tmp/logs/rom.bin" ]; then
           # Write to entire flash when restoring
           flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -w "/tmp/logs/rom.bin"
-
+          error_check "Failed to restore BIOS firmware!"
           print_green "Successfully restored firmware"
         else
           print_error "Report does not have firmware backup!"
