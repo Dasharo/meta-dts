@@ -13,3 +13,4 @@ DASHARO_VENDOR="3mdeb"
 DASHARO_NAME="Dasharo"
 
 CMD_POWEROFF="/sbin/poweroff"
+CMD_REBOOT="/sbin/reboot"

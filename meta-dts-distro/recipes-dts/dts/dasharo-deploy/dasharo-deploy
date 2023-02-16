@@ -361,8 +361,17 @@ display_flashing_warning() {
   done
 
   while : ; do
+    echo "Following firmware will be used to install Dasharo"
+    if [ -v BIOS_HASH ]; then
+      echo "File hash: $BIOS_HASH"
+    fi
+    if [ -v EC_HASH ]; then
+      echo "File hash: $EC_HASH"
+    fi
     echo
-    echo "Do you want to install Dasharo Firmware on your hardware? (Y|n)"
+    echo "You can verify the file hash by visiting https://docs.dasharo.com/"
+    echo
+    echo "Do you want to install Dasharo firmware on your hardware? (Y|n)"
 
     echo
     read -r -p "Enter an option: " OPTION
@@ -580,7 +589,7 @@ install() {
   echo "Done."
   echo "The computer will shut down automatically in 5 seconds"
   sleep 0.5
-  echo "Powering off in 5s:"
+  echo "Rebooting in 5s:"
   echo "5..."
   sleep 1
   echo "4..."
@@ -591,12 +600,12 @@ install() {
   sleep 1
   echo "1..."
   sleep 0.5
-  echo "Powering off"
+  echo "Rebooting"
   sleep 1
   if [ "$NEED_EC_RESET" = "true" ]; then
     it5570_shutdown
   else
-    ${CMD_POWEROFF}
+    ${CMD_REBOOT}
   fi
 }
 
