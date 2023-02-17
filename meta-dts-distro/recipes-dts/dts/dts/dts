@@ -150,8 +150,14 @@ while : ; do
           ;;
       esac
       if [ "${SEND_LOGS}" == "true" ]; then
+          # DEPLOY_REPORT variable is used in dasharo-hcl-report to determine
+          # which logs should be printed in the terminal, in the future whole
+          # dts scripting should get some LOGLEVEL and maybe dumping working
+          # logs to file
+          export DEPLOY_REPORT="false"
           check_network_connection && ${CMD_DASHARO_HCL_REPORT} && logs_sent="1"
       else
+          export DEPLOY_REPORT="false"
           ${CMD_DASHARO_HCL_REPORT}
       fi
       ;;
@@ -161,7 +167,8 @@ while : ; do
           echo "Preparing ..."
           if [ -z "${logs_sent}" ]; then
             export SEND_LOGS="true"
-            if ! ${CMD_DASHARO_HCL_REPORT} > /dev/null 2>&1; then
+            export DEPLOY_REPORT="true"
+            if ! ${CMD_DASHARO_HCL_REPORT}; then
               echo -e "Cannot reach 3mdeb cloud to leave HCL report. Please
                         \rrecheck your internet connection."
             else

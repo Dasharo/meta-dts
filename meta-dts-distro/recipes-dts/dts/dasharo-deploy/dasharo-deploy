@@ -298,8 +298,10 @@ ask_for_version()
         if [ -v BIOS_HASH_PROD ]; then
           BIOS_HASH=$BIOS_HASH_PROD
           BIOS_LINK=$BIOS_LINK_PROD
-          EC_HASH=$EC_HASH_PROD
-          EC_LINK=$EC_LINK_PROD
+          if [ -v EC_HASH_PROD ]; then
+            EC_HASH=$EC_HASH_PROD
+            EC_LINK=$EC_LINK_PROD
+          fi
           echo "Production version selected"
           break
         else
@@ -310,8 +312,10 @@ ask_for_version()
         if [ -v BIOS_HASH_EVAL ]; then
           BIOS_HASH=$BIOS_HASH_EVAL
           BIOS_LINK=$BIOS_LINK_EVAL
-          EC_HASH=$EC_HASH_EVAL
-          EC_LINK=$EC_LINK_EVAL
+          if [ -v EC_HASH_EVAL ]; then
+            EC_HASH=$EC_HASH_EVAL
+            EC_LINK=$EC_LINK_EVAL
+          fi
           echo "Evaluation version selected"
           break
         else
@@ -363,10 +367,10 @@ display_flashing_warning() {
   while : ; do
     echo "Following firmware will be used to install Dasharo"
     if [ -v BIOS_HASH ]; then
-      echo "File hash: $BIOS_HASH"
+      echo "File hash: $BIOS_HASH" | cut -d ' ' -f -3
     fi
     if [ -v EC_HASH ]; then
-      echo "File hash: $EC_HASH"
+      echo "File hash: $EC_HASH" | cut -d ' ' -f -3
     fi
     echo
     echo "You can verify the file hash by visiting https://docs.dasharo.com/"
@@ -587,7 +591,11 @@ install() {
   echo -n "Syncing disks... "
   sync
   echo "Done."
-  echo "The computer will shut down automatically in 5 seconds"
+  if [ "$NEED_EC_RESET" = "true" ]; then
+    echo "The computer will shut down automatically in 5 seconds"
+  else
+    echo "The computer will reboot automatically in 5 seconds"
+  fi
   sleep 0.5
   echo "Rebooting in 5s:"
   echo "5..."
