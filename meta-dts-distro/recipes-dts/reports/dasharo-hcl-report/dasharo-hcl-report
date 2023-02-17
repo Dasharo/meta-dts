@@ -93,47 +93,47 @@ fi
 # echo "Dumping PCI configuration space and topology..."
 lspci -nnvvvxxxx > logs/lspci.log 2> logs/lspci.err.log
 update_result "PCI configuration space and topology" logs/lspci.err.log
-printf '##                                                                  \r'
+printf '##                                                                 |\r'
 
 # echo "Dumping USB devices and topology..."
 lsusb -vvv > logs/lsusb.log 2> logs/lsusb.err.log
 update_result "USB devices and topology" logs/lsusb.err.log
-printf '####                                                                \r'
+printf '####                                                               |\r'
 
 # echo "Dumping Super I/O configuration..."
 superiotool -deV > logs/superiotool.log 2> logs/superiotool.err.log
 update_result "Super I/O configuration" logs/superiotool.err.log
-printf '######                                                              \r'
+printf '######                                                             |\r'
 
 # echo "Dumping Embedded Controller configuration (this may take a while if EC is not present)..."
 ectool -ip > logs/ectool.log 2> logs/ectool.err.log
 update_result "EC configuration" logs/ectool.err.log
-printf '########                                                            \r'
+printf '########                                                           |\r'
 
 # echo "Dumping MSRs..."
 msrtool > logs/msrtool.log 2> logs/msrtool.err.log
 update_result "MSRs" logs/msrtool.err.log
-printf '##########                                                          \r'
+printf '##########                                                         |\r'
 
 # echo "Dumping SMBIOS tables..."
 dmidecode > logs/dmidecode.log 2> logs/dmidecode.err.log
 update_result "SMBIOS tables" logs/dmidecode.err.log
-printf '############                                                        \r'
+printf '############                                                       |\r'
 
 # echo "Decoding BIOS information..."
 biosdecode > logs/biosdecode.log 2> logs/biosdecode.err.log
 update_result "BIOS information" logs/biosdecode.err.log
-printf '##############                                                      \r'
+printf '##############                                                     |\r'
 
 # echo "Extracting CMOS NVRAM..."
 nvramtool -x > logs/nvramtool.log 2> logs/nvramtool.err.log
 update_result "CMOS NVRAM" logs/nvramtool.err.log
-printf '################                                                    \r'
+printf '################                                                   |\r'
 
 # echo "Dumping Intel configuration registers..."
 inteltool -a > logs/inteltool.log 2> logs/inteltool.err.log
 update_result "Intel configuration registers" logs/inteltool.err.log
-printf '##################                                                  \r'
+printf '##################                                                 |\r'
 
 # echo "Generating GPIO configuration C header files for coreboot..."
 intelp2m -file logs/inteltool.log -fld cb -i -p snr -o logs/gpio_snr.h > logs/intelp2m.log 2> logs/intelp2m.err.log
@@ -141,17 +141,17 @@ intelp2m -file logs/inteltool.log -fld cb -i -p cnl -o logs/gpio_cnl.h >> logs/i
 intelp2m -file logs/inteltool.log -fld cb -i -p apl -o logs/gpio_apl.h >> logs/intelp2m.log 2>> logs/intelp2m.err.log
 intelp2m -file logs/inteltool.log -fld cb -i -p lbg -o logs/gpio_lbg.h >> logs/intelp2m.log 2>> logs/intelp2m.err.log
 update_result "GPIO configuration C header files" logs/intelp2m.err.log
-printf '####################                                                \r'
+printf '####################                                               |\r'
 
 # echo "Dumping kernel dmesg..."
 dmesg > logs/dmesg.log 2> logs/dmesg.err.log
 update_result "kernel dmesg" logs/dmesg.err.log
-printf '######################                                              \r'
+printf '######################                                             |\r'
 
 # echo "Dumping ACPI tables..."
 acpidump > logs/acpidump.log 2> logs/acpidump.err.log
 update_result "ACPI tables" logs/acpidump.err.log
-printf '########################                                            \r'
+printf '########################                                           |\r'
 
 # echo "Dumping Audio devices configuration..."
 
@@ -179,22 +179,22 @@ done
 for x in /sys/class/sound/card0/hw*; do cat "$x/init_pin_configs" > logs/pin_"$(basename "$x")" 2> logs/pin_"$(basename "$x")".err.log; done
 for x in /proc/asound/card0/codec#*; do cat "$x" > logs/"$(basename "$x")" 2> logs/"$(basename "$x")".err.log; done
 update_result "Audio devices configuration" 0 UNKNOWN
-printf '##########################                                          \r'
+printf '##########################                                         |\r'
 
 # echo "Dumping CPU info..."
 cat /proc/cpuinfo > logs/cpuinfo.log 2> logs/cpuinfo.err.log
 update_result "CPU info" logs/cpuinfo.err.log
-printf '############################                                        \r'
+printf '############################                                       |\r'
 
 # echo "Dumping I/O ports..."
 cat /proc/ioports > logs/ioports.log 2> logs/ioports.err.log
 update_result "I/O ports" logs/ioports.err.log
-printf '##############################                                      \r'
+printf '##############################                                     |\r'
 
 # echo "Dumping input bus types..."
 cat /sys/class/input/input*/id/bustype > logs/input_bustypes.log
 update_result "Input bus types"  logs/ioports.err.log
-printf '################################                                    \r'
+printf '################################                                   |\r'
 
 # echo "Trying to read firmware image with flashrom..."
 flashrom -V -p internal:laptop=force_I_want_a_brick ${FLASH_CHIP_SELECT} -r logs/rom.bin > logs/flashrom_read.log 2> logs/flashrom_read.err.log
@@ -202,7 +202,7 @@ if [ $? -ne 0 ]; then
   echo "CRITICAL ERROR: cannot dump firmware"
 fi
 update_result "Firmware image" logs/flashrom_read.err.log
-printf '##################################                                  \r'
+printf '##################################                                 |\r'
 
 # echo "Probing all I2C buses..."
 MAX_I2C_ID=$(i2cdetect -l | awk 'BEGIN{c1=0} //{c1++} END{print "",--c1}')
@@ -212,7 +212,7 @@ do
   i2cdetect -y "$bus" >> logs/i2cdetect.log 2>> logs/i2cdetect.err.log
 done
 update_result "I2C bus" logs/i2cdetect.err.log
-printf '####################################                                \r'
+printf '####################################                               |\r'
 
 # echo "Decompiling ACPI tables..."
 mkdir -p logs/acpi
@@ -222,48 +222,51 @@ if pushd logs/acpi &> /dev/null; then
   popd &> /dev/null
 fi
 update_result "ACPI tables" 0 UNKNOWN
-printf '######################################                              \r'
+printf '######################################                             |\r'
 
 # echo "Getting touchpad information..."
 touchpad-info > logs/touchpad.log 2> logs/touchpad.err.log
 update_result "Touchpad information" logs/touchpad.err.log
-printf '########################################                            \r'
+printf '########################################                           |\r'
 
 # echo "Getting DIMMs information..."
 decode-dimms > logs/decode-dimms.log 2> logs/decode-dimms.err.log
 update_result "DIMMs information" logs/decode-dimms.err.log
-printf '##########################################                          \r'
+printf '##########################################                         |\r'
 
 # echo "Getting CBMEM table..."
 cbmem > logs/cbmem.log 2> logs/cbmem.err.log
 update_result "CBMEM table information" logs/cbmem.err.log
-printf '############################################                        \r'
+printf '############################################                       |\r'
 
 # echo "Getting TPM information..."
 find `realpath /sys/class/tpm/tpm*` -type f -print -exec cat {} \; > logs/tpm_version.log 2> logs/tpm_version.err.log
 update_result "TPM information" logs/tpm_version.err.log
-printf '#############################################                       \r'
+printf '#############################################                      |\r'
 
 # echo "Checking AMT..."
 mei-amt-check > logs/amt-check.log 2> logs/amt-check.err.log
 update_result "AMT information" logs/amt-check.err.log
-printf '###############################################                     \r'
+printf '###############################################                    |\r'
 
 # echo "Checking ME..."
 intelmetool -m > logs/intelmetool.log 2> logs/intelmetool.err.log
 update_result "ME information" logs/intelmetool.err.log
-printf '################################################                    \r'
+printf '################################################                   |\r'
 
-printf '##################################################                  \r'
-printf '####################################################                \r'
-printf '######################################################              \r'
-printf '########################################################            \r'
-printf '##########################################################          \r'
-printf '############################################################        \r'
-printf '##############################################################      \r'
-printf '################################################################    \r'
-printf '##################################################################  \r'
-printf '####################################################################\r'
+printf '##################################################                 |\r'
+printf '####################################################               |\r'
+printf '######################################################             |\r'
+printf '########################################################           |\r'
+printf '##########################################################         |\r'
+printf '############################################################       |\r'
+printf '##############################################################     |\r'
+printf '################################################################   |\r'
+printf '################################################################## |\r'
+printf '###################################################################|\r'
+# next two echo cmds helps with printing
+echo
+echo
 
 echo "Results of getting data:" >> result
 echo -e "\nLegend:" >> result
@@ -314,9 +317,9 @@ fi
 if [ "$SEND_LOGS" = "true" ]; then
   if [ $DEPLOY_REPORT = "false" ]; then
     echo "Sending logs to 3mdeb cloud..."
-    CLOUDSEND_OPTS = "-e"
+    CLOUDSEND_OPTS="-e"
   else
-    CLOUDSEND_OPTS = "-e -q"
+    CLOUDSEND_OPTS="-e -q"
   fi
   cloudsend.sh \
     ${CLOUDSEND_OPTS} \
