@@ -37,6 +37,7 @@ RDEPENDS:${PN}-tools-base = " \
 "
 
 RDEPENDS:${PN}-tools-dts = " \
+    tpm2-tools \
     mei-amt-check \
     cloudsend \
     dasharo-deploy \
