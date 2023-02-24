@@ -3,9 +3,7 @@
 ## Prerequisites
 
 * Linux PC (tested on `Ubuntu 20.04 LTS`)
-
 * [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/) installed
-
 * [kas-container 3.0.2](https://raw.githubusercontent.com/siemens/kas/3.0.2/kas-container)
   script downloaded and available in [PATH](https://en.wikipedia.org/wiki/PATH_(variable))
 
@@ -70,7 +68,7 @@ UEFI Secure Boot into DTS using
 image allow to prepare a PoC version with [uses sample
 keys](https://github.com/jiazhang0/meta-secure-core/tree/master/meta-efi-secure-boot#sample-keys)
 which by no mean should used in production. For user keys the script
-[create-user-key-store.sh](https://github.com/jiazhang0/meta-secure-core/blob/master/meta-signing-key/scripts/create-user-key-store.sh
+[create-user-key-store.sh](https://github.com/jiazhang0/meta-secure-core/blob/master/meta-signing-key/scripts/create-user-key-store.sh)
 can be used but it was not tested yet. Quick start with instructions on how to
 use image are described in
 [meta-efi-secure-boot](https://github.com/jiazhang0/meta-secure-core/tree/master/meta-efi-secure-boot#quick-start-for-the-first-boot).
