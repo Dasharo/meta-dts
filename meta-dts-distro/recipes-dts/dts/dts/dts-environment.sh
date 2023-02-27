@@ -14,3 +14,8 @@ DASHARO_NAME="Dasharo"
 
 CMD_POWEROFF="/sbin/poweroff"
 CMD_REBOOT="/sbin/reboot"
+CMD_SHELL="/bin/bash"
+CMD_DASHARO_HCL_REPORT="/usr/sbin/dasharo-hcl-report"
+CMD_NCMENU="/usr/sbin/novacustom_menu"
+CMD_DASHARO_DEPLOY="/usr/sbin/dasharo-deploy"
+CMD_CLOUD_LIST="/usr/sbin/cloud_list"

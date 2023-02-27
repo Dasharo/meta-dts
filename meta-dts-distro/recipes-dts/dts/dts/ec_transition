@@ -124,8 +124,6 @@ ROOT_DIR="/"
 [ -z "$BOARD_VENDOR" ] && error_exit "BOARD_VENDOR not given"
 [ -z "$SYSTEM_MODEL" ] && error_exit "SYSTEM_MODEL not given"
 
-CMD_POWEROFF="/sbin/poweroff"
-
 check_for_opensource_firmware
 board_config
 download_files

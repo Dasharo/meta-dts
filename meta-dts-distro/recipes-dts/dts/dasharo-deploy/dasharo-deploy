@@ -30,7 +30,6 @@ PROGRAMMER_EC="ite_ec"
 [ -z "$SYSTEM_MODEL" ] && error_exit "SYSTEM_MODEL not given"
 
 CMD="$1"
-CMD_CLOUD_LIST="/usr/sbin/cloud_list"
 board_config() {
   case "$BOARD_VENDOR" in
     "Notebook")
