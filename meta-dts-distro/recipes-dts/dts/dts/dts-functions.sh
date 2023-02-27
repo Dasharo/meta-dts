@@ -83,4 +83,3 @@ it5570_shutdown() {
   it5570_i2ec w 0x1f01 0x20
   it5570_i2ec w 0x1f07 0x01
 }
-
