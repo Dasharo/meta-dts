@@ -3,24 +3,6 @@
 source /usr/sbin/dts-environment.sh
 source /usr/sbin/dts-functions.sh
 
-COLOR_OFF='\033[0m'       # Text Reset
-RED='\033[0;31m'
-YELLOW='\033[0;33m'
-GREEN='\033[0;32m'
-
-### Color functions
-print_warning() {
-  echo -e "$YELLOW""$1""$COLOR_OFF"
-}
-
-print_error() {
-  echo -e "$RED""$1""$COLOR_OFF"
-}
-
-print_green() {
-  echo -e "$GREEN""$1""$COLOR_OFF"
-}
-
 ### Error checks
 error_exit() {
   _error_msg="$1"
