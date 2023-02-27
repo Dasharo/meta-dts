@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-* Linux PC (tested on `Ubuntu 20.04 LTS`)
+* Linux PC (tested on `Ubuntu 20.04/22.04 LTS` and `NixOS 22.11`)
 * [docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/) installed
 * [kas-container 3.0.2](https://raw.githubusercontent.com/siemens/kas/3.0.2/kas-container)
   script downloaded and available in [PATH](https://en.wikipedia.org/wiki/PATH_(variable))
@@ -65,8 +65,8 @@ NOTE: Tasks Summary: Attempted 5860 tasks of which 5841 didn't need to be rerun 
 Image created with `kas-uefi-sb.yml` configuration file enable integration of
 UEFI Secure Boot into DTS using
 [meta-secure-core](https://github.com/jiazhang0/meta-secure-core/). Building the
-image allow to prepare a PoC version with [uses sample
-keys](https://github.com/jiazhang0/meta-secure-core/tree/master/meta-efi-secure-boot#sample-keys)
+image allows to prepare a PoC version with
+[uses sample keys](https://github.com/jiazhang0/meta-secure-core/tree/master/meta-efi-secure-boot#sample-keys)
 which by no mean should used in production. For user keys the script
 [create-user-key-store.sh](https://github.com/jiazhang0/meta-secure-core/blob/master/meta-signing-key/scripts/create-user-key-store.sh)
 can be used but it was not tested yet. Quick start with instructions on how to
