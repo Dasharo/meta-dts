@@ -99,6 +99,49 @@ check_network_connection() {
   return 0
 }
 
+compare_versions() {
+    # return 1 if ver2 > ver1
+    # return 0 otherwise
+
+    local ver1="$1"
+    local ver2="$2"
+
+    if [[ $ver1 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && [[ $ver2 =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+      IFS='.' read -r -a arr_ver1 <<< "$ver1"
+      IFS='.' read -r -a arr_ver2 <<< "$ver2"
+
+      if [ ${arr_ver2[0]} -lt ${arr_ver1[0]} ]; then
+          return 0
+      fi
+
+      if [ ${arr_ver2[0]} -gt ${arr_ver1[0]} ]; then
+          return 1
+      fi
+
+      if [ ${arr_ver2[0]} -eq ${arr_ver1[0]} ]; then
+          if [ ${arr_ver2[1]} -lt ${arr_ver1[1]} ]; then
+              return 0
+          fi
+
+          if [ ${arr_ver2[1]} -gt ${arr_ver1[1]} ]; then
+              return 1
+          fi
+
+          if [ ${arr_ver2[1]} -eq ${arr_ver1[1]} ]; then
+              if [ ${arr_ver2[2]} -lt ${arr_ver1[2]} ]; then
+                  return 0
+              fi
+
+              if [ ${arr_ver2[2]} -gt ${arr_ver1[2]} ]; then
+                return 1
+              fi
+          fi
+      fi
+    else
+      error_exit "Incorrect version format"
+    fi
+}
+
 check_se_creds() {
   # TODO: what is the difference between tpmDownloadURL and tmpDOWNLOADURL ?!
   tmpDownloadURL="https://cloud.3mdeb.com/public.php/webdav/biosupdate.rom"
