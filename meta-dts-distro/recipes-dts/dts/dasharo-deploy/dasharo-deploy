@@ -467,9 +467,9 @@ resign_binary()
 {
   if [ "$HAVE_VBOOT" -eq 0 ]; then
     download_keys
-    sign_firmware.sh $BIOS_UPDATE_FILE $KEYS_DIR $RESIGNED_BIOS_UPDATE_DIR
+    sign_firmware.sh $BIOS_UPDATE_FILE $KEYS_DIR $RESIGNED_BIOS_UPDATE_FILE
     error_check "Cannot resign binary file. Please, make sure if you have proper keys. Aborting..."
-    BIOS_UPDATE_FILE="$RESIGNED_BIOS_UPDATE_DIR"
+    BIOS_UPDATE_FILE="$RESIGNED_BIOS_UPDATE_FILE"
   fi
 }
 
