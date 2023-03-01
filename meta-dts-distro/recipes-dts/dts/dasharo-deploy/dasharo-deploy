@@ -640,6 +640,7 @@ update() {
   fi
 
   echo "Updating Dasharo firmware..."
+  print_warning "This will take around 3 minutes. Please be patient and do not reset your computer, or touch keyboard!"
   flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_UPDATE} -w "$BIOS_UPDATE_FILE" &>> $ERR_LOG_FILE
   error_check "Failed to update Dasharo firmware"
 
@@ -648,6 +649,7 @@ update() {
     sleep 3
     echo "Your machine will shut down automatically once it finishes."
     sleep 3
+    print_warning "This will take around 1 minute. Please be patient and do not reset your computer, or touch keyboard!"
     echo "Updating Dasharo EC firmware..."
     update_ec
   fi
