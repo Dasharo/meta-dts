@@ -116,7 +116,6 @@ board_config() {
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
               FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
-              FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A -i RW_SECTION_B"
               # if v1.0.0 or older, flash the whole bios region, as per:
               # https://docs.dasharo.com/variants/msi_z690/firmware-update/#version-older-than-v110
               compare_versions $DASHARO_VERSION 1.1.0
