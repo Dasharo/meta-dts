@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# set -x
+
 source /usr/sbin/dts-environment.sh
 source /usr/sbin/dts-functions.sh
 
@@ -35,36 +37,38 @@ board_config() {
     "Notebook")
       case "$SYSTEM_MODEL" in
         "NV4XMB,ME,MZ")
-          DASHARO_REL_NAME="novacustom_nv4x"
-          DASHARO_REL_VER="1.3.0"
+          DASHARO_REL_NAME="novacustom_nv4x_tgl"
+          DASHARO_REL_VER="1.4.0"
           BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
           EC_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_ec_v${DASHARO_REL_VER}.rom"
           HAVE_EC="true"
           NEED_EC_RESET="true"
           COMPATIBLE_EC_FW_VERSION="2022-10-07_c662165"
-          EC_HASH_PROD="7a75fd9afd81012f7c1485cc335298979509e5929d931d898465fbddb4ce105c  $EC_UPDATE_FILE"
-          BIOS_HASH_PROD="7271b638c87cba658162931f55bdaa6987eb5b0555075ce8e2297a79a505c8b0  $BIOS_UPDATE_FILE"
+          EC_HASH_PROD="$(wget -O /dev/stdout ${EC_LINK_PROD}.sha256 2>/dev/null | cut -d ' ' -f 1) $EC_UPDATE_FILE"
+          BIOS_HASH_PROD="$(wget -O /dev/stdout ${BIOS_LINK_PROD}.sha256 2>/dev/null | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
           NEED_SMBIOS_MIGRATION="false"
           NEED_BLOB_TRANSMISSION="false"
           PROGRAMMER_BIOS="internal"
           PROGRAMMER_EC="ite_ec"
-          FLASHROM_ADD_OPT="--ifd -i bios"
+          FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
+          FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
           ;;
         "NS50_70MU")
-          DASHARO_REL_NAME="novacustom_ns5x"
+          DASHARO_REL_NAME="novacustom_ns5x_tgl"
           DASHARO_REL_VER="1.3.0"
           BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
           EC_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_ec_v${DASHARO_REL_VER}.rom"
           HAVE_EC="true"
           NEED_EC_RESET="true"
           COMPATIBLE_EC_FW_VERSION="2022-08-31_cbff21b"
-          EC_HASH_PROD="d1001465cea74a550914c14f0c8f901b14827a3b5fa0b612ae6d11594ac2b405  $EC_UPDATE_FILE"
-          BIOS_HASH_PROD="d4c30660c53bac505997de30b9eac4c5ac15f3212c62366730dc2ca3974bba18  $BIOS_UPDATE_FILE"
+          EC_HASH_PROD="$(wget -O /dev/stdout ${EC_LINK_PROD}.sha256 2>/dev/null | cut -d ' ' -f 1) $EC_UPDATE_FILE"
+          BIOS_HASH_PROD="$(wget -O /dev/stdout ${BIOS_LINK_PROD}.sha256 2>/dev/null | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
           NEED_SMBIOS_MIGRATION="false"
           NEED_BLOB_TRANSMISSION="false"
           PROGRAMMER_BIOS="internal"
           PROGRAMMER_EC="ite_ec"
-          FLASHROM_ADD_OPT="--ifd -i bios"
+          FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
+          FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
           ;;
         *)
           error_exit "Board model $SYSTEM_MODEL is currently not supported"
@@ -81,12 +85,13 @@ board_config() {
               BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
               HAVE_EC="false"
               NEED_EC_RESET="false"
-              BIOS_HASH_PROD="adee8e0f3c71f40a4d834eafc18231f20924f12dc4ab35b01d9c683b34b32626  $BIOS_UPDATE_FILE"
+              BIOS_HASH_PROD="$(wget -O /dev/stdout ${BIOS_LINK_PROD}.sha256 2>/dev/null | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
               NEED_SMBIOS_MIGRATION="true"
               NEED_BLOB_TRANSMISSION="false"
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
-              FLASHROM_ADD_OPT="--ifd -i bios"
+              FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
+              FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
               ;;
             "PRO Z690-A WIFI (MS-7D25)" | "PRO Z690-A (MS-7D25)")
               DASHARO_REL_NAME="msi_ms7d25"
@@ -94,12 +99,13 @@ board_config() {
               BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_ddr5.rom"
               HAVE_EC="false"
               NEED_EC_RESET="false"
-              BIOS_HASH_PROD="b7a0ca05a860c27c8357ed29c51317f1c2ace0590f073f65978296d2036e68dd  $BIOS_UPDATE_FILE"
+              BIOS_HASH_PROD="$(wget -O /dev/stdout ${BIOS_LINK_PROD}.sha256 2>/dev/null | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
               NEED_SMBIOS_MIGRATION="true"
               NEED_BLOB_TRANSMISSION="false"
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
-              FLASHROM_ADD_OPT="--ifd -i bios"
+              FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
+              FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
               ;;
             *)
               error_exit "Board model $BOARD_MODEL is currently not supported"
@@ -125,7 +131,8 @@ board_config() {
       SINIT_ACM_URL="https://cdrdv2.intel.com/v1/dl/getContent/630744"
       SINIT_ACM_HASH="b23c5e6bd70bdcfde4215a5a252e56c4966f0e06cacf388e654ca906c4ecdad1 $SINIT_ACM_FILENAME"
       SINIT_ACM="/tmp/630744_002/SNB_IVB_SINIT_20190708_PW.bin"
-      FLASHROM_ADD_OPT="--ifd -i bios"
+      FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
+      FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
       case "$SYSTEM_MODEL" in
         "OptiPlex 7010")
           DBT_BIOS_UPDATE_FILENAME="/tmp/O7010A29.exe"
@@ -292,10 +299,16 @@ display_flashing_warning() {
   while : ; do
     echo "Following firmware will be used to install Dasharo"
     if [ -v BIOS_HASH ]; then
-      echo "File hash: $BIOS_HASH" | cut -d ' ' -f -3
+      local _bios_hash="$(echo $BIOS_HASH | cut -d ' ' -f 1)"
+      echo "Dasharo BIOS firmware:"
+      echo "  - link: $BIOS_LINK"
+      echo "  - hash: $_bios_hash"
     fi
     if [ -v EC_HASH ]; then
-      echo "File hash: $EC_HASH" | cut -d ' ' -f -3
+      local _ec_hash="$(echo $BIOS_HASH | cut -d ' ' -f 1)"
+      echo "Dasharo EC firmware:"
+      echo "  - link : $EC_LINK"
+      echo "  - hash: $_ec_hash"
     fi
     echo
     echo "You can verify the file hash by visiting https://docs.dasharo.com/"
@@ -349,7 +362,7 @@ backup() {
   echo "Successfully backed up firmware locally at: $FW_BACKUP_TAR"
 }
 
-update_ec() {
+install_ec() {
   echo "Downloading EC firmware update..."
   curl -f "$EC_LINK" -o "$EC_UPDATE_FILE"
   error_check "Cannot access $FW_STORE_URL. Please check your internet
@@ -473,7 +486,7 @@ install() {
   ask_for_version
   display_flashing_warning
   echo "Downloading update"
-  curl -f "$BIOS_LINK" -o $BIOS_UPDATE_FILE
+  curl -f "$BIOS_LINK" -o $BIOS_UPDATE_DIR
   error_check "Cannot access $FW_STORE_URL. Please check your internet
  connection"
   sha256sum --check <(echo "$BIOS_HASH")
@@ -489,13 +502,13 @@ install() {
 
       if [ "$_ec_fw_version" != "$COMPATIBLE_EC_FW_VERSION" ]; then
         print_warning "EC version: $_ec_fw_version is not supported, update required"
-        update_ec
+        install_ec
       fi
     fi
   fi
 
-  cbfstool "$BIOS_UPDATE_FILE" extract -r COREBOOT -n config -f "$BIOS_UPDATE_CONFIG_FILE"
-  grep "CONFIG_VBOOT=y" "$BIOS_UPDATE_CONFIG_FILE"
+  cbfstool "$BIOS_UPDATE_DIR" extract -r COREBOOT -n config -f "$BIOS_UPDATE_CONFIG_DIR"
+  grep "CONFIG_VBOOT=y" "$BIOS_UPDATE_CONFIG_DIR"
   HAVE_VBOOT="$?"
 
   if [ "$NEED_SMBIOS_MIGRATION" = "true" ]; then
@@ -508,7 +521,7 @@ install() {
   fi
 
   echo "Installing Dasharo firmware..."
-  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT} -w "$BIOS_UPDATE_FILE"
+  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_DEPLOY} -w "$BIOS_UPDATE_DIR"
   error_check "Failed to install Dasharo firmware"
 
   print_green "Successfully installed Dasharo firmware"
@@ -540,6 +553,125 @@ install() {
   else
     ${CMD_REBOOT}
   fi
+}
+
+update_ec() {
+  echo "Downloading EC firmware update..."
+  curl -f "$EC_LINK" -o "$EC_UPDATE_FILE"
+  error_check "Cannot access $FW_STORE_URL. Please check your internet connection"
+  sha256sum --check <(echo "$EC_HASH")
+  error_check "Failed to download EC firmware update"
+
+  echo "Updating EC..."
+  system76_ectool flash "$EC_UPDATE_FILE"
+  error_check "Failed to update EC firmware"
+}
+
+compare_versions() {
+    # return 1 if ver2 > ver1
+    # return 0 otherwise
+
+    local ver1="$1"
+    local ver2="$2"
+
+    IFS='.' read -r -a arr_ver1 <<< "$ver1"
+    IFS='.' read -r -a arr_ver2 <<< "$ver2"
+
+    if [ ${arr_ver2[0]} -lt ${arr_ver1[0]} ]; then
+        return 0
+    fi
+
+    if [ ${arr_ver2[0]} -gt ${arr_ver1[0]} ]; then
+        return 1
+    fi
+
+    if [ ${arr_ver2[0]} -eq ${arr_ver1[0]} ]; then
+        if [ ${arr_ver2[1]} -lt ${arr_ver1[1]} ]; then
+            return 0
+        fi
+
+        if [ ${arr_ver2[1]} -gt ${arr_ver1[1]} ]; then
+            return 1
+        fi
+
+        if [ ${arr_ver2[1]} -eq ${arr_ver1[1]} ]; then
+            if [ ${arr_ver2[2]} -lt ${arr_ver1[2]} ]; then
+                return 0
+            fi
+
+            if [ ${arr_ver2[2]} -gt ${arr_ver1[2]} ]; then
+              return 1
+            fi
+        fi
+    fi
+}
+
+update() {
+  echo "Checking for latest Dasharo update available..."
+  echo "Current Dasharo version: $DASHARO_VERSION"
+  echo "Latest available Dasharo version: $DASHARO_REL_VER"
+  compare_versions $DASHARO_VERSION $DASHARO_REL_VER
+  if [ $? -ne 1 ]; then
+    error_exit "No update available for your machine"
+  fi
+
+  BIOS_HASH=$BIOS_HASH_PROD
+  BIOS_LINK=$BIOS_LINK_PROD
+  if [ "$HAVE_EC" = "true" ]; then
+    EC_HASH=$EC_HASH_PROD
+    EC_LINK=$EC_LINK_PROD
+  fi
+
+  display_flashing_warning
+
+  echo "Downloading update"
+  curl -f "$BIOS_LINK" -o $BIOS_UPDATE_FILE
+  error_check "Cannot access $FW_STORE_URL. Please check your internet connection"
+  sha256sum --check <(echo "$BIOS_HASH")
+  error_check "Failed to verify Dasharo firmware"
+
+  if [ "$HAVE_EC" = "true" ]; then
+    echo "Checking for Open Source Embedded Controller firmware"
+    system76_ectool info >> /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+      error_exit "Device does not have Dasharo EC firmware - cannot continue update!"
+    fi
+  fi
+
+  echo "Updating Dasharo firmware..."
+  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_UPDATE} -w "$BIOS_UPDATE_FILE"
+  error_check "Failed to Dasharo firmware"
+
+  if [ "$HAVE_EC" = "true" ]; then
+    echo "Dasharo EC update process will start in a moment."
+    sleep 1
+    echo "Your machine will shut down automatically once it finishes."
+    sleep 1
+    echo "Updating Dasharo EC firmware..."
+    update_ec
+  fi
+
+  print_green "Successfully updated Dasharo firmware"
+
+  echo -n "Syncing disks... "
+  sync
+  echo "Done."
+  echo "The computer will reboot automatically in 5 seconds"
+  sleep 0.5
+  echo "Rebooting in 5s:"
+  echo "5..."
+  sleep 1
+  echo "4..."
+  sleep 1
+  echo "3..."
+  sleep 1
+  echo "2..."
+  sleep 1
+  echo "1..."
+  sleep 0.5
+  echo "Rebooting"
+  sleep 1
+  ${CMD_REBOOT}
 }
 
 restore() {
@@ -682,6 +814,9 @@ case "$CMD" in
     fi
     backup
     install
+    ;;
+  update)
+    update
     ;;
   backup)
     backup

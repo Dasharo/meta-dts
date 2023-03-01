@@ -83,3 +83,39 @@ it5570_shutdown() {
   it5570_i2ec w 0x1f01 0x20
   it5570_i2ec w 0x1f07 0x01
 }
+
+check_network_connection() {
+  echo 'Waiting for network connection ...'
+  n="5"
+  while : ; do
+    ping -c 3 cloud.3mdeb.com > /dev/null 2>&1 && break
+    n=$((n-1))
+    if [ "${n}" == "0" ]; then
+      echo 'No network connection to 3mdeb cloud, please recheck Ethernet connection'
+      return 1
+    fi
+    sleep 1
+  done
+  return 0
+}
+
+check_se_creds() {
+  # TODO: what is the difference between tpmDownloadURL and tmpDOWNLOADURL ?!
+  tmpDownloadURL="https://cloud.3mdeb.com/public.php/webdav/biosupdate.rom"
+  tmpLogsURL="https://cloud.3mdeb.com/index.php/s/${CLOUDSEND_LOGS_URL}/authenticate/showShare"
+  CLOUD_DOWNLOAD_URL=`sed -n '2p' < ${SE_credential_file} | tr -d '\n'`
+  CLOUD_PASSWORD=`sed -n '3p' < ${SE_credential_file} | tr -d '\n'`
+  USER_DETAILS="$CLOUD_DOWNLOAD_URL:$CLOUD_PASSWORD"
+  CLOUD_REQUEST="X-Requested-With: XMLHttpRequest"
+
+  if check_network_connection; then
+    CHECK_DOWNLOAD_REQUEST_RESPONSE=$( curl -I -s -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$tmpDownloadURL" -o /dev/null -w "%{http_code}")
+    CHECK_LOGS_REQUEST_RESPONSE=$( curl -I -s -f -H "$CLOUD_REQUEST" "$tmpLogsURL" -o /dev/null -w "%{http_code}")
+    if [ ${CHECK_DOWNLOAD_REQUEST_RESPONSE} -eq 200 ] && [ ${CHECK_LOGS_REQUEST_RESPONSE} -eq 200 ]; then
+      return 0
+    else
+      echo ""
+      return 1
+    fi
+  fi
+}
