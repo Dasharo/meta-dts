@@ -9,7 +9,6 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384
 SRC_URI = " \
     file://dts \
     file://ec_transition \
-    file://novacustom_menu \
     file://cloud_list \
     file://dts-environment.sh \
     file://dts-functions.sh \
@@ -27,7 +26,6 @@ do_install () {
     install -d ${D}/${sbindir}
     install -m 0755 ${S}/dts ${D}/${sbindir}
     install -m 0755 ${S}/ec_transition ${D}/${sbindir}
-    install -m 0755 ${S}/novacustom_menu ${D}/${sbindir}
     install -m 0755 ${S}/cloud_list ${D}/${sbindir}
     install -m 0664 ${S}/dts-environment.sh ${D}/${sbindir}
     install -m 0664 ${S}/dts-functions.sh ${D}/${sbindir}
