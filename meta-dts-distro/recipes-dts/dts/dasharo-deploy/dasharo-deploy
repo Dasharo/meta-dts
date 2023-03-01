@@ -72,6 +72,40 @@ board_config() {
           FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
           FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
           ;;
+        "NS5x_NS7xPU")
+          DASHARO_REL_NAME="novacustom_ns5x_adl"
+          DASHARO_REL_VER="1.5.0"
+          BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
+          EC_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_ec_v${DASHARO_REL_VER}.rom"
+          HAVE_EC="true"
+          NEED_EC_RESET="true"
+          COMPATIBLE_EC_FW_VERSION="2022-08-31_cbff21b"
+          EC_HASH_PROD="$(wget -O /dev/stdout ${EC_LINK_PROD}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $EC_UPDATE_FILE"
+          BIOS_HASH_PROD="$(wget -O /dev/stdout ${BIOS_LINK_PROD}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
+          NEED_SMBIOS_MIGRATION="false"
+          NEED_BLOB_TRANSMISSION="false"
+          PROGRAMMER_BIOS="internal"
+          PROGRAMMER_EC="ite_ec"
+          FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
+          FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
+          ;;
+        "NV4xPZ")
+          DASHARO_REL_NAME="novacustom_nv4x_adl"
+          DASHARO_REL_VER="1.5.0"
+          BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
+          EC_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_ec_v${DASHARO_REL_VER}.rom"
+          HAVE_EC="true"
+          NEED_EC_RESET="true"
+          COMPATIBLE_EC_FW_VERSION="2022-08-31_cbff21b"
+          EC_HASH_PROD="$(wget -O /dev/stdout ${EC_LINK_PROD}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $EC_UPDATE_FILE"
+          BIOS_HASH_PROD="$(wget -O /dev/stdout ${BIOS_LINK_PROD}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
+          NEED_SMBIOS_MIGRATION="false"
+          NEED_BLOB_TRANSMISSION="false"
+          PROGRAMMER_BIOS="internal"
+          PROGRAMMER_EC="ite_ec"
+          FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
+          FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
+          ;;
         *)
           error_exit "Board model $SYSTEM_MODEL is currently not supported"
           ;;
