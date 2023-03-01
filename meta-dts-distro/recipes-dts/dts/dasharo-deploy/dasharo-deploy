@@ -267,7 +267,7 @@ ask_for_version()
 display_flashing_warning() {
   while : ; do
     echo
-    echo "Please, verify detected hardware! Does it match your actual specification? (Y|n)"
+    print_warning "Please verify detected hardware!"
     echo
 
     if [ -v BOARD_VENDOR ]; then
@@ -280,7 +280,7 @@ display_flashing_warning() {
       echo "Board model: $BOARD_MODEL"
     fi
     echo
-    read -r -p "Enter an option: " OPTION
+    read -r -p "Does it match your actual specification? (Y|n)" OPTION
     echo
 
     case ${OPTION} in
@@ -311,12 +311,10 @@ display_flashing_warning() {
       echo "  - hash: $_ec_hash"
     fi
     echo
-    echo "You can verify the file hash by visiting https://docs.dasharo.com/"
-    echo
-    echo "Do you want to install Dasharo firmware on your hardware? (Y|n)"
+    echo "You can learn more about this release on: https://docs.dasharo.com/"
 
     echo
-    read -r -p "Enter an option: " OPTION
+    read -r -p "Do you want to update Dasharo firmware on your hardware? (Y|n) " OPTION
     echo
 
     case ${OPTION} in
@@ -485,7 +483,7 @@ blob_transmission()
 install() {
   ask_for_version
   display_flashing_warning
-  echo "Downloading update"
+  echo "Downloading update..."
   curl -f "$BIOS_LINK" -o $BIOS_UPDATE_DIR
   error_check "Cannot access $FW_STORE_URL. Please check your internet
  connection"
@@ -557,13 +555,14 @@ install() {
 
 update_ec() {
   echo "Downloading EC firmware update..."
-  curl -f "$EC_LINK" -o "$EC_UPDATE_FILE"
+  curl --progress-bar -f "$EC_LINK" -o "$EC_UPDATE_FILE"
   error_check "Cannot access $FW_STORE_URL. Please check your internet connection"
+  echo "Checking sha256sum..."
   sha256sum --check <(echo "$EC_HASH")
   error_check "Failed to download EC firmware update"
 
   echo "Updating EC..."
-  system76_ectool flash "$EC_UPDATE_FILE"
+  system76_ectool flash "$EC_UPDATE_FILE" &> /dev/null
   error_check "Failed to update EC firmware"
 }
 
@@ -607,7 +606,7 @@ compare_versions() {
 }
 
 update() {
-  echo "Checking for latest Dasharo update available..."
+  echo "Checking for the latest Dasharo update available..."
   echo "Current Dasharo version: $DASHARO_VERSION"
   echo "Latest available Dasharo version: $DASHARO_REL_VER"
   compare_versions $DASHARO_VERSION $DASHARO_REL_VER
@@ -624,14 +623,14 @@ update() {
 
   display_flashing_warning
 
-  echo "Downloading update"
-  curl -f "$BIOS_LINK" -o $BIOS_UPDATE_FILE
+  echo "Downloading Dasharo firmware update..."
+  curl --progress-bar -f "$BIOS_LINK" -o $BIOS_UPDATE_FILE
   error_check "Cannot access $FW_STORE_URL. Please check your internet connection"
+  echo "Checking sha256sum..."
   sha256sum --check <(echo "$BIOS_HASH")
   error_check "Failed to verify Dasharo firmware"
 
   if [ "$HAVE_EC" = "true" ]; then
-    echo "Checking for Open Source Embedded Controller firmware"
     system76_ectool info >> /dev/null 2>&1
     if [ $? -ne 0 ]; then
       error_exit "Device does not have Dasharo EC firmware - cannot continue update!"
@@ -639,14 +638,14 @@ update() {
   fi
 
   echo "Updating Dasharo firmware..."
-  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_UPDATE} -w "$BIOS_UPDATE_FILE"
-  error_check "Failed to Dasharo firmware"
+  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_UPDATE} -w "$BIOS_UPDATE_FILE" &> /dev/null
+  error_check "Failed to update Dasharo firmware"
 
   if [ "$HAVE_EC" = "true" ]; then
     echo "Dasharo EC update process will start in a moment."
-    sleep 1
+    sleep 3
     echo "Your machine will shut down automatically once it finishes."
-    sleep 1
+    sleep 3
     echo "Updating Dasharo EC firmware..."
     update_ec
   fi
@@ -768,13 +767,13 @@ restore() {
 }
 
 check_flash_chip() {
-  echo "Check information about flash chipset."
-  flashrom -p "$PROGRAMMER_BIOS" --flash-name > "$FLASH_INFO_FILE"
+  echo "Gathering flash chip and chipset information..."
+  flashrom -p "$PROGRAMMER_BIOS" --flash-name > "$FLASH_INFO_FILE" 2> /dev/null
   if [ $? -eq 0 ]; then
-    echo "Chipset found"
+    echo -n "Flash information: "
     tail -n1 "$FLASH_INFO_FILE"
-    FLASH_CHIP_SIZE=$(($(flashrom -p "$PROGRAMMER_BIOS" --flash-size | tail -n1) / 1024 / 1024))
-    echo "Chipset size"
+    FLASH_CHIP_SIZE=$(($(flashrom -p "$PROGRAMMER_BIOS" --flash-size 2> /dev/null | tail -n1) / 1024 / 1024))
+    echo -n "Flash size: "
     echo ${FLASH_CHIP_SIZE}M
   else
     for flash_name in $FLASH_CHIP_LIST
