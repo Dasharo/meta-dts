@@ -28,6 +28,8 @@ SERIAL_NUMBER_FILE="/tmp/serial_number.txt"
 PROGRAMMER_BIOS="internal"
 PROGRAMMER_EC="ite_ec"
 
+ERR_LOG_FILE="/tmp/dts-err.log"
+
 [ -z "$BOARD_VENDOR" ] && error_exit "BOARD_VENDOR not given"
 [ -z "$SYSTEM_MODEL" ] && error_exit "SYSTEM_MODEL not given"
 
@@ -44,8 +46,8 @@ board_config() {
           HAVE_EC="true"
           NEED_EC_RESET="true"
           COMPATIBLE_EC_FW_VERSION="2022-10-07_c662165"
-          EC_HASH_PROD="$(wget -O /dev/stdout ${EC_LINK_PROD}.sha256 2>/dev/null | cut -d ' ' -f 1) $EC_UPDATE_FILE"
-          BIOS_HASH_PROD="$(wget -O /dev/stdout ${BIOS_LINK_PROD}.sha256 2>/dev/null | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
+          EC_HASH_PROD="$(wget -O /dev/stdout ${EC_LINK_PROD}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $EC_UPDATE_FILE"
+          BIOS_HASH_PROD="$(wget -O /dev/stdout ${BIOS_LINK_PROD}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
           NEED_SMBIOS_MIGRATION="false"
           NEED_BLOB_TRANSMISSION="false"
           PROGRAMMER_BIOS="internal"
@@ -61,8 +63,8 @@ board_config() {
           HAVE_EC="true"
           NEED_EC_RESET="true"
           COMPATIBLE_EC_FW_VERSION="2022-08-31_cbff21b"
-          EC_HASH_PROD="$(wget -O /dev/stdout ${EC_LINK_PROD}.sha256 2>/dev/null | cut -d ' ' -f 1) $EC_UPDATE_FILE"
-          BIOS_HASH_PROD="$(wget -O /dev/stdout ${BIOS_LINK_PROD}.sha256 2>/dev/null | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
+          EC_HASH_PROD="$(wget -O /dev/stdout ${EC_LINK_PROD}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $EC_UPDATE_FILE"
+          BIOS_HASH_PROD="$(wget -O /dev/stdout ${BIOS_LINK_PROD}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
           NEED_SMBIOS_MIGRATION="false"
           NEED_BLOB_TRANSMISSION="false"
           PROGRAMMER_BIOS="internal"
@@ -85,7 +87,7 @@ board_config() {
               BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
               HAVE_EC="false"
               NEED_EC_RESET="false"
-              BIOS_HASH_PROD="$(wget -O /dev/stdout ${BIOS_LINK_PROD}.sha256 2>/dev/null | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
+              BIOS_HASH_PROD="$(wget -O /dev/stdout ${BIOS_LINK_PROD}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
               NEED_SMBIOS_MIGRATION="true"
               NEED_BLOB_TRANSMISSION="false"
               PROGRAMMER_BIOS="internal"
@@ -99,7 +101,7 @@ board_config() {
               BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_ddr5.rom"
               HAVE_EC="false"
               NEED_EC_RESET="false"
-              BIOS_HASH_PROD="$(wget -O /dev/stdout ${BIOS_LINK_PROD}.sha256 2>/dev/null | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
+              BIOS_HASH_PROD="$(wget -O /dev/stdout ${BIOS_LINK_PROD}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
               NEED_SMBIOS_MIGRATION="true"
               NEED_BLOB_TRANSMISSION="false"
               PROGRAMMER_BIOS="internal"
@@ -342,7 +344,7 @@ backup() {
 
   if [ "$HAVE_EC" = "true" ]; then
     echo "Checking for Open Source Embedded Controller firmware"
-    system76_ectool info >> /dev/null 2>&1
+    system76_ectool info >> $ERR_LOG_FILE 2>&1
     if [ $? -eq 0 ]; then
       echo "Device has already Open Source Embedded Controller firmware, do not backup EC..."
     else
@@ -422,37 +424,37 @@ resign_binary()
 download_keys()
 {
   mkdir $KEYS_DIR
-  wget -O $KEYS_DIR/recovery_key.vbpubk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/recovery_key.vbpubk > /dev/null 2>&1
-  wget -O $KEYS_DIR/firmware.keyblock https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/firmware.keyblock > /dev/null 2>&1
-  wget -O $KEYS_DIR/firmware_data_key.vbprivk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/firmware_data_key.vbprivk > /dev/null 2>&1
-  wget -O $KEYS_DIR/kernel_subkey.vbpubk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/kernel_subkey.vbpubk > /dev/null 2>&1
-  wget -O $KEYS_DIR/root_key.vbpubk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/root_key.vbpubk> /dev/null 2>&1
+  wget -O $KEYS_DIR/recovery_key.vbpubk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/recovery_key.vbpubk >> $ERR_LOG_FILE 2>&1
+  wget -O $KEYS_DIR/firmware.keyblock https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/firmware.keyblock >> $ERR_LOG_FILE 2>&1
+  wget -O $KEYS_DIR/firmware_data_key.vbprivk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/firmware_data_key.vbprivk >> $ERR_LOG_FILE 2>&1
+  wget -O $KEYS_DIR/kernel_subkey.vbpubk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/kernel_subkey.vbpubk >> $ERR_LOG_FILE 2>&1
+  wget -O $KEYS_DIR/root_key.vbpubk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/root_key.vbpubk>> $ERR_LOG_FILE 2>&1
 }
 
 blob_transmission()
 {
   echo "Extracting the UEFI image from BIOS update"
-  wget -O "$DBT_BIOS_UPDATE_FILENAME" "$DBT_BIOS_UPDATE_URL" > /dev/null 2>&1
+  wget -O "$DBT_BIOS_UPDATE_FILENAME" "$DBT_BIOS_UPDATE_URL" >> $ERR_LOG_FILE 2>&1
   error_file_check "$DBT_BIOS_UPDATE_FILENAME" "Failed to download BIOS for $SYSTEM_MODEL"
 
   sha256sum --check <(echo "$DBT_BIOS_UPDATE_HASH")
   error_check "Failed SHA-256 sum check on the downloaded BIOS for $SYSTEM_MODEL"
 
-  binwalk --run-as=root -e "$DBT_BIOS_UPDATE_FILENAME" -C /tmp > /dev/null 2>&1
+  binwalk --run-as=root -e "$DBT_BIOS_UPDATE_FILENAME" -C /tmp >> $ERR_LOG_FILE 2>&1
   error_file_check "$DBT_UEFI_IMAGE" "Failed to extract UEFI image from BIOS update"
 
-  uefi-firmware-parser -e "$DBT_UEFI_IMAGE" -O > /dev/null 2>&1
+  uefi-firmware-parser -e "$DBT_UEFI_IMAGE" -O >> $ERR_LOG_FILE 2>&1
 
   if [ -n "$SINIT_ACM_FILENAME" ] && [ -n "$SINIT_ACM_URL" ]; then
     echo "Downloading the Intel SINIT ACM"
-    wget -O "$SINIT_ACM_FILENAME" "$SINIT_ACM_URL" > /dev/null 2>&1
+    wget -O "$SINIT_ACM_FILENAME" "$SINIT_ACM_URL" >> $ERR_LOG_FILE 2>&1
     error_file_check "$SINIT_ACM_FILENAME" "Failed to download Intel SINIT ACM."
 
     # Intel does not provide hash of the package, use SHA256 we know is good
     sha256sum --check <(echo "$SINIT_ACM_HASH")
     error_check "Failed SHA-256 sum check on the downloaded Intel SINIT ACM."
 
-    unzip -o "$SINIT_ACM_FILENAME" -d /tmp > /dev/null 2>&1
+    unzip -o "$SINIT_ACM_FILENAME" -d /tmp >> $ERR_LOG_FILE 2>&1
     error_check "Failed to decompress Intel SINIT ACM package."
   fi
 
@@ -492,7 +494,7 @@ install() {
 
   if [ "$HAVE_EC" = "true" ]; then
     echo "Checking for Open Source Embedded Controller firmware"
-    system76_ectool info >> /dev/null 2>&1
+    system76_ectool info >> $ERR_LOG_FILE 2>&1
     if [ $? -eq 0 ]; then
       echo "Device has already Open Source Embedded Controller firmware, do not flash EC..."
     else
@@ -562,7 +564,7 @@ update_ec() {
   error_check "Failed to download EC firmware update"
 
   echo "Updating EC..."
-  system76_ectool flash "$EC_UPDATE_FILE" &> /dev/null
+  system76_ectool flash "$EC_UPDATE_FILE" &>> $ERR_LOG_FILE
   error_check "Failed to update EC firmware"
 }
 
@@ -631,14 +633,14 @@ update() {
   error_check "Failed to verify Dasharo firmware"
 
   if [ "$HAVE_EC" = "true" ]; then
-    system76_ectool info >> /dev/null 2>&1
+    system76_ectool info >> $ERR_LOG_FILE 2>&1
     if [ $? -ne 0 ]; then
       error_exit "Device does not have Dasharo EC firmware - cannot continue update!"
     fi
   fi
 
   echo "Updating Dasharo firmware..."
-  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_UPDATE} -w "$BIOS_UPDATE_FILE" &> /dev/null
+  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_UPDATE} -w "$BIOS_UPDATE_FILE" &>> $ERR_LOG_FILE
   error_check "Failed to update Dasharo firmware"
 
   if [ "$HAVE_EC" = "true" ]; then
@@ -768,11 +770,11 @@ restore() {
 
 check_flash_chip() {
   echo "Gathering flash chip and chipset information..."
-  flashrom -p "$PROGRAMMER_BIOS" --flash-name > "$FLASH_INFO_FILE" 2> /dev/null
+  flashrom -p "$PROGRAMMER_BIOS" --flash-name > "$FLASH_INFO_FILE" 2>> $ERR_LOG_FILE
   if [ $? -eq 0 ]; then
     echo -n "Flash information: "
     tail -n1 "$FLASH_INFO_FILE"
-    FLASH_CHIP_SIZE=$(($(flashrom -p "$PROGRAMMER_BIOS" --flash-size 2> /dev/null | tail -n1) / 1024 / 1024))
+    FLASH_CHIP_SIZE=$(($(flashrom -p "$PROGRAMMER_BIOS" --flash-size 2>> $ERR_LOG_FILE| tail -n1) / 1024 / 1024))
     echo -n "Flash size: "
     echo ${FLASH_CHIP_SIZE}M
   else
