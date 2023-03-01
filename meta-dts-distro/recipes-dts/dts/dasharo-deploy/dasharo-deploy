@@ -57,7 +57,7 @@ board_config() {
           ;;
         "NS50_70MU")
           DASHARO_REL_NAME="novacustom_ns5x_tgl"
-          DASHARO_REL_VER="1.3.0"
+          DASHARO_REL_VER="1.4.0"
           BIOS_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
           EC_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_ec_v${DASHARO_REL_VER}.rom"
           HAVE_EC="true"
