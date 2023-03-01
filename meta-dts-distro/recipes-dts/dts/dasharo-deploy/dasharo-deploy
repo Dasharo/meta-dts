@@ -690,9 +690,7 @@ update() {
 
   if [ "$HAVE_EC" = "true" ]; then
     system76_ectool info >> $ERR_LOG_FILE 2>&1
-    if [ $? -ne 0 ]; then
-      error_exit "Device does not have Dasharo EC firmware - cannot continue update!"
-    fi
+    error_check "Device does not have Dasharo EC firmware - cannot continue update!"
   fi
 
   echo "Updating Dasharo firmware..."
