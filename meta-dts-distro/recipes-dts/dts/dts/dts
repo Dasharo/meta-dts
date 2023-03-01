@@ -41,31 +41,6 @@ echo '/_____/\__,_/____/_/ /_/\__,_/_/   \____/    /_/  \____/\____/_/____/   /_
 echo
 }
 
-vendor_menu()
-{
-  case "$BOARD_VENDOR" in
-    "Notebook")
-      case "$SYSTEM_MODEL" in
-      "NV4XMB,ME,MZ" | "NS50_70MU")
-        case "$1" in
-          "print")
-             echo "  6) NovaCustom menu"
-            ;;
-          "action")
-            echo "Entering NovaCustom menu, to leave type exit and press Enter or press LCtrl+D"
-            echo ""
-            ${CMD_NCMENU}
-            ;;
-          *)
-            ;;
-        esac
-        ;;
-      *)
-        ;;
-      esac
-  esac
-}
-
 print_banner
 
 logs_sent=""
@@ -98,7 +73,6 @@ while : ; do
 
   echo "  5) Update Dasharo firmware"
 
-  vendor_menu "print"
   echo "  9) Shell"
   echo "  10) Power off system"
   echo "  11) Reboot system"
@@ -186,11 +160,29 @@ while : ; do
       ;;
     5)
       if check_if_dasharo; then
+        # For NovaCustom TGL laptops with Dasharo version lower than 1.3.0,
+        # we shall run the ec_transition script instead. See:
+        # https://docs.dasharo.com/variants/novacustom_nv4x_tgl/releases/#v130-2022-10-18
+        if [ "$BOARD_VENDOR" = "Notebook" ]; then
+            case "$SYSTEM_MODEL" in
+              "NS50_70MU"|"NV4XMB,ME,MZ")
+                compare_versions $DASHARO_VERSION 1.3.0
+                if [ $? -eq 1 ]; then
+                # For Dasharo version lesser than 1.3.0
+                  echo "Detected NovaCustom hardware with version < 1.3.0"
+                  echo "EC transition procedure will start in 5 seconds"
+                  sleep 5
+                  ${CMD_EC_TRANSITION}
+                fi
+                # Continue with regular update process for Dasharo version
+                #  greater or equal 1.3.0
+                ;;
+            esac
+        fi
+
+        # Use regular update process for everything else
         ${CMD_DASHARO_DEPLOY} update
       fi
-      ;;
-    6)
-      vendor_menu "action"
       ;;
     9)
       echo "Entering shell, to leave type exit and press Enter or press LCtrl+D"

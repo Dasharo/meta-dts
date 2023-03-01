@@ -20,6 +20,7 @@ CMD_DASHARO_HCL_REPORT="/usr/sbin/dasharo-hcl-report"
 CMD_NCMENU="/usr/sbin/novacustom_menu"
 CMD_DASHARO_DEPLOY="/usr/sbin/dasharo-deploy"
 CMD_CLOUD_LIST="/usr/sbin/cloud_list"
+CMD_EC_TRANSITION="/usr/sbin/ec_transition"
 
 # Dasharo Supporters Entrance variables
 SE_credential_file="/etc/cloud-pass"
