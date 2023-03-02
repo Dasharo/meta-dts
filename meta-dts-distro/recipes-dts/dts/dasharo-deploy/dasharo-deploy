@@ -127,15 +127,17 @@ board_config() {
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
               FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
-              # if v1.0.0 or older, flash the whole bios region, as per:
-              # https://docs.dasharo.com/variants/msi_z690/firmware-update/#version-older-than-v110
-              compare_versions $DASHARO_VERSION 1.1.0
-              if [ $? -eq 1 ]; then
-              # For Dasharo version lesser than 1.1.0
-                FLASHROM_ADD_OPT_UPDATE="--bios"
-              # For Dasharo version greater or equal 1.1.0
-              else
-                FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A -i RW_SECTION_B"
+              if check_if_dasharo; then
+                # if v1.0.0 or older, flash the whole bios region, as per:
+                # https://docs.dasharo.com/variants/msi_z690/firmware-update/#version-older-than-v110
+                compare_versions $DASHARO_VERSION 1.1.0
+                if [ $? -eq 1 ]; then
+                # For Dasharo version lesser than 1.1.0
+                    FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
+                # For Dasharo version greater or equal 1.1.0
+                else
+                    FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A -i RW_SECTION_B"
+                fi
               fi
               ;;
             "PRO Z690-A WIFI (MS-7D25)" | "PRO Z690-A (MS-7D25)")
@@ -150,15 +152,17 @@ board_config() {
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
               FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
-              # if v1.0.0 or older, flash the whole bios region, as per:
-              # https://docs.dasharo.com/variants/msi_z690/firmware-update/#version-older-than-v110
-              compare_versions $DASHARO_VERSION 1.1.0
-              if [ $? -eq 1 ]; then
-              # For Dasharo version lesser than 1.1.0
-                FLASHROM_ADD_OPT_UPDATE="--bios"
-              else
-              # For Dasharo version greater or equal 1.1.0
-                FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A -i RW_SECTION_B"
+              if check_if_dasharo; then
+                # if v1.0.0 or older, flash the whole bios region, as per:
+                # https://docs.dasharo.com/variants/msi_z690/firmware-update/#version-older-than-v110
+                compare_versions $DASHARO_VERSION 1.1.0
+                if [ $? -eq 1 ]; then
+                # For Dasharo version lesser than 1.1.0
+                    FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
+                else
+                # For Dasharo version greater or equal 1.1.0
+                    FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A -i RW_SECTION_B"
+                fi
               fi
               ;;
             *)
@@ -361,15 +365,21 @@ display_flashing_warning() {
     if [ -v EC_HASH ]; then
       local _ec_hash="$(echo $BIOS_HASH | cut -d ' ' -f 1)"
       echo "Dasharo EC firmware:"
-      echo "  - link : $EC_LINK"
+      echo "  - link: $EC_LINK"
       echo "  - hash: $_ec_hash"
     fi
     echo
     echo "You can learn more about this release on: https://docs.dasharo.com/"
 
-    echo
-    read -r -p "Do you want to update Dasharo firmware on your hardware? (Y|n) " OPTION
-    echo
+    if check_if_dasharo; then
+        echo
+        read -r -p "Do you want to update Dasharo firmware on your hardware? (Y|n) " OPTION
+        echo
+    else
+        echo
+        read -r -p "Do you want to install Dasharo firmware on your hardware? (Y|n) " OPTION
+        echo
+    fi
 
     case ${OPTION} in
       yes|y|Y|Yes|YES)
@@ -415,12 +425,12 @@ backup() {
 }
 
 install_ec() {
-  echo "Downloading EC firmware update..."
+  echo "Downloading Dasharo EC firmware update..."
   curl -f "$EC_LINK" -o "$EC_UPDATE_FILE"
   error_check "Cannot access $FW_STORE_URL. Please check your internet
  connection"
   sha256sum --check <(echo "$EC_HASH")
-  error_check "Failed to download EC firmware update"
+  error_check "Failed to download Dasharo EC firmware update"
 
   echo "Updating EC..."
   flashrom -p "$PROGRAMMER_EC" ${FLASH_CHIP_SELECT} -w "$EC_UPDATE_FILE"
@@ -537,8 +547,8 @@ blob_transmission()
 install() {
   ask_for_version
   display_flashing_warning
-  echo "Downloading update..."
-  curl -f "$BIOS_LINK" -o $BIOS_UPDATE_DIR
+  echo "Downloading Dasharo firmware..."
+  curl -f "$BIOS_LINK" -o $BIOS_UPDATE_FILE
   error_check "Cannot access $FW_STORE_URL. Please check your internet
  connection"
   sha256sum --check <(echo "$BIOS_HASH")
@@ -559,8 +569,8 @@ install() {
     fi
   fi
 
-  cbfstool "$BIOS_UPDATE_DIR" extract -r COREBOOT -n config -f "$BIOS_UPDATE_CONFIG_DIR"
-  grep "CONFIG_VBOOT=y" "$BIOS_UPDATE_CONFIG_DIR"
+  cbfstool "$BIOS_UPDATE_FILE" extract -r COREBOOT -n config -f "$BIOS_UPDATE_CONFIG_FILE"
+  grep "CONFIG_VBOOT=y" "$BIOS_UPDATE_CONFIG_FILE"
   HAVE_VBOOT="$?"
 
   if [ "$NEED_SMBIOS_MIGRATION" = "true" ]; then
@@ -573,7 +583,7 @@ install() {
   fi
 
   echo "Installing Dasharo firmware..."
-  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_DEPLOY} -w "$BIOS_UPDATE_DIR"
+  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_DEPLOY} -w "$BIOS_UPDATE_FILE"
   error_check "Failed to install Dasharo firmware"
 
   print_green "Successfully installed Dasharo firmware"
