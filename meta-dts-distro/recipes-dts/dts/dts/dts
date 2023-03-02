@@ -70,9 +70,9 @@ while : ; do
   else
       echo "  4) Load SE keys"
   fi
-
-  echo "  5) Update Dasharo firmware"
-
+  if check_if_dasharo; then
+    echo "  5) Update Dasharo firmware"
+  fi
   echo "  9) Shell"
   echo "  10) Power off system"
   echo "  11) Reboot system"
