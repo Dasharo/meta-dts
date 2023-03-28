@@ -1,13 +1,19 @@
 name: Weekly clean & rebuild
 on:
-  schedule:
-    - cron: '0 8 * * 6'
+  push
 
 jobs:
   build:
     name: Build system image without using cache
     runs-on: self-hosted
     steps:
+      - name: Prepare SSH key
+        shell: bash
+        env:
+          SSH_KEY: ${{secrets.SSH_KEY}}
+        run: |
+          echo -e ${SSH_KEY} > ~/.ssh/dts-ci-key-2
+          chmod 600 ~/.ssh/dts-ci-key-2
       - name: Checkout meta-dts repo
         uses: actions/checkout@v2
         with:
@@ -42,7 +48,7 @@ jobs:
   cleanup:
     name: Cleanup
     if: always()
-    needs: [deploy-cache, deploy-images]
+    needs: deploy-cache
     runs-on: self-hosted
     steps:
       - name: Cleanup after deployment
