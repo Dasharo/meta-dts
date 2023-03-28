@@ -152,8 +152,8 @@ check_se_creds() {
   CLOUD_REQUEST="X-Requested-With: XMLHttpRequest"
 
   if check_network_connection; then
-    CHECK_DOWNLOAD_REQUEST_RESPONSE=$( curl -I -s -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$tmpDownloadURL" -o /dev/null -w "%{http_code}")
-    CHECK_LOGS_REQUEST_RESPONSE=$( curl -I -s -f -H "$CLOUD_REQUEST" "$tmpLogsURL" -o /dev/null -w "%{http_code}")
+    CHECK_DOWNLOAD_REQUEST_RESPONSE=$(curl -L -I -s -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$TEST_DOWNLOAD_URL" -o /dev/null -w "%{http_code}")
+    CHECK_LOGS_REQUEST_RESPONSE=$(curl -L -I -s -f -H "$CLOUD_REQUEST" "$TEST_LOGS_URL" -o /dev/null -w "%{http_code}")
     if [ ${CHECK_DOWNLOAD_REQUEST_RESPONSE} -eq 200 ] && [ ${CHECK_LOGS_REQUEST_RESPONSE} -eq 200 ]; then
       return 0
     else

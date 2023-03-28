@@ -426,7 +426,7 @@ backup() {
 
 install_ec() {
   echo "Downloading Dasharo EC firmware update..."
-  curl -f "$EC_LINK" -o "$EC_UPDATE_FILE"
+  curl -L -f "$EC_LINK" -o "$EC_UPDATE_FILE"
   error_check "Cannot access $FW_STORE_URL. Please check your internet
  connection"
   sha256sum --check <(echo "$EC_HASH")
@@ -548,7 +548,7 @@ install() {
   ask_for_version
   display_flashing_warning
   echo "Downloading Dasharo firmware..."
-  curl -f "$BIOS_LINK" -o $BIOS_UPDATE_FILE
+  curl -L -f "$BIOS_LINK" -o $BIOS_UPDATE_FILE
   error_check "Cannot access $FW_STORE_URL. Please check your internet
  connection"
   sha256sum --check <(echo "$BIOS_HASH")
@@ -619,7 +619,7 @@ install() {
 
 update_ec() {
   echo "Downloading EC firmware update..."
-  curl --progress-bar -f "$EC_LINK" -o "$EC_UPDATE_FILE"
+  curl --progress-bar -L -f "$EC_LINK" -o "$EC_UPDATE_FILE"
   error_check "Cannot access $FW_STORE_URL. Please check your internet connection"
   echo "Checking sha256sum..."
   sha256sum --check <(echo "$EC_HASH")
@@ -649,7 +649,7 @@ update() {
   display_flashing_warning
 
   echo "Downloading Dasharo firmware update..."
-  curl --progress-bar -f "$BIOS_LINK" -o $BIOS_UPDATE_FILE
+  curl --progress-bar -L -f "$BIOS_LINK" -o $BIOS_UPDATE_FILE
   error_check "Cannot access $FW_STORE_URL. Please check your internet connection"
   echo "Checking sha256sum..."
   sha256sum --check <(echo "$BIOS_HASH")
