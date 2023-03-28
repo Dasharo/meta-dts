@@ -9,7 +9,7 @@ trap : 3
 check_os_version() {
   local os_version=$(grep "VERSION_ID" ${OS_VERSION_FILE} | cut -d "=" -f 2-)
 
-  if [ ${SE_IS_LOGGED} ]; then
+  if ${SE_IS_LOGGED}; then
     echo "  Logs key:        " ${CLOUDSEND_LOGS_URL}
     echo "  Download key:    " ${CLOUDSEND_DOWNLOAD_URL}
     echo "  Password:        " ${CLOUDSEND_PASSWORD}
@@ -49,9 +49,9 @@ while : ; do
   # Each time the main menu is displayed, check for SE credentials and export
   # them, if file exists
   if [ -e "${SE_credential_file}" ]; then
-      export CLOUDSEND_LOGS_URL=$(head -1 ${SE_credential_file})
-      export CLOUDSEND_DOWNLOAD_URL=$(head -2 ${SE_credential_file} | tail -1 )
-      export CLOUDSEND_PASSWORD=$(head -3 ${SE_credential_file} | tail -1 )
+      export CLOUDSEND_LOGS_URL=$(sed -n '1p' < ${SE_credential_file} | tr -d '\n')
+      export CLOUDSEND_DOWNLOAD_URL=$(sed -n '2p' < ${SE_credential_file} | tr -d '\n')
+      export CLOUDSEND_PASSWORD=$(sed -n '3p' < ${SE_credential_file} | tr -d '\n')
       export SE_IS_LOGGED=true
   fi
 
@@ -65,7 +65,7 @@ while : ; do
   if check_if_dasharo; then
     echo "  3) Restore firmware from Dasharo HCL report"
   fi
-  if [ -n "${SE_IS_LOGGED}" ]; then
+  if ${SE_IS_LOGGED}; then
       echo "  4) Edit SE keys"
   else
       echo "  4) Load SE keys"
@@ -135,28 +135,31 @@ while : ; do
       ;;
     4)
       echo ""
-      read -p "Enter logs key:                " tmpUPURL
+      read -p "Enter logs key:                " TMP_CLOUDSEND_LOGS_URL
       echo ""
-      read -p "Enter firmware download key:   " tmpDOWNLOADURL
+      read -p "Enter firmware download key:   " TMP_CLOUDSEND_DOWNLOAD_URL
       echo ""
-      read -p "Enter password:                " tmpPASSWD
+      read -p "Enter password:                " TMP_CLOUDSEND_PASSWORD
 
-      echo ${tmpUPURL} > ${SE_credential_file}
-      echo ${tmpDOWNLOADURL} >> ${SE_credential_file}
-      echo ${tmpPASSWD} >> ${SE_credential_file}
+      echo ${TMP_CLOUDSEND_LOGS_URL} > ${SE_credential_file}
+      echo ${TMP_CLOUDSEND_DOWNLOAD_URL} >> ${SE_credential_file}
+      echo ${TMP_CLOUDSEND_PASSWORD} >> ${SE_credential_file}
 
-      echo "Dasharo SE credentials has been saved"
+      print_green "Dasharo SE credentials has been saved"
       echo "Veryfing Dasharo SE credentials..."
 
       check_se_creds
       if [ $? -eq 0 ]; then
-        echo "Dasharo SE credentials are correct and ready to use"
+        print_green "Dasharo SE credentials are correct and ready to use"
       else
         echo -e "Something may be wrong with credentials. Please use option 4 to change SE keys
                   \rand make sure that there is no typo."
         rm ${SE_credential_file}
+        export CLOUDSEND_LOGS_URL="$BASE_CLOUDSEND_LOGS_URL"
+        export CLOUDSEND_PASSWORD="$BASE_CLOUDSEND_PASSWORD"
+        unset CLOUDSEND_DOWNLOAD_URL
+        export SE_IS_LOGGED=false
       fi
-
       ;;
     5)
       if check_if_dasharo; then
@@ -169,10 +172,13 @@ while : ; do
                 compare_versions $DASHARO_VERSION 1.3.0
                 if [ $? -eq 1 ]; then
                 # For Dasharo version lesser than 1.3.0
-                  echo "Detected NovaCustom hardware with version < 1.3.0"
-                  echo "EC transition procedure will start in 5 seconds"
+                  print_warning "Detected NovaCustom hardware with version < 1.3.0"
+                  print_warning "Need to perform EC transition after which the platform will turn off"
+                  print_warning "Then, please power it on and proceed with update again"
+                  print_warning "EC transition procedure will start in 5 seconds"
                   sleep 5
                   ${CMD_EC_TRANSITION}
+                  error_check "Could not perform EC transition"
                 fi
                 # Continue with regular update process for Dasharo version
                 #  greater or equal 1.3.0

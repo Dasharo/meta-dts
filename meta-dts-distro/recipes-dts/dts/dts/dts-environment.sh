@@ -26,11 +26,11 @@ CMD_EC_TRANSITION="/usr/sbin/ec_transition"
 SE_credential_file="/etc/cloud-pass"
 Cloud_base_url="https://cloud.3mdeb.com/index.php/s/"
 # base values
-CLOUDSEND_LOGS_URL="39d4biH4SkXD8Zm"
-CLOUDSEND_PASSWORD="1{\[\k6G"
+BASE_CLOUDSEND_LOGS_URL="39d4biH4SkXD8Zm"
+BASE_CLOUDSEND_PASSWORD="1{\[\k6G"
 # base values
-export CLOUDSEND_LOGS_URL="39d4biH4SkXD8Zm"
-export CLOUDSEND_PASSWORD="1{\[\k6G"
+export CLOUDSEND_LOGS_URL="$BASE_CLOUDSEND_LOGS_URL"
+export CLOUDSEND_PASSWORD="$BASE_CLOUDSEND_PASSWORD"
 
 
 OS_VERSION_FILE="/etc/os-release"

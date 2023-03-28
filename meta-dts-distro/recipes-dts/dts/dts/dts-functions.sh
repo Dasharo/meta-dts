@@ -36,8 +36,8 @@ error_exit() {
 
 error_check() {
   _error_code=$?
-  [ "$_error_code" -ne 0 ] && error_exit "$_error_msg : ($_error_code)"
   _error_msg="$1"
+  [ "$_error_code" -ne 0 ] && error_exit "$_error_msg : ($_error_code)"
 }
 
 function error_file_check {
@@ -143,13 +143,13 @@ compare_versions() {
 }
 
 check_se_creds() {
-  # TODO: what is the difference between tpmDownloadURL and tmpDOWNLOADURL ?!
-  tmpDownloadURL="https://cloud.3mdeb.com/public.php/webdav/biosupdate.rom"
-  tmpLogsURL="https://cloud.3mdeb.com/index.php/s/${CLOUDSEND_LOGS_URL}/authenticate/showShare"
-  CLOUD_DOWNLOAD_URL=`sed -n '2p' < ${SE_credential_file} | tr -d '\n'`
-  CLOUD_PASSWORD=`sed -n '3p' < ${SE_credential_file} | tr -d '\n'`
-  USER_DETAILS="$CLOUD_DOWNLOAD_URL:$CLOUD_PASSWORD"
+  CLOUDSEND_LOGS_URL=$(sed -n '1p' < ${SE_credential_file} | tr -d '\n')
+  CLOUDSEND_DOWNLOAD_URL=$(sed -n '2p' < ${SE_credential_file} | tr -d '\n')
+  CLOUDSEND_PASSWORD=$(sed -n '3p' < ${SE_credential_file} | tr -d '\n')
+  USER_DETAILS="$CLOUDSEND_DOWNLOAD_URL:$CLOUDSEND_PASSWORD"
   CLOUD_REQUEST="X-Requested-With: XMLHttpRequest"
+  TEST_DOWNLOAD_URL="https://cloud.3mdeb.com/public.php/webdav/biosupdate.rom"
+  TEST_LOGS_URL="https://cloud.3mdeb.com/index.php/s/${CLOUDSEND_LOGS_URL}/authenticate/showShare"
 
   if check_network_connection; then
     CHECK_DOWNLOAD_REQUEST_RESPONSE=$(curl -L -I -s -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$TEST_DOWNLOAD_URL" -o /dev/null -w "%{http_code}")
