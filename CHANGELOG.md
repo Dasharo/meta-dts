@@ -3,7 +3,27 @@
 All notable changes to the DTS Community Edition project will be documented in
 this file.
 
-## v1.1.0 - 2022-10-30
+## v1.1.1 - 2023-02-20
+
+* Fixed Dasharo zero-touch initial deployment on MSI PRO Z690-A, added DDR5
+  target with dedicated firmware.
+* Blocked Dasharo zero-touch initial deployment on platforms where Dasharo
+  firmware was detected.
+* Added couple UX improvements for Dasharo zero-touch initial deployment:
+    - added platform verification step (show detected device information),
+    - added firmware verification step (show hash of using binary),
+    - added progress bar on first instructions,
+    - used reboot as default behavior after successful flashing.
+* Added improvements for HCL report.
+* Added DTS ISO format image, and documentation about
+  [VentoyOS](./documentation.md#run-dts-using-ventoyos) usage.
+* Improved `README` of the `meta-dts` repository.
+* Added service to run shell [commands from
+  iPXE](./documentation.md#run-commands-from-ipxe-shell).
+* Added instructions for building PoC image with [enabled UEFI Secure
+  Boot](./documentation.md#build-image-with-uefi-secure-boot-support) support.
+
+## v1.1.0 - 2022-11-02
 
 * Added [Dasharo zero-touch initial
   deployment](https://docs.dasharo.com/dasharo-tools-suite/documentation.md#dasharo-zero-touch-initial-deployment)
@@ -25,7 +45,7 @@ this file.
   [boot.dasharo.com](https://boot.dasharo.com/dts/)
 * Sharing build cache on [cache.dasharo.com](https://cache.dasharo.com/yocto/dts/)
 
-## v1.0.2 - 2022-10-12
+## v1.0.2 - 2022-10-19
 
 * Added new vendor specific menu entry which is displayed only on supported
   platforms, for now NovaCustom menu was added for NV4x and NS50 70MU laptops
@@ -48,7 +68,7 @@ this file.
   NS50 70MU and NS70 laptops
 * First public release: https://github.com/Dasharo/meta-dts
 
-## v1.0.0 2022-07-28
+## v1.0.0 2022-08-09
 
 * Initial release v1.0.0
 * Auto-login functionality
