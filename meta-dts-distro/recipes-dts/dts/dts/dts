@@ -73,6 +73,11 @@ while : ; do
   if check_if_dasharo; then
     echo "  5) Update Dasharo firmware"
   fi
+  if systemctl is-active sshd.socket > /dev/null 2>&1; then
+      echo "  8) Stop SSH server"
+  else
+      echo "  8) Start SSH server"
+  fi
   echo "  9) Shell"
   echo "  10) Power off system"
   echo "  11) Reboot system"
@@ -190,6 +195,15 @@ while : ; do
         ${CMD_DASHARO_DEPLOY} update
       fi
       ;;
+    8)
+      if systemctl is-active sshd.socket > /dev/null 2>&1; then
+        print_green "Turning off the SSH server..."
+        systemctl stop sshd.socket
+      else
+        print_warning "Starting SSH server!"
+        print_warning "Now you can log in into the system using root account."
+        systemctl start sshd.socket
+      fi
     9)
       echo "Entering shell, to leave type exit and press Enter or press LCtrl+D"
       echo ""
