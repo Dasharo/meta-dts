@@ -13,8 +13,8 @@ jobs:
         env:
           SSH_KEY: ${{secrets.SSH_KEY}}
         run: |
-          echo -e ${SSH_KEY} > ~/.ssh/dts-ci-key-2
-          chmod 600 ~/.ssh/dts-ci-key-2
+          echo -e ${SSH_KEY} > ~/.ssh/dts-ci-key
+          chmod 600 ~/.ssh/dts-ci-key
       - name: Checkout meta-dts repo
         uses: actions/checkout@v2
         with:
@@ -35,17 +35,17 @@ jobs:
         env:
           SSH_KEY: ${{secrets.SSH_KEY}}
         run: |
-          echo -e ${SSH_KEY} | sed 's/^ *//' > ~/.ssh/dts-ci.tmp
-          chmod 600 ~/.ssh/dts-ci.tmp
+          echo -e ${SSH_KEY} > ~/.ssh/dts-ci-key
+          chmod 600 ~/.ssh/dts-ci-key
       - name: Send sstate-cache folder to cache.dasharo.com
         shell: bash
         run: |
-          ssh -i ~/.ssh/dts-ci.tmp builder@10.1.40.2 "mkdir -p cache/yocto/dts"
-          rsync -P -e "ssh -i ~/.ssh/dts-ci.tmp" -rlptD --delete build/sstate-cache builder@10.1.40.2:cache/yocto/dts
+          ssh -i ~/.ssh/dts-ci-key builder@10.1.40.2 "mkdir -p cache/yocto/dts"
+          rsync -P -e "ssh -i ~/.ssh/dts-ci-key" -rlptD --delete build/sstate-cache builder@10.1.40.2:cache/yocto/dts
       - name: Send downloads folder to cache.dasharo.com
         shell: bash
         run: |
-          rsync -P -e "ssh -i ~/.ssh/dts-ci.tmp" -rlptD --delete build/downloads builder@10.1.40.2:cache/yocto/dts
+          rsync -P -e "ssh -i ~/.ssh/dts-ci-key" -rlptD --delete build/downloads builder@10.1.40.2:cache/yocto/dts
   cleanup:
     name: Cleanup
     if: always()
@@ -55,5 +55,5 @@ jobs:
       - name: Cleanup after deployment
         shell: bash
         run: |
-          rm -rf ~/.ssh/dts-ci.tmp
+          rm -rf ~/.ssh/dts-ci-key
           rm -rf build
