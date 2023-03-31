@@ -47,7 +47,7 @@ jobs:
           cp dts-base-image-genericx86-64.wic.gz dts-base-image-${DTS_VER}.wic.gz
           scp -i ~/.ssh/dts-ci-key bzImage-${DTS_VER} builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.cpio.gz builder@10.1.40.2:boot/dts/${DTS_VER}/
-          scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.wic.gz builder@10.1.40.2:/boot/dts/${DTS_VER}/
+          scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.wic.gz builder@10.1.40.2:boot/dts/${DTS_VER}/
       - name: Deploy sha256 on boot.dasharo.com
         shell: bash
         run: |
@@ -58,7 +58,7 @@ jobs:
           sha256sum dts-base-image-${DTS_VER}.wic.gz > dts-base-image-${DTS_VER}.wic.gz.sha256
           scp -i ~/.ssh/dts-ci-key bzImage-${DTS_VER}.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.cpio.gz.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
-          scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.wic.gz.sha256 builder@10.1.40.2:/boot/dts/${DTS_VER}/
+          scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.wic.gz.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
       - name: Update iPXE menu
         shell: bash
         run: |
