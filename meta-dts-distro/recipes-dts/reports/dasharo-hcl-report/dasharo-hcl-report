@@ -13,7 +13,7 @@ FLASH_INFO_FILE="/tmp/flash_info"
 
 check_flash_chip() {
   echo "Check information about flash chipset."
-  flashrom -p "$PROGRAMMER_BIOS" --flash-name > "$FLASH_INFO_FILE"
+  flashrom -p "$PROGRAMMER_BIOS" --flash-name > "$FLASH_INFO_FILE" 2>> $ERR_LOG_FILE
   if [ $? -eq 0 ]; then
     echo "Chipset found"
     tail -n1 "$FLASH_INFO_FILE"
@@ -23,7 +23,7 @@ check_flash_chip() {
   else
     for flash_name in $FLASH_CHIP_LIST
     do
-      flashrom -p "$PROGRAMMER_BIOS" -c "$flash_name" --flash-name > "$FLASH_INFO_FILE"
+      flashrom -p "$PROGRAMMER_BIOS" -c "$flash_name" --flash-name > "$FLASH_INFO_FILE" 2>> $ERR_LOG_FILE
       if [ $? -eq 0 ]; then
         echo "Chipset found"
         tail -n1 "$FLASH_INFO_FILE"

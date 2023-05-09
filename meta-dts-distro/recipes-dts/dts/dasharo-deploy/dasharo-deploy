@@ -401,17 +401,17 @@ backup() {
 
   echo "Backing up BIOS firmware and store it locally..."
   echo "Remember that firmware is also backed up in HCL report."
-  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r "${FW_BACKUP_DIR}"/rom.bin
+  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r "${FW_BACKUP_DIR}"/rom.bin >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
   error_check "Failed to read BIOS firmware backup"
 
   if [ "$HAVE_EC" = "true" ]; then
     echo "Checking for Open Source Embedded Controller firmware"
-    system76_ectool info >> /dev/null 2>&1
+    system76_ectool info >> $ERR_LOG_FILE 2>&1
     if [ $? -eq 0 ]; then
       echo "Device has already Open Source Embedded Controller firmware, do not backup EC..."
     else
       echo "Backing up EC firmware..."
-      flashrom -p "$PROGRAMMER_EC" ${FLASH_CHIP_SELECT} -r "${FW_BACKUP_DIR}"/ec.bin
+      flashrom -p "$PROGRAMMER_EC" ${FLASH_CHIP_SELECT} -r "${FW_BACKUP_DIR}"/ec.bin >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
       error_check "Failed to read EC firmware backup"
     fi
   fi
@@ -433,7 +433,7 @@ update_ec() {
   error_check "Failed to download EC firmware update"
 
   echo "Updating EC..."
-  flashrom -p "$PROGRAMMER_EC" ${FLASH_CHIP_SELECT} -w "$EC_UPDATE_DIR"
+  flashrom -p "$PROGRAMMER_EC" ${FLASH_CHIP_SELECT} -w "$EC_UPDATE_FILE" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
   error_check "Failed to update EC firmware"
 
   echo "Successfully updated EC firmware"
@@ -486,37 +486,37 @@ resign_binary()
 download_keys()
 {
   mkdir $KEYS_DIR
-  wget -O $KEYS_DIR/recovery_key.vbpubk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/recovery_key.vbpubk > /dev/null 2>&1
-  wget -O $KEYS_DIR/firmware.keyblock https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/firmware.keyblock > /dev/null 2>&1
-  wget -O $KEYS_DIR/firmware_data_key.vbprivk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/firmware_data_key.vbprivk > /dev/null 2>&1
-  wget -O $KEYS_DIR/kernel_subkey.vbpubk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/kernel_subkey.vbpubk > /dev/null 2>&1
-  wget -O $KEYS_DIR/root_key.vbpubk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/root_key.vbpubk> /dev/null 2>&1
+  wget -O $KEYS_DIR/recovery_key.vbpubk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/recovery_key.vbpubk >> $ERR_LOG_FILE 2>&1
+  wget -O $KEYS_DIR/firmware.keyblock https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/firmware.keyblock >> $ERR_LOG_FILE 2>&1
+  wget -O $KEYS_DIR/firmware_data_key.vbprivk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/firmware_data_key.vbprivk >> $ERR_LOG_FILE 2>&1
+  wget -O $KEYS_DIR/kernel_subkey.vbpubk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/kernel_subkey.vbpubk >> $ERR_LOG_FILE 2>&1
+  wget -O $KEYS_DIR/root_key.vbpubk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/root_key.vbpubk>> $ERR_LOG_FILE 2>&1
 }
 
 blob_transmission()
 {
   echo "Extracting the UEFI image from BIOS update"
-  wget -O "$DBT_BIOS_UPDATE_FILENAME" "$DBT_BIOS_UPDATE_URL" > /dev/null 2>&1
+  wget -O "$DBT_BIOS_UPDATE_FILENAME" "$DBT_BIOS_UPDATE_URL" >> $ERR_LOG_FILE 2>&1
   error_file_check "$DBT_BIOS_UPDATE_FILENAME" "Failed to download BIOS for $SYSTEM_MODEL"
 
   sha256sum --check <(echo "$DBT_BIOS_UPDATE_HASH")
   error_check "Failed SHA-256 sum check on the downloaded BIOS for $SYSTEM_MODEL"
 
-  binwalk --run-as=root -e "$DBT_BIOS_UPDATE_FILENAME" -C /tmp > /dev/null 2>&1
+  binwalk --run-as=root -e "$DBT_BIOS_UPDATE_FILENAME" -C /tmp >> $ERR_LOG_FILE 2>&1
   error_file_check "$DBT_UEFI_IMAGE" "Failed to extract UEFI image from BIOS update"
 
-  uefi-firmware-parser -e "$DBT_UEFI_IMAGE" -O > /dev/null 2>&1
+  uefi-firmware-parser -e "$DBT_UEFI_IMAGE" -O >> $ERR_LOG_FILE 2>&1
 
   if [ -n "$SINIT_ACM_FILENAME" ] && [ -n "$SINIT_ACM_URL" ]; then
     echo "Downloading the Intel SINIT ACM"
-    wget -O "$SINIT_ACM_FILENAME" "$SINIT_ACM_URL" > /dev/null 2>&1
+    wget -O "$SINIT_ACM_FILENAME" "$SINIT_ACM_URL" >> $ERR_LOG_FILE 2>&1
     error_file_check "$SINIT_ACM_FILENAME" "Failed to download Intel SINIT ACM."
 
     # Intel does not provide hash of the package, use SHA256 we know is good
     sha256sum --check <(echo "$SINIT_ACM_HASH")
     error_check "Failed SHA-256 sum check on the downloaded Intel SINIT ACM."
 
-    unzip -o "$SINIT_ACM_FILENAME" -d /tmp > /dev/null 2>&1
+    unzip -o "$SINIT_ACM_FILENAME" -d /tmp >> $ERR_LOG_FILE 2>&1
     error_check "Failed to decompress Intel SINIT ACM package."
   fi
 
@@ -556,7 +556,7 @@ install() {
 
   if [ "$HAVE_EC" = "true" ]; then
     echo "Checking for Open Source Embedded Controller firmware"
-    system76_ectool info >> /dev/null 2>&1
+    system76_ectool info >> $ERR_LOG_FILE 2>&1
     if [ $? -eq 0 ]; then
       echo "Device has already Open Source Embedded Controller firmware, do not flash EC..."
     else
@@ -583,7 +583,7 @@ install() {
   fi
 
   echo "Installing Dasharo firmware..."
-  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT} -w "$BIOS_UPDATE_DIR"
+  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_DEPLOY} -w "$BIOS_UPDATE_FILE" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
   error_check "Failed to install Dasharo firmware"
 
   print_green "Successfully installed Dasharo firmware"
@@ -615,6 +615,87 @@ install() {
   else
     ${CMD_REBOOT}
   fi
+}
+
+update_ec() {
+  echo "Downloading EC firmware update..."
+  curl --progress-bar -L -f "$EC_LINK" -o "$EC_UPDATE_FILE"
+  error_check "Cannot access $FW_STORE_URL. Please check your internet connection"
+  echo "Checking sha256sum..."
+  sha256sum --check <(echo "$EC_HASH")
+  error_check "Failed to download EC firmware update"
+
+  echo "Updating EC..."
+  system76_ectool flash "$EC_UPDATE_FILE" &>> $ERR_LOG_FILE
+  error_check "Failed to update EC firmware"
+}
+
+update() {
+  echo "Checking for the latest Dasharo update available..."
+  echo "Current Dasharo version: $DASHARO_VERSION"
+  echo "Latest available Dasharo version: $DASHARO_REL_VER"
+  compare_versions $DASHARO_VERSION $DASHARO_REL_VER
+  if [ $? -ne 1 ]; then
+    error_exit "No update available for your machine"
+  fi
+
+  BIOS_HASH=$BIOS_HASH_PROD
+  BIOS_LINK=$BIOS_LINK_PROD
+  if [ "$HAVE_EC" = "true" ]; then
+    EC_HASH=$EC_HASH_PROD
+    EC_LINK=$EC_LINK_PROD
+  fi
+
+  display_flashing_warning
+
+  echo "Downloading Dasharo firmware update..."
+  curl --progress-bar -L -f "$BIOS_LINK" -o $BIOS_UPDATE_FILE
+  error_check "Cannot access $FW_STORE_URL. Please check your internet connection"
+  echo "Checking sha256sum..."
+  sha256sum --check <(echo "$BIOS_HASH")
+  error_check "Failed to verify Dasharo firmware"
+
+  if [ "$HAVE_EC" = "true" ]; then
+    system76_ectool info >> $ERR_LOG_FILE 2>&1
+    error_check "Device does not have Dasharo EC firmware - cannot continue update!"
+  fi
+
+  echo "Updating Dasharo firmware..."
+  print_warning "This will take around 3 minutes. Please be patient and do not reset your computer, or touch keyboard!"
+  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_UPDATE} -w "$BIOS_UPDATE_FILE"  >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+  error_check "Failed to update Dasharo firmware"
+
+  if [ "$HAVE_EC" = "true" ]; then
+    echo "Dasharo EC update process will start in a moment."
+    sleep 3
+    echo "Your machine will shut down automatically once it finishes."
+    sleep 3
+    print_warning "This will take around 1 minute. Please be patient and do not reset your computer, or touch keyboard!"
+    echo "Updating Dasharo EC firmware..."
+    update_ec
+  fi
+
+  print_green "Successfully updated Dasharo firmware"
+
+  echo -n "Syncing disks... "
+  sync
+  echo "Done."
+  echo "The computer will reboot automatically in 5 seconds"
+  sleep 0.5
+  echo "Rebooting in 5s:"
+  echo "5..."
+  sleep 1
+  echo "4..."
+  sleep 1
+  echo "3..."
+  sleep 1
+  echo "2..."
+  sleep 1
+  echo "1..."
+  sleep 0.5
+  echo "Rebooting"
+  sleep 1
+  ${CMD_REBOOT}
 }
 
 restore() {
@@ -661,7 +742,7 @@ restore() {
             read -p "Do you want to restore firmware from the given HCL report? [N/y] "
             case ${REPLY} in
                 yes|y|Y|Yes|YES)
-                flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -w "/tmp/logs/rom.bin"
+                flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -w "/tmp/logs/rom.bin" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
                 error_check "Failed to restore BIOS firmware! You can try one more time."
                 print_green "Successfully restored firmware"
                 echo "Returning to main menu..."
@@ -693,7 +774,7 @@ restore() {
         echo "Restoring BIOS firmware..."
         if [ -f "/tmp/logs/rom.bin" ]; then
           # Write to entire flash when restoring
-          flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -w "/tmp/logs/rom.bin"
+          flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -w "/tmp/logs/rom.bin" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
           error_check "Failed to restore BIOS firmware! You can try one more time."
           print_green "Successfully restored firmware"
         else
@@ -711,18 +792,18 @@ restore() {
 }
 
 check_flash_chip() {
-  echo "Check information about flash chipset."
-  flashrom -p "$PROGRAMMER_BIOS" --flash-name > "$FLASH_INFO_FILE"
+  echo "Gathering flash chip and chipset information..."
+  flashrom -p "$PROGRAMMER_BIOS" --flash-name > "$FLASH_INFO_FILE" 2>> $ERR_LOG_FILE
   if [ $? -eq 0 ]; then
-    echo "Chipset found"
+    echo -n "Flash information: "
     tail -n1 "$FLASH_INFO_FILE"
     FLASH_CHIP_SIZE=$(($(flashrom -p "$PROGRAMMER_BIOS" --flash-size | tail -n1) / 1024 / 1024))
-    echo "Chipset size"
+    echo -n "Flash size: "
     echo ${FLASH_CHIP_SIZE}M
   else
     for flash_name in $FLASH_CHIP_LIST
     do
-      flashrom -p "$PROGRAMMER_BIOS" -c "$flash_name" --flash-name > "$FLASH_INFO_FILE"
+      flashrom -p "$PROGRAMMER_BIOS" -c "$flash_name" --flash-name > "$FLASH_INFO_FILE" 2>> $ERR_LOG_FILE
       if [ $? -eq 0 ]; then
         echo "Chipset found"
         tail -n1 "$FLASH_INFO_FILE"
