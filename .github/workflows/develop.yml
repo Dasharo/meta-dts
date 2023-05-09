@@ -1,8 +1,8 @@
-name: CI on push tag
+name: CI on push to develop
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - 'develop'
 
 jobs:
   build:
