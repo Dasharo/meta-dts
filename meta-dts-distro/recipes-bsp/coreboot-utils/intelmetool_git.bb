@@ -7,6 +7,8 @@ EXTRA_OEMAKE = ' \
   PREFIX="${prefix}" \
 '
 
+TARGET_CFLAGS += "-I../../src/commonlib/bsd/include"
+
 do_compile () {
   oe_runmake -C util/intelmetool
 }
