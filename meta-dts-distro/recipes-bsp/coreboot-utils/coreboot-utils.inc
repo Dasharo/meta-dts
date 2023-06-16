@@ -9,6 +9,6 @@ SRC_URI = " \
     git://github.com/Dasharo/coreboot.git;protocol=https;branch=coreboot-utils-v2\
     "
 
-SRCREV = "c10b38c4bcfb1623f77fa99e6dcdffbeadd56e90"
+SRCREV = "59a36f59fe6c9cde08b8729167a96b919264a153"
 
 S = "${WORKDIR}/git"
