@@ -2,6 +2,10 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v1.2.1 - 2023-06-16
+
+* Updated coreboot-utils to support Jasper Lake
+
 ## v1.2.0 - 2023-05-10
 
 * Added Dasharo [firmware
