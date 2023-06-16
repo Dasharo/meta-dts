@@ -5,3 +5,5 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 SRC_URI:remove = " file://syslog.cfg"
 SRC_URI:append = " file://disable-klogd.cfg"
 SRC_URI:append = " file://disable-syslogd.cfg"
+
+SRC_URI:append = " file://enable-devmem.cfg"
