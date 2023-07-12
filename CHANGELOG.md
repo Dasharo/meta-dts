@@ -2,6 +2,10 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v1.2.4 - 2023-07-12
+
+* Added [me_cleaner](https://github.com/corna/me_cleaner)
+
 ## v1.2.3 - 2023-06-16
 
 * Enbled devmem applet for buxybox

@@ -34,6 +34,7 @@ RDEPENDS:${PN}-tools-base = " \
     bmap-tools \
     flashrom \
     fwupd \
+    me-cleaner \
 "
 
 RDEPENDS:${PN}-tools-dts = " \
