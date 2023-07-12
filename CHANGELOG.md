@@ -2,6 +2,10 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v1.2.3 - 2023-06-16
+
+* Enbled devmem applet for buxybox
+
 ## v1.2.2 - 2023-06-16
 
 * Updated coreboot-utils to support Alder Lake
