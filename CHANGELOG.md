@@ -2,6 +2,10 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v1.2.5 - 2023-08-07
+
+* Fix downloading Dell BIOS Update packages
+
 ## v1.2.4 - 2023-07-12
 
 * Added [me_cleaner](https://github.com/corna/me_cleaner)
