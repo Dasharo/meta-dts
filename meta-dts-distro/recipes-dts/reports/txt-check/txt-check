@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+
+TXT_SINIT_BASE="0xFED30270"
+
+# WARNING: Only busybox devmem was tested
+# Function to read memory address
+#   address is expected in a format: 0xDEADBEEF
+#   result will be in a format: 0xDEADBEEF
+read_mem() {
+    local address=$1
+    local result=""
+
+    # Trying devmem2
+    if command -v devmem2 &> /dev/null; then
+        result=$(devmem2 "$address" | grep "Value at address" | awk '{print $NF}' | head -n 1)
+    # Trying devmem
+    elif command -v devmem &> /dev/null; then
+        result=$(devmem "$address" | head -n 1)
+    # Trying busybox devmem
+    elif command -v busybox &> /dev/null && busybox devmem "$address" &>/dev/null; then
+        result=$(busybox devmem "$address" | head -n 1)
+    else
+        echo "Cannot find a tool to read memory." >&2
+        exit 1
+    fi
+
+    echo $result
+}
+
+echo "Reading TXT.SINIT.BASE register at address: $TXT_SINIT_BASE"
+# Reading ACM_base value
+ACM_base=$(read_mem $TXT_SINIT_BASE)
+echo "ACM_base value: $ACM_base"
+
+# Checking ACM_base value for validity
+if [ -z "$ACM_base" ]; then
+    echo "ACM_base validation failed: Empty value."
+    exit 1
+fi
+
+if [[ "$ACM_base" =~ ^0x0+$ ]]; then
+    echo "ACM_base validation failed: Value of only '0' characters."
+    exit 1
+fi
+
+if [[ "$ACM_base" =~ ^0xF+$ ]]; then
+    echo "ACM_base validation failed: Value consists of only 'F' characters."
+    exit 1
+fi
+
+if ! [[ "$ACM_base" =~ 0x....0{4}$ ]]; then
+    echo "ACM_base validation failed: Value does not end with at least four zeros."
+    exit 1
+fi
+
+ACM_base_decimal=$(printf "%d" $ACM_base)
+
+# Reading HDR_len and SCRATCH_len values
+HDR_len_addr=$(printf "0x%X" $((ACM_base_decimal + 4)))
+SCRATCH_len_addr=$(printf "0x%X" $((ACM_base_decimal + 0x7C)))
+
+echo "Reading HDR_len register at address: $HDR_len_addr"
+HDR_len=$(printf "%d" $(read_mem $HDR_len_addr))
+echo "HDR_len value: $HDR_len"
+
+echo "Reading SCRATCH_len register at address: $SCRATCH_len_addr"
+SCRATCH_len=$(printf "%d" $(read_mem $SCRATCH_len_addr))
+echo "SCRATCH_len value: $SCRATCH_len"
+
+# Calculating info_table_offset and info_table_addr
+info_table_offset=$(( (HDR_len + SCRATCH_len) * 4 ))
+echo "info_table_offset: $(printf "0x%X" "$info_table_offset")"
+info_table_addr=$(printf "0x%X" $((ACM_base_decimal + info_table_offset)))
+echo "info_table_addr: $info_table_addr"
+
+# Reading GUID from info_table_addr
+echo "Reading GUID registers starting at address: $info_table_addr"
+guid_1=$(read_mem $info_table_addr)
+echo "guid_1: $guid_1"
+
+guid_2=$(read_mem $(printf "0x%X" $((info_table_addr + 4))))
+echo "guid_2: $guid_2"
+
+guid_3=$(read_mem $(printf "0x%X" $((info_table_addr + 8))))
+echo "guid_3: $guid_3"
+
+guid_4=$(read_mem $(printf "0x%X" $((info_table_addr + 0xC))))
+echo "guid_4: $guid_4"
+
+# Checking GUID against known GRUB_TXT_ACM_UUID
+# GRUB_TXT_ACM_UUID "\xaa\x3a\xc0\x7f\xa7\x46\xdb\x18\x2e\xac\x69\x8f\x8d\x41\x7f\x5a"
+if [ "$guid_1" != "0x7FC03AAA" ] || [ "$guid_2" != "0x18DB46A7" ] || [ "$guid_3" != "0x8F69AC2E" ] || [ "$guid_4" != "0x5A7F418D" ]; then
+    echo "Invalid GUID at address: $info_table_addr"
+    exit 1
+fi
+
+echo "Actual UUID matches to the expected GRUB_TXT_ACM_UUID"
+echo "TXT can be used on this system"
