@@ -210,8 +210,15 @@ install_ec() {
   echo "Successfully updated EC firmware"
 }
 
-smbios_migration()
-{
+romhole_migration() {
+    echo "Beginning ROM hole migration process..."
+    flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r /tmp/rom.bin ${FLASHROM_ADD_OPT_READ} >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+    dd if=/tmp/rom.bin of=/tmp/romhole.bin skip=$((0x17C0000)) bs=128K count=1 iflag=skip_bytes
+    echo "Migrate to ROMHOLE section."
+    cbfstool "$BIOS_UPDATE_FILE" write -r ROMHOLE -f /tmp/romhole.bin -u
+}
+
+smbios_migration() {
   echo -n "$(dmidecode -s system-uuid)" > $SYSTEM_UUID_FILE
   echo -n "$(dmidecode -s baseboard-serial-number)" > $SERIAL_NUMBER_FILE
 
@@ -244,8 +251,15 @@ smbios_migration()
   fi
 }
 
-resign_binary()
-{
+smmstore_migration() {
+    echo "Beginning SMMSTORE migration process..."
+    flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r /tmp/dasharo_dump.rom ${FLASHROM_ADD_OPT_READ} --fmap -i FMAP -i SMMSTORE >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+    cbfstool /tmp/dasharo_dump.rom read -r SMMSTORE -f smmstore.bin
+    echo "Migrate to SMMSTORE section."
+    cbfstool "$BIOS_UPDATE_FILE" write -r SMMSTORE -f smmstore.bin -u
+}
+
+resign_binary() {
   if [ "$HAVE_VBOOT" -eq 0 ]; then
     download_keys
     sign_firmware.sh $BIOS_UPDATE_FILE $KEYS_DIR $RESIGNED_BIOS_UPDATE_FILE
@@ -254,8 +268,7 @@ resign_binary()
   fi
 }
 
-download_keys()
-{
+download_keys() {
   mkdir $KEYS_DIR
   wget -O $KEYS_DIR/recovery_key.vbpubk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/recovery_key.vbpubk >> $ERR_LOG_FILE 2>&1
   wget -O $KEYS_DIR/firmware.keyblock https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/firmware.keyblock >> $ERR_LOG_FILE 2>&1
@@ -264,8 +277,7 @@ download_keys()
   wget -O $KEYS_DIR/root_key.vbpubk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/root_key.vbpubk>> $ERR_LOG_FILE 2>&1
 }
 
-blob_transmission()
-{
+blob_transmission() {
   echo "Extracting the UEFI image from BIOS update"
   wget -O "$DBT_BIOS_UPDATE_FILENAME" "$DBT_BIOS_UPDATE_URL" >> $ERR_LOG_FILE 2>&1
   error_file_check "$DBT_BIOS_UPDATE_FILENAME" "Failed to download BIOS for $SYSTEM_MODEL"
@@ -339,7 +351,6 @@ install() {
       echo "Device has already Open Source Embedded Controller firmware, do not flash EC..."
     else
       _ec_fw_version=$(flashrom -p "$PROGRAMMER_EC" ${FLASH_CHIP_SELECT} | grep "Mainboard EC Version" | tr -d ' ' | cut -d ':' -f 2)
-
       if [ "$_ec_fw_version" != "$COMPATIBLE_EC_FW_VERSION" ]; then
         print_warning "EC version: $_ec_fw_version is not supported, update required"
         install_ec
@@ -350,6 +361,10 @@ install() {
   cbfstool "$BIOS_UPDATE_FILE" extract -r COREBOOT -n config -f "$BIOS_UPDATE_CONFIG_FILE"
   grep "CONFIG_VBOOT=y" "$BIOS_UPDATE_CONFIG_FILE"
   HAVE_VBOOT="$?"
+
+  if [ "$NEED_ROMHOLE_MIGRATION" = "true" ]; then
+    romhole_migration
+  fi
 
   if [ "$NEED_SMBIOS_MIGRATION" = "true" ]; then
     smbios_migration
@@ -470,6 +485,10 @@ update() {
   if [ "$HAVE_EC" = "true" ]; then
     system76_ectool info >> $ERR_LOG_FILE 2>&1
     error_check "Device does not have Dasharo EC firmware - cannot continue update!"
+  fi
+
+  if [ "$NEED_SMMSTORE_MIGRATION" = "true" ]; then
+    smmstore_migration
   fi
 
   echo "Updating Dasharo firmware..."
