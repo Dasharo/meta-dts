@@ -1,44 +1,7 @@
 #!/usr/bin/env bash
 
-COLOR_OFF='\033[0m'       # Text Reset
-RED='\033[0;31m'
-YELLOW='\033[0;33m'
-GREEN='\033[0;32m'
-
-PROGRAMMER_BIOS="internal"
-# most the time one flash chipset will be detected, for other cases (like for
-# ASUS KGPE-D16) we will test the following list in check_flash_chip function
-FLASH_CHIP_LIST="W25Q64BV/W25Q64CV/W25Q64FV W25Q64JV-.Q W25Q128.V..M"
-FLASH_INFO_FILE="/tmp/flash_info"
-
-check_flash_chip() {
-  echo "Check information about flash chipset."
-  flashrom -p "$PROGRAMMER_BIOS" --flash-name > "$FLASH_INFO_FILE" 2>> $ERR_LOG_FILE
-  if [ $? -eq 0 ]; then
-    echo "Chipset found"
-    tail -n1 "$FLASH_INFO_FILE"
-    FLASH_CHIP_SIZE=$(($(flashrom -p "$PROGRAMMER_BIOS" --flash-size | tail -n1) / 1024 / 1024))
-    echo "Chipset size"
-    echo ${FLASH_CHIP_SIZE}M
-  else
-    for flash_name in $FLASH_CHIP_LIST
-    do
-      flashrom -p "$PROGRAMMER_BIOS" -c "$flash_name" --flash-name > "$FLASH_INFO_FILE" 2>> $ERR_LOG_FILE
-      if [ $? -eq 0 ]; then
-        echo "Chipset found"
-        tail -n1 "$FLASH_INFO_FILE"
-        FLASH_CHIP_SELECT="-c ${flash_name}"
-        FLASH_CHIP_SIZE=$(($(flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} --flash-size | tail -n1) / 1024 / 1024))
-        echo "Chipset size"
-        echo ${FLASH_CHIP_SIZE}M
-        break
-      fi
-    done
-    if [ -z "$FLASH_CHIP_SELECT" ]; then
-      error_exit "No supported chipset found, exit."
-    fi
-  fi
-}
+source /usr/sbin/dts-environment.sh
+source /usr/sbin/dts-functions.sh
 
 update_result() {
   TOOL=$1
