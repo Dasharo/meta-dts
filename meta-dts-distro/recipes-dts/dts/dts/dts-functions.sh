@@ -242,6 +242,55 @@ board_config() {
               ;;
           esac
           ;;
+        "MS-7E06")
+          case "$BOARD_MODEL" in
+            "PRO Z790-P WIFI DDR4(MS-7E06)" | "PRO Z790-P DDR4(MS-7E06)")
+              DASHARO_REL_NAME="msi_ms7e06"
+              #DASHARO_REL_VER=""
+              DASHARO_REL_VER_DES="0.9.0"
+              #BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_ddr4.rom"
+              BIOS_LINK_DES="${FW_STORE_URL_DES}/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr4.rom"
+              HAVE_EC="false"
+              NEED_EC_RESET="false"
+              #BIOS_HASH_COMM="$(wget -O /dev/stdout ${BIOS_LINK_COMM}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
+              BIOS_HASH_DES="${BIOS_LINK_DES}.sha256"
+              NEED_SMBIOS_MIGRATION="false"
+              NEED_SMMSTORE_MIGRATION="true"
+              NEED_BLOB_TRANSMISSION="false"
+              PROGRAMMER_BIOS="internal"
+              PROGRAMMER_EC=""
+              FLASHROM_ADD_OPT_DEPLOY="-N --ifd -i bios"
+              FLASHROM_ADD_OPT_READ="--ifd -i fd -i me -i bios"
+              if ! check_if_dasharo; then
+                NEED_ROMHOLE_MIGRATION="true"
+              fi
+              ;;
+            "PRO Z790-P WIFI (MS-7E06)" | "PRO Z790-P (MS-7E06)")
+              DASHARO_REL_NAME="msi_ms7e06"
+              #DASHARO_REL_VER=""
+              DASHARO_REL_VER_DES="0.9.0"
+              #BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_ddr5.rom"
+              BIOS_LINK_DES="${FW_STORE_URL_DES}/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr5.rom"
+              HAVE_EC="false"
+              NEED_EC_RESET="false"
+              #BIOS_HASH_COMM="$(wget -O /dev/stdout ${BIOS_LINK_COMM}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
+              BIOS_HASH_DES="${BIOS_LINK_DES}.sha256"
+              NEED_SMBIOS_MIGRATION="false"
+              NEED_SMMSTORE_MIGRATION="true"
+              NEED_BLOB_TRANSMISSION="false"
+              PROGRAMMER_BIOS="internal"
+              PROGRAMMER_EC=""
+              FLASHROM_ADD_OPT_DEPLOY="-N --ifd -i bios"
+              FLASHROM_ADD_OPT_READ="--ifd -i fd -i me -i bios"
+              if ! check_if_dasharo; then
+                NEED_ROMHOLE_MIGRATION="true"
+              fi
+              ;;
+            *)
+              error_exit "Board model $BOARD_MODEL is currently not supported"
+              ;;
+          esac
+          ;;
         *)
           error_exit "Board model $SYSTEM_MODEL is currently not supported"
           ;;
