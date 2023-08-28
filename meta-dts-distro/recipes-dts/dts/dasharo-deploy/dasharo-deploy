@@ -31,11 +31,15 @@ ask_for_version()
     echo "Please, select Dasharo firmware version to install"
 
     # -v: True if the shell variable varname is set (has been assigned a value).
-    if [ -v BIOS_HASH_PROD ]; then
-      echo "  p) Production version"
+    if [ -v BIOS_HASH_COMM ]; then
+      echo "  c) Community version"
     fi
-    if [ -v BIOS_HASH_EVAL ]; then
-      echo "  e) Evaluation version"
+    if [ -v BIOS_HASH_DES ]; then
+      if [ -v DES_IS_LOGGED ]; then
+        echo "  d) DES version"
+      else
+        echo "  DES version available, if you are interested, please visit https://shop.3mdeb.com/product-category/dasharo-entry-subscription/"
+      fi
     fi
     echo "  b) Back to main menu"
     echo
@@ -43,29 +47,30 @@ ask_for_version()
     echo
 
     case ${OPTION} in
-      p|P|prod|production|PRODUCTION|PROD|Production)
-        if [ -v BIOS_HASH_PROD ]; then
-          BIOS_HASH=$BIOS_HASH_PROD
-          BIOS_LINK=$BIOS_LINK_PROD
-          if [ -v EC_HASH_PROD ]; then
-            EC_HASH=$EC_HASH_PROD
-            EC_LINK=$EC_LINK_PROD
+      c|C|comm|community|COMMUNITY|COMM|Community)
+        if [ -v BIOS_HASH_COMM ]; then
+          BIOS_HASH=$BIOS_HASH_COMM
+          BIOS_LINK=$BIOS_LINK_COMM
+          if [ -v EC_HASH_COMM ]; then
+            EC_HASH=$EC_HASH_COMM
+            EC_LINK=$EC_LINK_COMM
           fi
-          echo "Production version selected"
+          echo "Community version selected"
           break
         else
           error_exit "Bad option or resignation. Returning to main menu..."
         fi
         ;;
-      e|E|eval|EVAL|evaluation|EVALUATION|Evaluation)
-        if [ -v BIOS_HASH_EVAL ]; then
-          BIOS_HASH=$BIOS_HASH_EVAL
-          BIOS_LINK=$BIOS_LINK_EVAL
-          if [ -v EC_HASH_EVAL ]; then
-            EC_HASH=$EC_HASH_EVAL
-            EC_LINK=$EC_LINK_EVAL
+      d|D|des|DES|Des)
+        if [ -v BIOS_HASH_DES ]; then
+          USER_DETAILS="$CLOUDSEND_DOWNLOAD_URL:$CLOUDSEND_PASSWORD"
+          BIOS_HASH="$(curl -L -s -f -u ${USER_DETAILS} -H ${CLOUD_REQUEST} ${BIOS_LINK_DES}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
+          BIOS_LINK=$BIOS_LINK_DES
+          if [ -v EC_HASH_DES ]; then
+            EC_HASH=$EC_HASH_DES
+            EC_LINK=$EC_LINK_DES
           fi
-          echo "Evaluation version selected"
+          echo "Dasharo Entry Subscription version selected"
           break
         else
           error_exit "Bad option. Returning to main menu..."
@@ -307,9 +312,16 @@ install() {
   ask_for_version
   display_flashing_warning
   echo "Downloading Dasharo firmware..."
-  curl -L -f "$BIOS_LINK" -o $BIOS_UPDATE_FILE
-  error_check "Cannot access $FW_STORE_URL. Please check your internet
- connection"
+  if [ -v BIOS_LINK_COMM ] && [ ${BIOS_LINK} == ${BIOS_LINK_COMM} ]; then
+    curl -L -f "$BIOS_LINK" -o $BIOS_UPDATE_FILE
+    error_check "Cannot access $FW_STORE_URL. Please check your internet
+   connection"
+  else
+    USER_DETAILS="$CLOUDSEND_DOWNLOAD_URL:$CLOUDSEND_PASSWORD"
+    curl -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_LINK" -o $BIOS_UPDATE_FILE
+    error_check "Cannot access $FW_STORE_URL_DES. Please check your internet
+   connection"
+  fi
   sha256sum --check <(echo "$BIOS_HASH")
   error_check "Failed to verify Dasharo firmware"
 
@@ -390,26 +402,60 @@ update_ec() {
 }
 
 update() {
+  local _update_version=""
   echo "Checking for the latest Dasharo update available..."
   echo "Current Dasharo version: $DASHARO_VERSION"
-  echo "Latest available Dasharo version: $DASHARO_REL_VER"
-  compare_versions $DASHARO_VERSION $DASHARO_REL_VER
-  if [ $? -ne 1 ]; then
-    error_exit "No update available for your machine"
+  if [ -v BIOS_HASH_DES ]; then
+    if [ -v DES_IS_LOGGED ]; then
+      echo "Latest available Dasharo version: $DASHARO_REL_VER_DES"
+      USER_DETAILS="$CLOUDSEND_DOWNLOAD_URL:$CLOUDSEND_PASSWORD"
+      BIOS_HASH="$(curl -L -s -f -u ${USER_DETAILS} -H ${CLOUD_REQUEST} ${BIOS_LINK_DES}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
+      BIOS_LINK=$BIOS_LINK_DES
+      if [ "$HAVE_EC" = "true" ]; then
+        EC_HASH=$EC_HASH_DES
+        EC_LINK=$EC_LINK_DES
+      fi
+      _update_version=$DASHARO_REL_VER_DES
+    else
+      echo "DES version available, if you are interested, please visit https://shop.3mdeb.com/product-category/dasharo-entry-subscription/"
+      echo "Latest available Dasharo version: $DASHARO_REL_VER"
+      BIOS_HASH=$BIOS_HASH_COMM
+      BIOS_LINK=$BIOS_LINK_COMM
+      if [ "$HAVE_EC" = "true" ]; then
+        EC_HASH=$EC_HASH_COMM
+        EC_LINK=$EC_LINK_COMM
+      fi
+      _update_version=$DASHARO_REL_VER
+    fi
+  else
+    echo "Latest available Dasharo version: $DASHARO_REL_VER"
+    BIOS_HASH=$BIOS_HASH_COMM
+    BIOS_LINK=$BIOS_LINK_COMM
+    if [ "$HAVE_EC" = "true" ]; then
+      EC_HASH=$EC_HASH_COMM
+      EC_LINK=$EC_LINK_COMM
+    fi
+    _update_version=$DASHARO_REL_VER
   fi
 
-  BIOS_HASH=$BIOS_HASH_PROD
-  BIOS_LINK=$BIOS_LINK_PROD
-  if [ "$HAVE_EC" = "true" ]; then
-    EC_HASH=$EC_HASH_PROD
-    EC_LINK=$EC_LINK_PROD
+  compare_versions $DASHARO_VERSION $_update_version
+  if [ $? -ne 1 ]; then
+    error_exit "No update available for your machine"
   fi
 
   display_flashing_warning
 
   echo "Downloading Dasharo firmware update..."
-  curl --progress-bar -L -f "$BIOS_LINK" -o $BIOS_UPDATE_FILE
-  error_check "Cannot access $FW_STORE_URL. Please check your internet connection"
+  if [ -v BIOS_LINK_COMM ] && [ ${BIOS_LINK} == ${BIOS_LINK_COMM} ]; then
+    curl -L -f "$BIOS_LINK" -o $BIOS_UPDATE_FILE
+    error_check "Cannot access $FW_STORE_URL. Please check your internet
+   connection"
+  else
+    USER_DETAILS="$CLOUDSEND_DOWNLOAD_URL:$CLOUDSEND_PASSWORD"
+    curl -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_LINK" -o $BIOS_UPDATE_FILE
+    error_check "Cannot access $FW_STORE_URL_DES. Please check your internet
+   connection"
+  fi
   echo "Checking sha256sum..."
   sha256sum --check <(echo "$BIOS_HASH")
   error_check "Failed to verify Dasharo firmware"
