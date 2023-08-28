@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 
-# Text Reset
-COLOR_OFF='\033[0m'
-RED='\033[0;31m'
-YELLOW='\033[0;33m'
-GREEN='\033[0;32m'
+source /usr/sbin/dts-environment.sh
 
 ### Color functions
 print_warning() {
@@ -99,6 +95,297 @@ check_network_connection() {
   return 0
 }
 
+## Supported boards configuration
+
+board_config() {
+  echo "Checking if board is Dasharo compatible."
+  case "$BOARD_VENDOR" in
+    "Notebook")
+      case "$SYSTEM_MODEL" in
+        "NV4XMB,ME,MZ")
+          DASHARO_REL_NAME="novacustom_nv4x_tgl"
+          DASHARO_REL_VER="1.4.0"
+          BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
+          EC_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_ec_v${DASHARO_REL_VER}.rom"
+          HAVE_EC="true"
+          NEED_EC_RESET="true"
+          COMPATIBLE_EC_FW_VERSION="2022-10-07_c662165"
+          EC_HASH_PROD="$(wget -O /dev/stdout ${EC_LINK_PROD}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $EC_UPDATE_FILE"
+          BIOS_HASH_COMM="$(wget -O /dev/stdout ${BIOS_LINK_COMM}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
+          NEED_SMBIOS_MIGRATION="false"
+          NEED_BLOB_TRANSMISSION="false"
+          PROGRAMMER_BIOS="internal"
+          PROGRAMMER_EC="ite_ec"
+          FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
+          FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
+          ;;
+        "NS50_70MU")
+          DASHARO_REL_NAME="novacustom_ns5x_tgl"
+          DASHARO_REL_VER="1.4.0"
+          BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
+          EC_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_ec_v${DASHARO_REL_VER}.rom"
+          HAVE_EC="true"
+          NEED_EC_RESET="true"
+          COMPATIBLE_EC_FW_VERSION="2022-08-31_cbff21b"
+          EC_HASH_PROD="$(wget -O /dev/stdout ${EC_LINK_PROD}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $EC_UPDATE_FILE"
+          BIOS_HASH_COMM="$(wget -O /dev/stdout ${BIOS_LINK_COMM}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
+          NEED_SMBIOS_MIGRATION="false"
+          NEED_BLOB_TRANSMISSION="false"
+          PROGRAMMER_BIOS="internal"
+          PROGRAMMER_EC="ite_ec"
+          FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
+          FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
+          ;;
+        "NS5x_NS7xPU")
+          DASHARO_REL_NAME="novacustom_ns5x_adl"
+          DASHARO_REL_VER="1.6.0"
+          BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
+          EC_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_ec_v${DASHARO_REL_VER}.rom"
+          HAVE_EC="true"
+          NEED_EC_RESET="true"
+          COMPATIBLE_EC_FW_VERSION="2022-08-31_cbff21b"
+          EC_HASH_PROD="$(wget -O /dev/stdout ${EC_LINK_PROD}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $EC_UPDATE_FILE"
+          BIOS_HASH_COMM="$(wget -O /dev/stdout ${BIOS_LINK_COMM}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
+          NEED_SMBIOS_MIGRATION="false"
+          NEED_BLOB_TRANSMISSION="false"
+          PROGRAMMER_BIOS="internal"
+          PROGRAMMER_EC="ite_ec"
+          FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
+          FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
+          ;;
+        "NV4xPZ")
+          DASHARO_REL_NAME="novacustom_nv4x_adl"
+          DASHARO_REL_VER="1.6.0"
+          BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
+          EC_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_ec_v${DASHARO_REL_VER}.rom"
+          HAVE_EC="true"
+          NEED_EC_RESET="true"
+          COMPATIBLE_EC_FW_VERSION="2022-08-31_cbff21b"
+          EC_HASH_PROD="$(wget -O /dev/stdout ${EC_LINK_PROD}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $EC_UPDATE_FILE"
+          BIOS_HASH_COMM="$(wget -O /dev/stdout ${BIOS_LINK_COMM}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
+          NEED_SMBIOS_MIGRATION="false"
+          NEED_BLOB_TRANSMISSION="false"
+          PROGRAMMER_BIOS="internal"
+          PROGRAMMER_EC="ite_ec"
+          FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
+          FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
+          ;;
+        *)
+          error_exit "Board model $SYSTEM_MODEL is currently not supported"
+          ;;
+      esac
+      ;;
+    "Micro-Star International Co., Ltd.")
+      case "$SYSTEM_MODEL" in
+        "MS-7D25")
+          case "$BOARD_MODEL" in
+            "PRO Z690-A WIFI DDR4(MS-7D25)" | "PRO Z690-A DDR4(MS-7D25)")
+              DASHARO_REL_NAME="msi_ms7d25"
+              DASHARO_REL_VER="1.1.1"
+              DASHARO_REL_VER_DES="1.1.2"
+              BIOS_LINK_COMM="${FW_STORE_URL}/${DASHARO_REL_NAME}/v${DASHARO_REL_VER}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_ddr4.rom"
+              BIOS_LINK_DES="${FW_STORE_URL_DES}/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr4.rom"
+              HAVE_EC="false"
+              NEED_EC_RESET="false"
+              BIOS_HASH_COMM="$(wget -O /dev/stdout ${BIOS_LINK_COMM}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
+              BIOS_HASH_DES="${BIOS_LINK_DES}.sha256"
+              NEED_SMBIOS_MIGRATION="true"
+              NEED_SMMSTORE_MIGRATION="true"
+              NEED_BLOB_TRANSMISSION="false"
+              PROGRAMMER_BIOS="internal"
+              PROGRAMMER_EC=""
+              FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
+              if check_if_dasharo; then
+                # if v1.1.1 or older, flash the whole bios region, as per:
+                # https://docs.dasharo.com/variants/msi_z690/firmware-update/#version-older-than-v110
+                compare_versions $DASHARO_VERSION 1.1.2
+                if [ $? -eq 1 ]; then
+                # For Dasharo version lesser than 1.1.2
+                    FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
+                else
+                # For Dasharo version greater or equal 1.1.2
+                    FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A -i RW_SECTION_B"
+                fi
+              fi
+              ;;
+            "PRO Z690-A WIFI (MS-7D25)" | "PRO Z690-A (MS-7D25)")
+              DASHARO_REL_NAME="msi_ms7d25"
+              DASHARO_REL_VER="1.1.1"
+              DASHARO_REL_VER_DES="1.1.2"
+              BIOS_LINK_COMM="${FW_STORE_URL}/${DASHARO_REL_NAME}/v${DASHARO_REL_VER}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_ddr5.rom"
+              BIOS_LINK_DES="${FW_STORE_URL_DES}/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr5.rom"
+              HAVE_EC="false"
+              NEED_EC_RESET="false"
+              BIOS_HASH_COMM="$(wget -O /dev/stdout ${BIOS_LINK_COMM}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
+              BIOS_HASH_DES="${BIOS_LINK_DES}.sha256"
+              NEED_SMBIOS_MIGRATION="true"
+              NEED_SMMSTORE_MIGRATION="true"
+              NEED_BLOB_TRANSMISSION="false"
+              PROGRAMMER_BIOS="internal"
+              PROGRAMMER_EC=""
+              FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
+              if check_if_dasharo; then
+                # if v1.1.1 or older, flash the whole bios region, as per:
+                # https://docs.dasharo.com/variants/msi_z690/firmware-update/#version-older-than-v110
+                compare_versions $DASHARO_VERSION 1.1.2
+                if [ $? -eq 1 ]; then
+                # For Dasharo version lesser than 1.1.2
+                    FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
+                else
+                # For Dasharo version greater or equal 1.1.2
+                    FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A -i RW_SECTION_B"
+                fi
+              fi
+              ;;
+            *)
+              error_exit "Board model $BOARD_MODEL is currently not supported"
+              ;;
+          esac
+          ;;
+        *)
+          error_exit "Board model $SYSTEM_MODEL is currently not supported"
+          ;;
+      esac
+      ;;
+    "Dell Inc.")
+      DASHARO_REL_NAME="dell_optiplex_9010"
+      DASHARO_REL_VER="0.1.0"
+      BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER.rom"
+      HAVE_EC="false"
+      NEED_EC_RESET="false"
+      BIOS_HASH_COMM="a880504dfb0497f31e898f62ae5c9f3b145bca0b4fa601e41cddc54bea22ee36  $BIOS_UPDATE_FILE"
+      NEED_SMBIOS_MIGRATION="true"
+      NEED_BLOB_TRANSMISSION="true"
+      PROGRAMMER_BIOS="internal"
+      SINIT_ACM_FILENAME="/tmp/630744_002.zip"
+      SINIT_ACM_URL="https://cdrdv2.intel.com/v1/dl/getContent/630744"
+      SINIT_ACM_HASH="b23c5e6bd70bdcfde4215a5a252e56c4966f0e06cacf388e654ca906c4ecdad1 $SINIT_ACM_FILENAME"
+      SINIT_ACM="/tmp/630744_002/SNB_IVB_SINIT_20190708_PW.bin"
+      FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
+      FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
+      case "$SYSTEM_MODEL" in
+        "OptiPlex 7010")
+          DBT_BIOS_UPDATE_FILENAME="/tmp/O7010A29.exe"
+          DBT_BIOS_UPDATE_URL="--user-agent='Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)' https://dl.dell.com/FOLDER05066036M/1/O7010A29.exe"
+          DBT_BIOS_UPDATE_HASH="ceb82586c67cd8d5933ac858c12e0cb52f6e0e4cb3249f964f1c0cfc06d16f52  $DBT_BIOS_UPDATE_FILENAME"
+          DBT_UEFI_IMAGE="/tmp/_O7010A29.exe.extracted/65C10"
+          SCH5545_FW="/tmp/_O7010A29.exe.extracted/65C10_output/pfsobject/section-7ec6c2b0-3fe3-42a0-a316-22dd0517c1e8/volume-0x50000/file-d386beb8-4b54-4e69-94f5-06091f67e0d3/section0.raw"
+          ACM_BIN="/tmp/_O7010A29.exe.extracted/65C10_output/pfsobject/section-7ec6c2b0-3fe3-42a0-a316-22dd0517c1e8/volume-0x500000/file-2d27c618-7dcd-41f5-bb10-21166be7e143/object-0.raw"
+          ;;
+        "OptiPlex 9010")
+          DBT_BIOS_UPDATE_FILENAME="/tmp/O9010A30.exe"
+          DBT_BIOS_UPDATE_URL="--user-agent='Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)' https://dl.dell.com/FOLDER05066009M/1/O9010A30.exe"
+          DBT_BIOS_UPDATE_HASH="b11952f43d0ad66f3ce79558b8c5dd43f30866158ed8348e3b2dae1bbb07701b  $DBT_BIOS_UPDATE_FILENAME"
+          DBT_UEFI_IMAGE="/tmp/_O9010A30.exe.extracted/65C10"
+          SCH5545_FW="/tmp/_O9010A30.exe.extracted/65C10_output/pfsobject/section-7ec6c2b0-3fe3-42a0-a316-22dd0517c1e8/volume-0x50000/file-d386beb8-4b54-4e69-94f5-06091f67e0d3/section0.raw"
+          ACM_BIN="/tmp/_O9010A30.exe.extracted/65C10_output/pfsobject/section-7ec6c2b0-3fe3-42a0-a316-22dd0517c1e8/volume-0x500000/file-2d27c618-7dcd-41f5-bb10-21166be7e143/object-0.raw"
+          ;;
+        "Precision T1650")
+          # tested on Dasharo Firmware for OptiPlex 9010, will need to be
+          # enabled when build for T1650 exists
+          #
+          # DBT_BIOS_UPDATE_FILENAME="/tmp/T1650A28.exe"
+          # DBT_BIOS_UPDATE_URL="--user-agent='Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)' https://dl.dell.com/FOLDER05065992M/1/T1650A28.exe"
+          # DBT_BIOS_UPDATE_HASH="40a66210b8882f523885849c1d879e726dc58aa14718168b1e75f3e2caaa523b  $DBT_BIOS_UPDATE_FILENAME"
+          # DBT_UEFI_IMAGE="/tmp/_T1650A28.exe.extracted/65C10"
+          # SCH5545_FW="/tmp/_T1650A28.exe.extracted/65C10_output/pfsobject/section-7ec6c2b0-3fe3-42a0-a316-22dd0517c1e8/volume-0x60000/file-d386beb8-4b54-4e69-94f5-06091f67e0d3/section0.raw"
+          # ACM_BIN="/tmp/_T1650A28.exe.extracted/65C10_output/pfsobject/section-7ec6c2b0-3fe3-42a0-a316-22dd0517c1e8/volume-0x500000/file-2d27c618-7dcd-41f5-bb10-21166be7e143/object-0.raw"
+          print_warning "Dasharo Firmware for Precision T1650 not available yet!"
+          error_exit "Board model $SYSTEM_MODEL is currently not supported"
+          ;;
+        *)
+          error_exit "Board model $SYSTEM_MODEL is currently not supported"
+          ;;
+      esac
+      ;;
+    "ASUS")
+      case "$SYSTEM_MODEL" in
+        "KGPE-D16")
+          DASHARO_REL_NAME="asus_kgpe-d16"
+          DASHARO_REL_VER="0.4.0"
+          HAVE_EC="false"
+          NEED_EC_RESET="false"
+          case "$FLASH_CHIP_SIZE" in
+          "2")
+            BIOS_HASH_COMM="65e5370e9ea6b8ae7cd6cc878a031a4ff3a8f5d36830ef39656b8e5a6e37e889  $BIOS_UPDATE_FILE"
+            BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_vboot_notpm.rom"
+            ;;
+          "8")
+            BIOS_HASH_COMM="da4e6217d50f2ac199dcb9a927a0bc02aa4e792ed73c8c9bac8ba74fc787dbef  $BIOS_UPDATE_FILE"
+            BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_${FLASH_CHIP_SIZE}M_vboot_notpm.rom"
+            ;;
+          "16")
+            BIOS_HASH_COMM="20055cf57185f149259706f58d5e9552a1589259c6617999c1ac7d8d3c960020  $BIOS_UPDATE_FILE"
+            BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_${FLASH_CHIP_SIZE}M_vboot_notpm.rom"
+            ;;
+          *)
+            error_exit "Platform uses chipset with not supported size"
+            ;;
+          esac
+          NEED_SMBIOS_MIGRATION="true"
+          NEED_BLOB_TRANSMISSION="false"
+          PROGRAMMER_BIOS="internal"
+          ;;
+        *)
+          error_exit "Board model $SYSTEM_MODEL is currently not supported"
+          ;;
+      esac
+      ;;
+    *)
+      error_exit "Board vendor: $BOARD_VENDOR is currently not supported"
+      ;;
+  esac
+}
+
+check_flash_chip() {
+  echo "Gathering flash chip and chipset information..."
+  flashrom -p "$PROGRAMMER_BIOS" --flash-name > "$FLASH_INFO_FILE" 2>> $ERR_LOG_FILE
+  if [ $? -eq 0 ]; then
+    echo -n "Flash information: "
+    tail -n1 "$FLASH_INFO_FILE"
+    FLASH_CHIP_SIZE=$(($(flashrom -p "$PROGRAMMER_BIOS" --flash-size | tail -n1) / 1024 / 1024))
+    echo -n "Flash size: "
+    echo ${FLASH_CHIP_SIZE}M
+  else
+    for flash_name in $FLASH_CHIP_LIST
+    do
+      flashrom -p "$PROGRAMMER_BIOS" -c "$flash_name" --flash-name > "$FLASH_INFO_FILE" 2>> $ERR_LOG_FILE
+      if [ $? -eq 0 ]; then
+        echo "Chipset found"
+        tail -n1 "$FLASH_INFO_FILE"
+        FLASH_CHIP_SELECT="-c ${flash_name}"
+        FLASH_CHIP_SIZE=$(($(flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} --flash-size | tail -n1) / 1024 / 1024))
+        echo "Chipset size"
+        echo ${FLASH_CHIP_SIZE}M
+        break
+      fi
+    done
+    if [ -z "$FLASH_CHIP_SELECT" ]; then
+      error_exit "No supported chipset found, exit."
+    fi
+  fi
+}
+
+check_se_creds() {
+  CLOUDSEND_LOGS_URL=$(sed -n '1p' < ${SE_credential_file} | tr -d '\n')
+  CLOUDSEND_DOWNLOAD_URL=$(sed -n '2p' < ${SE_credential_file} | tr -d '\n')
+  CLOUDSEND_PASSWORD=$(sed -n '3p' < ${SE_credential_file} | tr -d '\n')
+  USER_DETAILS="$CLOUDSEND_DOWNLOAD_URL:$CLOUDSEND_PASSWORD"
+  board_config
+  TEST_LOGS_URL="https://cloud.3mdeb.com/index.php/s/${CLOUDSEND_LOGS_URL}/authenticate/showShare"
+
+  if check_network_connection; then
+    CHECK_DOWNLOAD_REQUEST_RESPONSE=$(curl -L -I -s -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_LINK_DES" -o /dev/null -w "%{http_code}")
+    CHECK_LOGS_REQUEST_RESPONSE=$(curl -L -I -s -f -H "$CLOUD_REQUEST" "$TEST_LOGS_URL" -o /dev/null -w "%{http_code}")
+    if [ ${CHECK_DOWNLOAD_REQUEST_RESPONSE} -eq 200 ] && [ ${CHECK_LOGS_REQUEST_RESPONSE} -eq 200 ]; then
+      return 0
+    else
+      echo ""
+      return 1
+    fi
+  fi
+}
+
 compare_versions() {
     # return 1 if ver2 > ver1
     # return 0 otherwise
@@ -155,25 +442,4 @@ compare_versions() {
     else
       error_exit "Incorrect version format"
     fi
-}
-
-check_se_creds() {
-  CLOUDSEND_LOGS_URL=$(sed -n '1p' < ${SE_credential_file} | tr -d '\n')
-  CLOUDSEND_DOWNLOAD_URL=$(sed -n '2p' < ${SE_credential_file} | tr -d '\n')
-  CLOUDSEND_PASSWORD=$(sed -n '3p' < ${SE_credential_file} | tr -d '\n')
-  USER_DETAILS="$CLOUDSEND_DOWNLOAD_URL:$CLOUDSEND_PASSWORD"
-  CLOUD_REQUEST="X-Requested-With: XMLHttpRequest"
-  TEST_DOWNLOAD_URL="https://cloud.3mdeb.com/public.php/webdav/biosupdate.rom"
-  TEST_LOGS_URL="https://cloud.3mdeb.com/index.php/s/${CLOUDSEND_LOGS_URL}/authenticate/showShare"
-
-  if check_network_connection; then
-    CHECK_DOWNLOAD_REQUEST_RESPONSE=$(curl -L -I -s -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$TEST_DOWNLOAD_URL" -o /dev/null -w "%{http_code}")
-    CHECK_LOGS_REQUEST_RESPONSE=$(curl -L -I -s -f -H "$CLOUD_REQUEST" "$TEST_LOGS_URL" -o /dev/null -w "%{http_code}")
-    if [ ${CHECK_DOWNLOAD_REQUEST_RESPONSE} -eq 200 ] && [ ${CHECK_LOGS_REQUEST_RESPONSE} -eq 200 ]; then
-      return 0
-    else
-      echo ""
-      return 1
-    fi
-  fi
 }
