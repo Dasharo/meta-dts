@@ -165,7 +165,14 @@ backup() {
 
   echo "Backing up BIOS firmware and store it locally..."
   echo "Remember that firmware is also backed up in HCL report."
-  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r "${FW_BACKUP_DIR}"/rom.bin >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+  # On MSI boards some regions may be not available so we need to use specific
+  # ones
+  if [ "$BOARD_VENDOR" == "Micro-Star International Co., Ltd." ] && [ "$SYSTEM_MODEL" == "MS-7E06" ]; then
+      FLASHROM_ADD_OPT_READ="--ifd -i fd -i me -i bios"
+  else
+      FLASHROM_ADD_OPT_READ=" "
+  fi
+  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r "${FW_BACKUP_DIR}"/rom.bin ${FLASHROM_ADD_OPT_READ} >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
   error_check "Failed to read BIOS firmware backup"
 
   if [ "$HAVE_EC" = "true" ]; then
