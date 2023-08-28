@@ -9,7 +9,7 @@ trap : 3
 check_os_version() {
   local os_version=$(grep "VERSION_ID" ${OS_VERSION_FILE} | cut -d "=" -f 2-)
 
-  if [ -n "${SE_IS_LOGGED}" ]; then
+  if [ -n "${DES_IS_LOGGED}" ]; then
     echo "  Logs key:        " ${CLOUDSEND_LOGS_URL}
     echo "  Download key:    " ${CLOUDSEND_DOWNLOAD_URL}
     echo "  Password:        " ${CLOUDSEND_PASSWORD}
@@ -52,7 +52,7 @@ while : ; do
       export CLOUDSEND_LOGS_URL=$(sed -n '1p' < ${SE_credential_file} | tr -d '\n')
       export CLOUDSEND_DOWNLOAD_URL=$(sed -n '2p' < ${SE_credential_file} | tr -d '\n')
       export CLOUDSEND_PASSWORD=$(sed -n '3p' < ${SE_credential_file} | tr -d '\n')
-      export SE_IS_LOGGED="true"
+      export DES_IS_LOGGED="true"
   fi
 
   echo
@@ -65,10 +65,10 @@ while : ; do
   if check_if_dasharo; then
     echo "  3) Restore firmware from Dasharo HCL report"
   fi
-  if [ -n "${SE_IS_LOGGED}" ]; then
-      echo "  4) Edit SE keys"
+  if [ -n "${DES_IS_LOGGED}" ]; then
+      echo "  4) Edit DES keys"
   else
-      echo "  4) Load SE keys"
+      echo "  4) Load DES keys"
   fi
   if check_if_dasharo; then
     echo "  5) Update Dasharo firmware"
@@ -163,7 +163,7 @@ while : ; do
         export CLOUDSEND_LOGS_URL="$BASE_CLOUDSEND_LOGS_URL"
         export CLOUDSEND_PASSWORD="$BASE_CLOUDSEND_PASSWORD"
         unset CLOUDSEND_DOWNLOAD_URL
-        unset SE_IS_LOGGED
+        unset DES_IS_LOGGED
       fi
       ;;
     5)

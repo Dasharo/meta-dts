@@ -537,7 +537,7 @@ restore() {
     echo "Please select one of available options."
 
     echo "  1) Check for HCL report stored locally"
-    if [ -n "${SE_IS_LOGGED}" ]; then
+    if [ -n "${DES_IS_LOGGED}" ]; then
       echo "  2) Check for HCL report stored on 3mdeb cloud"
     fi
     echo "  b) Back to main menu"
