@@ -4,4 +4,4 @@
 
 IP_ADDR="$1"
 
-scp dasharo-deploy/* dts/* root@$IP_ADDR:/usr/sbin
+scp -O dasharo-deploy/* dts/* root@$IP_ADDR:/usr/sbin
