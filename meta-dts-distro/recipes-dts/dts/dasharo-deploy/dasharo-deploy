@@ -254,9 +254,9 @@ smbios_migration() {
 smmstore_migration() {
     echo "Beginning SMMSTORE migration process..."
     flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r /tmp/dasharo_dump.rom ${FLASHROM_ADD_OPT_READ} --fmap -i FMAP -i SMMSTORE >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
-    cbfstool /tmp/dasharo_dump.rom read -r SMMSTORE -f smmstore.bin
+    cbfstool /tmp/dasharo_dump.rom read -r SMMSTORE -f /tmp/smmstore.bin
     echo "Migrate to SMMSTORE section."
-    cbfstool "$BIOS_UPDATE_FILE" write -r SMMSTORE -f smmstore.bin -u
+    cbfstool "$BIOS_UPDATE_FILE" write -r SMMSTORE -f /tmp/smmstore.bin -u
 }
 
 resign_binary() {
