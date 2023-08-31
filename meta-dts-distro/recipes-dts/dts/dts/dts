@@ -157,7 +157,7 @@ while : ; do
       if [ $? -eq 0 ]; then
         print_green "Dasharo SE credentials are correct and ready to use"
       else
-        echo -e "Something may be wrong with credentials. Please use option 4 to change SE keys
+        echo -e "Something may be wrong with credentials. Please use option 4 to change DES keys
                   \rand make sure that there is no typo."
         rm ${SE_credential_file}
         export CLOUDSEND_LOGS_URL="$BASE_CLOUDSEND_LOGS_URL"

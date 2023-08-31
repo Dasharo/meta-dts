@@ -298,7 +298,7 @@ if [ "$SEND_LOGS" = "true" ]; then
   if [ "$?" -ne "0" ]; then
     echo "Failed to send logs to the cloud"
     if [ -a "${CMD_DASHARO_DEPLOY}" ]; then
-      echo -e "Something may be wrong with credentials. Please use option 4 to change OEM keys
+      echo -e "Something may be wrong with credentials. Please use option 4 to change DES keys
                \rand make sure that there is no typo."
     fi
     exit 1
