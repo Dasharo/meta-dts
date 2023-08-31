@@ -5,6 +5,7 @@ All notable changes to the DTS project will be documented in this file.
 ## v1.2.6 - 2023-08-30
 
 * TBD
+* Added [txt-suite](https://github.com/9elements/converged-security-suite/releases/download/v2.6.0/txt-suite)
 
 ## v1.2.5 - 2023-08-07
 
