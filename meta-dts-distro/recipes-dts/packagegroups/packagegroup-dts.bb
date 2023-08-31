@@ -45,6 +45,7 @@ RDEPENDS:${PN}-tools-dts = " \
     dasharo-hcl-report \
     dts \
     system76-ectool \
+    txt-suite \
 "
 
 RDEPENDS:${PN}-python = " \
