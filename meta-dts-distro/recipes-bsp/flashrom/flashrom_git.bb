@@ -4,8 +4,8 @@ HOMEPAGE = "http://flashrom.org"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
-BRANCH = "rpl_support"
-SRCREV = "e21d7ca298667db517dcfe493fed20b5a2e29251"
+BRANCH = "dasharo-release"
+SRCREV = "24b8fcfccef31fbb95bc1dd308180f57d5cdb64c"
 SRC_URI = "git://github.com/Dasharo/flashrom.git;branch=${BRANCH};protocol=https"
 
 S = "${WORKDIR}/git"
