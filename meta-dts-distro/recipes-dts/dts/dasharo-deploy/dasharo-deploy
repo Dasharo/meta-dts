@@ -330,6 +330,7 @@ blob_transmission() {
 install() {
   ask_for_version
   display_flashing_warning
+  check_flash_lock
   echo "Downloading Dasharo firmware..."
   if [ -v BIOS_LINK_COMM ] && [ ${BIOS_LINK} == ${BIOS_LINK_COMM} ]; then
     curl -L -f "$BIOS_LINK" -o $BIOS_UPDATE_FILE
@@ -466,6 +467,7 @@ update() {
   fi
 
   display_flashing_warning
+  check_flash_lock
 
   echo "Downloading Dasharo firmware update..."
   if [ -v BIOS_LINK_COMM ] && [ ${BIOS_LINK} == ${BIOS_LINK_COMM} ]; then
@@ -573,6 +575,7 @@ restore() {
             read -p "Do you want to restore firmware from the given HCL report? [N/y] "
             case ${REPLY} in
                 yes|y|Y|Yes|YES)
+                check_flash_lock
                 flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -w "/tmp/logs/rom.bin" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
                 error_check "Failed to restore BIOS firmware! You can try one more time."
                 print_green "Successfully restored firmware"
@@ -605,6 +608,7 @@ restore() {
         echo "Restoring BIOS firmware..."
         if [ -f "/tmp/logs/rom.bin" ]; then
           # Write to entire flash when restoring
+          check_flash_lock
           flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -w "/tmp/logs/rom.bin" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
           error_check "Failed to restore BIOS firmware! You can try one more time."
           print_green "Successfully restored firmware"
