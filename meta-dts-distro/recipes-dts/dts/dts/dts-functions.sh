@@ -315,7 +315,7 @@ board_config() {
       case "$SYSTEM_MODEL" in
         "OptiPlex 7010")
           DBT_BIOS_UPDATE_FILENAME="/tmp/O7010A29.exe"
-          DBT_BIOS_UPDATE_URL="--user-agent='Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)' https://dl.dell.com/FOLDER05066036M/1/O7010A29.exe"
+          DBT_BIOS_UPDATE_URL="https://dl.dell.com/FOLDER05066036M/1/O7010A29.exe"
           DBT_BIOS_UPDATE_HASH="ceb82586c67cd8d5933ac858c12e0cb52f6e0e4cb3249f964f1c0cfc06d16f52  $DBT_BIOS_UPDATE_FILENAME"
           DBT_UEFI_IMAGE="/tmp/_O7010A29.exe.extracted/65C10"
           SCH5545_FW="/tmp/_O7010A29.exe.extracted/65C10_output/pfsobject/section-7ec6c2b0-3fe3-42a0-a316-22dd0517c1e8/volume-0x50000/file-d386beb8-4b54-4e69-94f5-06091f67e0d3/section0.raw"
@@ -323,7 +323,7 @@ board_config() {
           ;;
         "OptiPlex 9010")
           DBT_BIOS_UPDATE_FILENAME="/tmp/O9010A30.exe"
-          DBT_BIOS_UPDATE_URL="--user-agent='Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)' https://dl.dell.com/FOLDER05066009M/1/O9010A30.exe"
+          DBT_BIOS_UPDATE_URL="https://dl.dell.com/FOLDER05066009M/1/O9010A30.exe"
           DBT_BIOS_UPDATE_HASH="b11952f43d0ad66f3ce79558b8c5dd43f30866158ed8348e3b2dae1bbb07701b  $DBT_BIOS_UPDATE_FILENAME"
           DBT_UEFI_IMAGE="/tmp/_O9010A30.exe.extracted/65C10"
           SCH5545_FW="/tmp/_O9010A30.exe.extracted/65C10_output/pfsobject/section-7ec6c2b0-3fe3-42a0-a316-22dd0517c1e8/volume-0x50000/file-d386beb8-4b54-4e69-94f5-06091f67e0d3/section0.raw"
@@ -334,7 +334,7 @@ board_config() {
           # enabled when build for T1650 exists
           #
           # DBT_BIOS_UPDATE_FILENAME="/tmp/T1650A28.exe"
-          # DBT_BIOS_UPDATE_URL="--user-agent='Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)' https://dl.dell.com/FOLDER05065992M/1/T1650A28.exe"
+          # DBT_BIOS_UPDATE_URL="https://dl.dell.com/FOLDER05065992M/1/T1650A28.exe"
           # DBT_BIOS_UPDATE_HASH="40a66210b8882f523885849c1d879e726dc58aa14718168b1e75f3e2caaa523b  $DBT_BIOS_UPDATE_FILENAME"
           # DBT_UEFI_IMAGE="/tmp/_T1650A28.exe.extracted/65C10"
           # SCH5545_FW="/tmp/_T1650A28.exe.extracted/65C10_output/pfsobject/section-7ec6c2b0-3fe3-42a0-a316-22dd0517c1e8/volume-0x60000/file-d386beb8-4b54-4e69-94f5-06091f67e0d3/section0.raw"

@@ -279,7 +279,7 @@ download_keys() {
 
 blob_transmission() {
   echo "Extracting the UEFI image from BIOS update"
-  wget -O "$DBT_BIOS_UPDATE_FILENAME" "$DBT_BIOS_UPDATE_URL" >> $ERR_LOG_FILE 2>&1
+  wget -O "$DBT_BIOS_UPDATE_FILENAME" --user-agent='Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)' "$DBT_BIOS_UPDATE_URL" >> $ERR_LOG_FILE 2>&1
   error_file_check "$DBT_BIOS_UPDATE_FILENAME" "Failed to download BIOS for $SYSTEM_MODEL"
 
   sha256sum --check <(echo "$DBT_BIOS_UPDATE_HASH")
