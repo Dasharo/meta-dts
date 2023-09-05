@@ -46,7 +46,7 @@ print_banner
 logs_sent=""
 
 while : ; do
-  # Each time the main menu is displayed, check for SE credentials and export
+  # Each time the main menu is displayed, check for DES credentials and export
   # them, if file exists
   if [ -e "${SE_credential_file}" ]; then
       export CLOUDSEND_LOGS_URL=$(sed -n '1p' < ${SE_credential_file} | tr -d '\n')
@@ -150,12 +150,12 @@ while : ; do
       echo ${TMP_CLOUDSEND_DOWNLOAD_URL} >> ${SE_credential_file}
       echo ${TMP_CLOUDSEND_PASSWORD} >> ${SE_credential_file}
 
-      print_green "Dasharo SE credentials has been saved"
-      echo "Veryfing Dasharo SE credentials..."
+      print_green "Dasharo DES credentials has been saved"
+      echo "Veryfing Dasharo DES credentials..."
 
       check_se_creds
       if [ $? -eq 0 ]; then
-        print_green "Dasharo SE credentials are correct and ready to use"
+        print_green "Dasharo DES credentials are correct and ready to use"
       else
         echo -e "Something may be wrong with credentials. Please use option 4 to change DES keys
                   \rand make sure that there is no typo."
