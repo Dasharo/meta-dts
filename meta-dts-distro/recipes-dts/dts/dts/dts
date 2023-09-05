@@ -53,6 +53,11 @@ while : ; do
       export CLOUDSEND_DOWNLOAD_URL=$(sed -n '2p' < ${SE_credential_file} | tr -d '\n')
       export CLOUDSEND_PASSWORD=$(sed -n '3p' < ${SE_credential_file} | tr -d '\n')
       export DES_IS_LOGGED="true"
+  else
+      export CLOUDSEND_LOGS_URL="$BASE_CLOUDSEND_LOGS_URL"
+      export CLOUDSEND_PASSWORD="$BASE_CLOUDSEND_PASSWORD"
+      unset CLOUDSEND_DOWNLOAD_URL
+      unset DES_IS_LOGGED
   fi
 
   echo
