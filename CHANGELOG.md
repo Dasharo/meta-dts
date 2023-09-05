@@ -2,6 +2,10 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v1.2.8 - 2023-09-06
+
+* Check for SMM protection before trying to flash.
+
 ## v1.2.7 - 2023-09-05
 
 * Added Dasharo zero-touch initial deployment on MSI PRO Z790-A for
