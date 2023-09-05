@@ -389,7 +389,7 @@ board_config() {
 check_flash_lock() {
     flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} > /tmp/check_flash_lock 2> /tmp/check_flash_lock.err
     # Check in flashrom output if lock is enabled
-    grep -q 'PR0: Warning:.* is read-only' /tmp/check_flash_lock.err
+    grep -q 'PR0: Warning:.* is read-only\|SMM protection is enabled' /tmp/check_flash_lock.err
     if [ $? -eq 0 ]; then
         print_warning "Flash lock enabled, please go into BIOS setup / Dasharo System Features / Dasharo\r
         \rSecurity Options and enable access to flash with flashrom.\r\n
