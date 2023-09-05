@@ -16,6 +16,14 @@ update_result() {
 
   ERR=$(stat -c%s "$ERRORFILE" 2> /dev/null)
   LOG=$(stat -c%s "$LOGFILE" 2> /dev/null)
+
+  # if ERR or LOG var is empty, set it to 1 so we will go into UNKNOWN state
+  if [ -z "$LOG" ]; then
+    LOG=1
+  fi
+  if [ -z "$ERR" ]; then
+    ERR=1
+  fi
   # specific check for firmware dump
   if [ $LOGFILE == "logs/flashrom_read.log" ]; then
     if [ $LOG -ne 0 ] && [ -f "logs/rom.bin" ]; then
