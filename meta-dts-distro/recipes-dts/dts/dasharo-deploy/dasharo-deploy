@@ -102,7 +102,7 @@ display_flashing_warning() {
       echo "Board model: $BOARD_MODEL"
     fi
     echo
-    read -r -p "Does it match your actual specification? (Y|n)" OPTION
+    read -r -p "Does it match your actual specification? (Y|n) " OPTION
     echo
 
     case ${OPTION} in
