@@ -2,30 +2,43 @@
 
 All notable changes to the DTS project will be documented in this file.
 
-## v1.2.6 - 2023-08-30
+## v1.2.7 - 2023-09-05
 
-* TBD
-* Added [txt-suite](https://github.com/9elements/converged-security-suite/releases/download/v2.6.0/txt-suite)
+* Added Dasharo zero-touch initial deployment on MSI PRO Z790-A for
+  [DES](https://docs.dasharo.com/ways-you-can-help-us/#become-a-dasharo-entry-subscription-subscriber)
+  users.
+* Added Dasharo firmware update to version v1.2.0 on MSI PRO Z690-A for
+  [DES](https://docs.dasharo.com/ways-you-can-help-us/#become-a-dasharo-entry-subscription-subscriber)
+  users.
+* Updated coreboot-utils to support Raptor Lake.
+* Added couple UX improvements for DTS scripts, specially in the context of
+  [DES](https://docs.dasharo.com/ways-you-can-help-us/#become-a-dasharo-entry-subscription-subscriber)
+  users.
+* Correctly fixed downloading Dell BIOS Update packages.
+
+## v1.2.6 - 2023-08-31
+
+* Added [txt-suite](https://github.com/9elements/converged-security-suite/releases/download/v2.6.0/txt-suite).
 
 ## v1.2.5 - 2023-08-07
 
-* Fix downloading Dell BIOS Update packages
+* Fixed downloading Dell BIOS Update packages.
 
 ## v1.2.4 - 2023-07-12
 
-* Added [me_cleaner](https://github.com/corna/me_cleaner)
+* Added [me_cleaner](https://github.com/corna/me_cleaner).
 
 ## v1.2.3 - 2023-06-16
 
-* Enabled devmem applet for buxybox
+* Enabled devmem applet for buxybox.
 
 ## v1.2.2 - 2023-06-16
 
-* Updated coreboot-utils to support Alder Lake
+* Updated coreboot-utils to support Alder Lake.
 
 ## v1.2.1 - 2023-06-16
 
-* Updated coreboot-utils to support Jasper Lake
+* Updated coreboot-utils to support Jasper Lake.
 
 ## v1.2.0 - 2023-05-10
 
