@@ -1,0 +1,10 @@
+#!/bin/bash
+
+FUM_EFIVAR="/sys/firmware/efi/vars/FirmwareUpdateMode-d15b327e-ff2d-4fc1-abf6-c12bd08c1359"
+
+if [ -d $FUM_EFIVAR ]; then
+    /usr/sbin/dasharo-deploy update fum
+else
+    /usr/sbin/dts
+fi
+

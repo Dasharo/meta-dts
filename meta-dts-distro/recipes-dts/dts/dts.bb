@@ -8,6 +8,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384
 
 SRC_URI = " \
     file://dts \
+    file://dts-boot \
     file://ec_transition \
     file://cloud_list \
     file://dts-environment.sh \
@@ -25,6 +26,7 @@ RDEPENDS:${PN} = " \
 do_install () {
     install -d ${D}/${sbindir}
     install -m 0755 ${S}/dts ${D}/${sbindir}
+    install -m 0755 ${S}/dts-boot ${D}/${sbindir}
     install -m 0755 ${S}/ec_transition ${D}/${sbindir}
     install -m 0755 ${S}/cloud_list ${D}/${sbindir}
     install -m 0664 ${S}/dts-environment.sh ${D}/${sbindir}
