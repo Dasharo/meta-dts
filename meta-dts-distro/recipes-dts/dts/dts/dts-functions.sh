@@ -117,7 +117,7 @@ board_config() {
       case "$SYSTEM_MODEL" in
         "NV4XMB,ME,MZ")
           DASHARO_REL_NAME="novacustom_nv4x_tgl"
-          DASHARO_REL_VER="1.4.0"
+          DASHARO_REL_VER="1.5.0"
           BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
           EC_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_ec_v${DASHARO_REL_VER}.rom"
           HAVE_EC="true"
@@ -130,11 +130,22 @@ board_config() {
           PROGRAMMER_BIOS="internal"
           PROGRAMMER_EC="ite_ec"
           FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
-          FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
+          if check_if_dasharo; then
+          # if v1.4.0 or older, flash the whole bios region, as per:
+          # TBD
+            compare_versions $DASHARO_VERSION 1.5.0
+            if [ $? -eq 1 ]; then
+              # For Dasharo version lesser than 1.5.0
+              FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
+            else
+              # For Dasharo version greater or equal 1.5.0
+              FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A -i RW_SECTION_B"
+            fi
+          fi
           ;;
         "NS50_70MU")
           DASHARO_REL_NAME="novacustom_ns5x_tgl"
-          DASHARO_REL_VER="1.4.0"
+          DASHARO_REL_VER="1.5.0"
           BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
           EC_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_ec_v${DASHARO_REL_VER}.rom"
           HAVE_EC="true"
@@ -147,11 +158,22 @@ board_config() {
           PROGRAMMER_BIOS="internal"
           PROGRAMMER_EC="ite_ec"
           FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
-          FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
+          if check_if_dasharo; then
+          # if v1.4.0 or older, flash the whole bios region, as per:
+          # TBD
+            compare_versions $DASHARO_VERSION 1.5.0
+            if [ $? -eq 1 ]; then
+              # For Dasharo version lesser than 1.5.0
+              FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
+            else
+              # For Dasharo version greater or equal 1.5.0
+              FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A -i RW_SECTION_B"
+            fi
+          fi
           ;;
         "NS5x_NS7xPU")
           DASHARO_REL_NAME="novacustom_ns5x_adl"
-          DASHARO_REL_VER="1.6.0"
+          DASHARO_REL_VER="1.7.0"
           BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
           EC_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_ec_v${DASHARO_REL_VER}.rom"
           HAVE_EC="true"
@@ -164,11 +186,22 @@ board_config() {
           PROGRAMMER_BIOS="internal"
           PROGRAMMER_EC="ite_ec"
           FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
-          FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
+          if check_if_dasharo; then
+          # if v1.6.0 or older, flash the whole bios region, as per:
+          # TBD
+            compare_versions $DASHARO_VERSION 1.7.0
+            if [ $? -eq 1 ]; then
+              # For Dasharo version lesser than 1.7.0
+              FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
+            else
+              # For Dasharo version greater or equal 1.7.0
+              FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A -i RW_SECTION_B"
+            fi
+          fi
           ;;
         "NV4xPZ")
           DASHARO_REL_NAME="novacustom_nv4x_adl"
-          DASHARO_REL_VER="1.6.0"
+          DASHARO_REL_VER="1.7.0"
           BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
           EC_LINK_PROD="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_ec_v${DASHARO_REL_VER}.rom"
           HAVE_EC="true"
@@ -181,7 +214,18 @@ board_config() {
           PROGRAMMER_BIOS="internal"
           PROGRAMMER_EC="ite_ec"
           FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
-          FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
+          if check_if_dasharo; then
+          # if v1.6.0 or older, flash the whole bios region, as per:
+          # TBD
+            compare_versions $DASHARO_VERSION 1.7.0
+            if [ $? -eq 1 ]; then
+              # For Dasharo version lesser than 1.7.0
+              FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
+            else
+              # For Dasharo version greater or equal 1.7.0
+              FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A -i RW_SECTION_B"
+            fi
+          fi
           ;;
         *)
           error_exit "Board model $SYSTEM_MODEL is currently not supported"
