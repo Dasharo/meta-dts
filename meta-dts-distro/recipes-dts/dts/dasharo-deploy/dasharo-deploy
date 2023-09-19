@@ -23,6 +23,7 @@ PROGRAMMER_EC="ite_ec"
 [ -z "$SYSTEM_MODEL" ] && error_exit "SYSTEM_MODEL not given"
 
 CMD="$1"
+FUM="$2"
 
 ask_for_version()
 {
@@ -466,7 +467,9 @@ update() {
     error_exit "No update available for your machine"
   fi
 
-  display_flashing_warning
+  if [ ! "$FUM" == "fum" ]; then
+    display_flashing_warning
+  fi
   check_flash_lock
 
   echo "Downloading Dasharo firmware update..."
@@ -633,8 +636,8 @@ usage() {
   echo "  $0 restore  - Restore from a previously saved backup"
 }
 
-check_flash_chip
 board_config
+check_flash_chip
 
 case "$CMD" in
   install)
@@ -646,6 +649,20 @@ case "$CMD" in
     install
     ;;
   update)
+    if [ "$FUM" == "fum" ]; then
+        echo "Firmware Update Mode detected; proceed with automatic update in 5 second"
+        echo "Updating in 5s:"
+        echo "5..."
+        sleep 1
+        echo "4..."
+        sleep 1
+        echo "3..."
+        sleep 1
+        echo "2..."
+        sleep 1
+        echo "1..."
+        sleep 0.5
+    fi
     update
     ;;
   backup)
