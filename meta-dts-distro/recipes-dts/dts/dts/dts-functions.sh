@@ -24,9 +24,22 @@ check_if_dasharo() {
 }
 
 ### Error checks
+
+# instead of error exit in dasharo-deploy exit we need to reboot the platform
+# in cases where there would be some problem with updating the platform
+fum_exit() {
+    if [ "$FUM" == "fum" ]; then
+      print_error "Update cannot be performed"
+      print_warning "Starting bash session - please make sure you get logs from\r
+      \r$ERR_LOG_FILE and $FLASHROM_LOG_FILE; then you can poweroff the platform"
+      /bin/bash
+    fi
+}
+
 error_exit() {
   _error_msg="$1"
   print_error "$_error_msg"
+  fum_exit
   exit 1
 }
 
