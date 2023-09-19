@@ -19,6 +19,7 @@ RDEPENDS:${PN}-system = " \
     ca-certificates \
     chrony \
     chronyc \
+    efivar \
     gnupg \
     wget \
     ipxe-commands \
