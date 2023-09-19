@@ -21,7 +21,7 @@ DTS_LOCAL_GETTY ?= " \
     ${IMAGE_ROOTFS}${systemd_system_unitdir}/getty@.service \
 "
 local_autologin () {
-    sed -e 's/^\(ExecStart *=.*getty \)/\1--autologin root --login-program \/usr\/sbin\/dts /' -i ${DTS_LOCAL_GETTY}
+    sed -e 's/^\(ExecStart *=.*getty \)/\1--autologin root --login-program \/usr\/sbin\/dts-boot /' -i ${DTS_LOCAL_GETTY}
 }
 
 ROOTFS_POSTPROCESS_COMMAND += "local_autologin; "
