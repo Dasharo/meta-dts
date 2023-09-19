@@ -455,7 +455,7 @@ update() {
     echo "Latest available Dasharo version: $DASHARO_REL_VER"
     BIOS_HASH=$BIOS_HASH_COMM
     BIOS_LINK=$BIOS_LINK_COMM
-    if [ "$HAVE_EC" = "true" ]; then
+    if [ "$HAVE_EC" == "true" ]; then
       EC_HASH=$EC_HASH_COMM
       EC_LINK=$EC_LINK_COMM
     fi
@@ -635,6 +635,12 @@ usage() {
   echo "  $0 backup   - Backup current firmware"
   echo "  $0 restore  - Restore from a previously saved backup"
 }
+
+# for FUM we start in dasharo-deploy so we need to verify that we have internet
+# connection to download shasums in board_config
+if [ "$FUM" == "fum" ]; then
+    check_network_connection
+fi
 
 board_config
 check_flash_chip
