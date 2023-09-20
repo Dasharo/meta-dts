@@ -497,7 +497,7 @@ update() {
   fi
 
   echo "Updating Dasharo firmware..."
-  print_warning "This will take around 3 minutes. Please be patient and do not reset your computer, or touch keyboard!"
+  print_warning "This will take around 3 minutes. Please be patient and do not reset your computer, or touch the keyboard!"
   flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_UPDATE} -w "$BIOS_UPDATE_FILE"  >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
   error_check "Failed to update Dasharo firmware"
 
@@ -656,7 +656,7 @@ case "$CMD" in
     ;;
   update)
     if [ "$FUM" == "fum" ]; then
-        echo "Firmware Update Mode detected; proceed with automatic update in 5 second"
+        echo "Firmware Update Mode detected; proceed with automatic update in 5 seconds"
         echo "Updating in 5s:"
         echo "5..."
         sleep 1
