@@ -30,17 +30,47 @@ jobs:
         id: dts-ver
         shell: bash
         run: |
-          echo "DTS_VER=1.2.9" >> $GITHUB_OUTPUT
+          DTS_VER=v`cat meta-dts/meta-dts-distro/conf/distro/dts-distro.conf | grep DISTRO_VERSION | tr -d "\" [A-Z]_="`
+          echo "DTS_VER=${DTS_VER}" >> $GITHUB_OUTPUT
+      - name: Deploy DTS on boot.dasharo.com
+        shell: bash
+        run: |
+          DTS_VER="${{steps.dts-ver.outputs.DTS_VER}}"
+          ssh -i ~/.ssh/dts-ci-key builder@10.1.40.2 "mkdir -p boot/dts/${DTS_VER}"
+          cd build/tmp/deploy/images/genericx86-64/
+          cp bzImage bzImage-${DTS_VER}
+          cp dts-base-image-genericx86-64.cpio.gz dts-base-image-${DTS_VER}.cpio.gz
+          cp dts-base-image-genericx86-64.wic.gz dts-base-image-${DTS_VER}.wic.gz
+          cp dts-base-image-genericx86-64.iso dts-base-image-${DTS_VER}.iso
+          scp -i ~/.ssh/dts-ci-key bzImage-${DTS_VER} builder@10.1.40.2:boot/dts/${DTS_VER}/
+          scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.cpio.gz builder@10.1.40.2:boot/dts/${DTS_VER}/
+          scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.wic.gz builder@10.1.40.2:boot/dts/${DTS_VER}/
+          scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.iso builder@10.1.40.2:boot/dts/${DTS_VER}/
+      - name: Deploy sha256 on boot.dasharo.com
+        shell: bash
+        run: |
+          DTS_VER="${{steps.dts-ver.outputs.DTS_VER}}"
+          cd build/tmp/deploy/images/genericx86-64/
+          sha256sum bzImage-${DTS_VER} > bzImage-${DTS_VER}.sha256
+          sha256sum dts-base-image-${DTS_VER}.cpio.gz > dts-base-image-${DTS_VER}.cpio.gz.sha256
+          sha256sum dts-base-image-${DTS_VER}.wic.gz > dts-base-image-${DTS_VER}.wic.gz.sha256
+          sha256sum dts-base-image-${DTS_VER}.iso > dts-base-image-${DTS_VER}.iso.sha256
+          scp -i ~/.ssh/dts-ci-key bzImage-${DTS_VER}.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
+          scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.cpio.gz.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
+          scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.wic.gz.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
+          scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.iso.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
+      - name: Update iPXE menu
+        shell: bash
+        run: |
+          ./meta-dts/scripts/generate-ipxe-menu.sh ${{steps.dts-ver.outputs.DTS_VER}}
+          scp -i ~/.ssh/dts-ci-key dts.ipxe builder@10.1.40.2:boot/dts/
       - name: Trigger signing
         shell: bash
         run: |
           DTS_VER="${{steps.dts-ver.outputs.DTS_VER}}"
           git clone ssh://git@git.3mdeb.com:2222/3mdeb/dts-release-cicd-pipeline.git
           cd dts-release-cicd-pipeline
-          # Only for tests:
-          git checkout cicd-pipeline
-          git tag `echo $DTS_VER | tr -d "v"` HEAD^
-          #
+          git tag `echo $DTS_VER | tr -d "v"`
           git push origin main --tags
           cd -
   cleanup:
@@ -55,6 +85,6 @@ jobs:
           rm -rf ~/.ssh/dts-ci-key
           rm -rf dts-release-cicd-pipeline
           rm -f ~/.ssh/gitea-key
+          rm -rf build
           rm -f ~/.ssh/config
           mv ~/.ssh/config-old ~/.ssh/config
-
