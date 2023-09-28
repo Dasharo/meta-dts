@@ -13,6 +13,7 @@ SRC_URI = " \
     file://cloud_list \
     file://dts-environment.sh \
     file://dts-functions.sh \
+    file://coreboot_customizer \
 "
 
 S = "${WORKDIR}"
@@ -31,4 +32,5 @@ do_install () {
     install -m 0755 ${S}/cloud_list ${D}/${sbindir}
     install -m 0664 ${S}/dts-environment.sh ${D}/${sbindir}
     install -m 0664 ${S}/dts-functions.sh ${D}/${sbindir}
+    install -m 0755 ${S}/coreboot_customizer ${D}/${sbindir}
 }

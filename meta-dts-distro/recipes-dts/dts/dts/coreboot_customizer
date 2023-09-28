@@ -1,0 +1,210 @@
+#!/usr/bin/env bash
+
+POSITIONAL_ARGS=()
+
+echo "Dasharo coreboot image customizer"
+echo ""
+
+usage() {
+  echo "Usage: $0 OPTIONS coreboot.rom"
+  echo "  coreboot.rom  - coreboot file to modify"
+  echo ""
+  echo "  OPTIONS:"
+  echo "    -u | --uuid <UUID>              - UUID in RFC4122 format to be set in SMBIOS type 1 structure"
+  echo "    -s | --serial-number <SERIAL>   - Serial number to be set in SMBIOS type 1 and type 2 structure"
+  echo "    -l | --logo <LOGO>              - Custom logo in BMP/PNG/JPG/SVG format to be displayed on boot"
+  echo ""
+  echo "  Examples:"
+  echo "    $0 -u 96bcfa1a-42b4-6717-a44c-d8bbc18cbea4 -s D07229051 coreboot.rom"
+  echo "    $0 -u \`dmidecode -s system-uuid\` -s \`dmidecode -s baseboard-serial-number\` coreboot.rom"
+  echo "      Above command will obtain the current SMBIOS UUID and Serial Number"
+  echo "      from the system and patch the coreboot binary."
+}
+
+set_uuid() {
+  echo "$CB_CONFIG" | grep -q "CONFIG_DRIVERS_GENERIC_CBFS_UUID=y"
+  if [[ $? -ne 0 ]]; then
+    echo "Configurable UUID not supported by the coreboot image"
+    exit 7
+  fi
+  uuidparse "$SYSTEM_UUID" | grep -q "invalid"
+  if [[ $? -eq 0 ]]; then
+    echo "Invalid UUID format"
+    exit 8
+  fi
+  echo "Setting System UUID to $1"
+  echo -n "$1" > /tmp/system_uuid
+  $CBFSTOOL $COREBOOT_ROM remove -n system_uuid -r COREBOOT > /dev/null 2> /dev/null
+  CBFSTOOL_ERR="$($CBFSTOOL $COREBOOT_ROM add -f /tmp/system_uuid -n system_uuid -t raw -r COREBOOT 2>&1)"
+  rm /tmp/system_uuid
+  echo "$CBFSTOOL_ERR" |grep -q "The image will be left unmodified"
+  if [[ $? -eq 0 ]]; then
+    echo "An error occurred when adding setting the UUID"
+    echo "cbfstool output:"
+    echo "$CBFSTOOL_ERR"
+    exit 9
+  fi
+}
+
+set_serial_number() {
+  echo "$CB_CONFIG" | grep -q "CONFIG_DRIVERS_GENERIC_CBFS_SERIAL=y"
+  if [[ $? -ne 0 ]]; then
+    echo "Configurable Serial Number not supported by the coreboot image"
+    exit 10
+  fi
+  echo "Setting Serial Number to $1"
+  echo -n "$1" > /tmp/serial_number
+  $CBFSTOOL $COREBOOT_ROM remove -n serial_number -r COREBOOT > /dev/null 2> /dev/null
+  CBFSTOOL_ERR="$($CBFSTOOL $COREBOOT_ROM add -f /tmp/serial_number -n serial_number -t raw -r COREBOOT 2>&1)"
+  rm /tmp/serial_number
+  echo "$CBFSTOOL_ERR" |grep -q "The image will be left unmodified"
+  if [[ $? -eq 0 ]]; then
+    echo "An error occurred when adding setting the Serial Number"
+    echo "cbfstool output:"
+    echo "$CBFSTOOL_ERR"
+    exit 11
+  fi
+}
+
+set_logo() {
+  if [[ ! -f $1 ]]; then
+    echo "Logo file not found or invalid path."
+    exit 12
+  fi
+
+  file $1 | grep -qE 'PNG image|JPEG image|Scalable Vector Graphics image|PC bitmap'
+    if [[ $? -ne 0 ]]; then
+    echo "Invalid or unsupported logo file format"
+    echo "cbfstool output:"
+    echo "$CBFSTOOL_ERR"
+    exit 13
+  fi
+
+  $CBFSTOOL $COREBOOT_ROM layout -w | grep -q "BOOTSPLASH"
+  if [[ $? -ne 0 ]]; then
+    echo "Customizable logo not supported by the coreboot image"
+    exit 14
+  fi
+
+  echo "Setting $1 as custom logo"
+  convert -background None $1 BMP3:/tmp/logo.bmp
+  $CBFSTOOL $COREBOOT_ROM remove -n logo.bmp -r BOOTSPLASH > /dev/null 2> /dev/null
+  CBFSTOOL_ERR="$(cbfstool $COREBOOT_ROM add -f /tmp/logo.bmp -r BOOTSPLASH -n logo.bmp -t raw -c lzma 2>&1)"
+  rm /tmp/logo.bmp
+
+  echo "$CBFSTOOL_ERR" |grep -q "too big"
+  if [[ $? -eq 0 ]]; then
+    echo "Logo file too big to fit in the coreboot image"
+    exit 15
+  fi
+
+  echo "$CBFSTOOL_ERR" |grep -q "The image will be left unmodified"
+  if [[ $? -eq 0 ]]; then
+    echo "An error occurred when adding the logo to coreboot image"
+    echo "cbfstool output:"
+    echo "$CBFSTOOL_ERR"
+    exit 16
+  fi
+}
+
+if [[ $# -eq 0 ]]; then
+  usage
+  exit 0
+fi
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -u|--UUID)
+      SET_UUID=1
+      SYSTEM_UUID="$2"
+      shift # past argument
+      shift # past value
+
+      which uuidparse > /dev/null 2> /dev/null
+      if [[ $? -ne 0 ]]; then
+        echo "uuidparse not found. Please install util-linux package"
+        echo "ubuntu/debian: apt install util-linux"
+        echo "fedora: dnf install util-linux"
+        echo "redhat/centos: yum install util-linux"
+        exit 2
+      fi
+      ;;
+    -s|--serial-number)
+      SET_SERIAL=1
+      SERIAL_NUMBER="$2"
+      shift # past argument
+      shift # past value
+      ;;
+    -l|--logo)
+      SET_LOGO=1
+      LOGO_FILE="$(readlink -f $2)"
+      shift # past argument
+      shift # past value
+
+      which convert > /dev/null 2> /dev/null
+      if [[ $? -ne 0 ]]; then
+        echo "convert not found. Please install imagemagick package"
+        echo "ubuntu/debian: apt install imagemagick"
+        echo "fedora: dnf install imagemagick"
+        echo "redhat/centos: yum install imagemagick"
+        exit 3
+      fi
+      ;;
+    -*|--*)
+      echo "Unknown option $1"
+      exit 1
+      ;;
+    *)
+      POSITIONAL_ARGS+=("$(readlink -f $1)") # save positional arg
+      shift # past argument
+      ;;
+  esac
+done
+
+set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
+
+COREBOOT_ROM=$POSITIONAL_ARGS
+
+if [[ ! -f $COREBOOT_ROM ]]; then
+  echo "coreboot image not found or invalid path."
+  exit 4
+fi
+
+CBFSTOOL="${CBFSTOOL:-$PWD/cbfstool}"
+
+if [[ ! -f "$CBFSTOOL" ]]; then
+  CBFSTOOL=$(which cbfstool 2> /dev/null | head -n1 | cut -d " " -f1)
+  if [[ $? -ne 0 ]]; then
+    wget https://dl.3mdeb.com/open-source-firmware/utilities/cbfstool > /dev/null 2> /dev/null
+    if [[ $? -eq 0 ]]; then
+        CBFSTOOL="$PWD/cbfstool"
+    else
+      echo "cbfstool not found. Please obtain/compile cbfstool first"
+      exit 5
+    fi
+  fi	
+fi
+
+$CBFSTOOL $COREBOOT_ROM extract -n config -r COREBOOT -f /tmp/cb_config > /dev/null 2> /dev/null
+if [[ $? -ne 0 ]]; then
+  echo "Failed to extract coreboot configuration from the image"
+  exit 6
+fi
+
+CB_CONFIG="$(cat /tmp/cb_config)"
+rm /tmp/cb_config
+
+echo "Will modify $COREBOOT_ROM"
+echo ""
+
+if [[ $SET_UUID -eq 1 ]]; then
+  set_uuid "$SYSTEM_UUID"
+fi
+
+if [[ $SET_SERIAL -eq 1 ]]; then
+  set_serial_number "$SERIAL_NUMBER"
+fi
+
+if [[ $SET_LOGO -eq 1 ]]; then
+  set_logo "$LOGO_FILE"
+fi
