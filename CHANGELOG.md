@@ -2,6 +2,15 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v1.2.9 - 2023-09-29
+
+* Added [Firmware Update
+  Mode](https://docs.dasharo.com/guides/firmware-update/#firmware-update-mode)
+  integration, which speed up the process of Dasharo firmware update.
+* Added efivars support and efivar utility.
+* Fixed problem with EC firmware links and hashes.
+* Improved logging of DTS menu options.
+
 ## v1.2.8 - 2023-09-06
 
 * Check for SMM protection before trying to flash.
