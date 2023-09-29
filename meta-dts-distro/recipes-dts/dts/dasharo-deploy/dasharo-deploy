@@ -504,7 +504,7 @@ update() {
   if [ "$HAVE_EC" = "true" ]; then
     echo "Dasharo EC update process will start in a moment."
     sleep 3
-    echo "Your machine will shut down automatically once it finishes."
+    print_warning "Your machine will shut down automatically once it finishes."
     sleep 3
     print_warning "This will take around 1 minute. Please be patient and do not reset your computer, or touch keyboard!"
     echo "Updating Dasharo EC firmware..."
