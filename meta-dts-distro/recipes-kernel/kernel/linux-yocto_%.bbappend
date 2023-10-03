@@ -11,3 +11,9 @@ SRC_URI:append = " \
     file://touchpad.cfg \
     file://tpm.cfg \
 "
+
+# Enable support for additional file systems:
+SRC_URI:append = " \
+    file://ntfs-enable.cfg \
+    file://exfat-enable.cfg \
+"
