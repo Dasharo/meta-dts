@@ -1,0 +1,24 @@
+From 459ecaf5b6a9e724d8a293e80081632d3881c178 Mon Sep 17 00:00:00 2001
+From: Daniil Klimuk <daniil.klimuk@3mdeb.com>
+Date: Mon, 9 Oct 2023 15:31:54 +0200
+Subject: [PATCH] add-device-symlinks-udev
+
+---
+ localextra.rules | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/localextra.rules b/localextra.rules
+index 3d51d3e395d4..89a141ac8d86 100644
+--- a/localextra.rules
++++ b/localextra.rules
+@@ -21,3 +21,7 @@ KERNEL=="fb0",  SYMLINK+="fb"
+ 
+ # Make all input devices read-write to the input group
+ SUBSYSTEM=="input", GROUP="input", MODE="660"
++
++# Add links to devices to /dev/disk/:
++KERNEL!="sr*", IMPORT{program}="/sbin/blkid -o udev -p $tempnode"
++ENV{ID_FS_LABEL_ENC}=="?*",     ENV{ID_FS_USAGE}=="filesystem", SYMLINK+="disk/by-label/$env{ID_FS_LABEL_ENC}"
+-- 
+2.41.0
+
