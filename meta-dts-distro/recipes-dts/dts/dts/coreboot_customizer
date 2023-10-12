@@ -114,7 +114,7 @@ fi
 
 while [[ $# -gt 0 ]]; do
   case $1 in
-    -u|--UUID)
+    -u|--uuid)
       SET_UUID=1
       SYSTEM_UUID="$2"
       shift # past argument
