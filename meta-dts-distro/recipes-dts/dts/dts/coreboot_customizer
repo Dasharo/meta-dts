@@ -89,7 +89,7 @@ set_logo() {
   echo "Setting $1 as custom logo"
   convert -background None $1 BMP3:/tmp/logo.bmp
   $CBFSTOOL $COREBOOT_ROM remove -n logo.bmp -r BOOTSPLASH > /dev/null 2> /dev/null
-  CBFSTOOL_ERR="$(cbfstool $COREBOOT_ROM add -f /tmp/logo.bmp -r BOOTSPLASH -n logo.bmp -t raw -c lzma 2>&1)"
+  CBFSTOOL_ERR="$($CBFSTOOL $COREBOOT_ROM add -f /tmp/logo.bmp -r BOOTSPLASH -n logo.bmp -t raw -c lzma 2>&1)"
   rm /tmp/logo.bmp
 
   echo "$CBFSTOOL_ERR" |grep -q "too big"
