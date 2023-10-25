@@ -2,13 +2,15 @@
 
 All notable changes to the DTS project will be documented in this file.
 
-## v1.2.13 - 2023-11-20
+## v1.2.13 - 2023-11-x
 
-* Add dasharo_ectool for updating EC
+* Added dasharo_ectool for updating EC
+* Added
+  [bg-suite](https://github.com/9elements/converged-security-suite/tree/main/cmd/bg-suite)
 
 ## v1.2.12 - 2023-11-03
 
-* Fix updating boards without Vboot slot B
+* Fixed updating boards without Vboot slot B
 
 ## v1.2.11 - 2023-10-31
 
