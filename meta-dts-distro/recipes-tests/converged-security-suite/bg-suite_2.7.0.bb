@@ -9,7 +9,7 @@ SRC_URI = " \
     file://bg-suite \
 "
 
-SRC_URI[sha256sum] = "12f07220b3caa9337db9ae4230921e9d28fb4e29282627859eee324b4d2ebc90"
+SRC_URI[sha256sum] = "7d76040cf6d78bd1e5ccc9d0056799c37ccce0870139eef44a556f2e56a037e6"
 
 S = "${WORKDIR}"
 
