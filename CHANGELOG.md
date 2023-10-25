@@ -2,6 +2,12 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v1.2.10 - 2023-10-x
+
+* Added
+  [coreboot_customizer](https://docs.dasharo.com/guides/image-customization/#usage)
+  which allow to change logo displayed on boot.
+
 ## v1.2.9 - 2023-09-29
 
 * Added [Firmware Update
