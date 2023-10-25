@@ -4,17 +4,18 @@ All notable changes to the DTS project will be documented in this file.
 
 ## v1.2.13 - 2023-11-x
 
-* Added dasharo_ectool for updating EC
+* Added dasharo_ectool for updating EC.
 * Added
-  [bg-suite](https://github.com/9elements/converged-security-suite/tree/main/cmd/bg-suite)
+  [bg-suite](https://github.com/9elements/converged-security-suite/tree/main/cmd/bg-suite).
+* Added support fot exFAT and NTFS file systems.
 
 ## v1.2.12 - 2023-11-03
 
-* Fixed updating boards without Vboot slot B
+* Fixed updating boards without Vboot slot B.
 
 ## v1.2.11 - 2023-10-31
 
-* Bumped supported firmware versions of NovaCustom to 1.5.1/1.7.1
+* Bumped supported firmware versions of NovaCustom to 1.5.1/1.7.1.
 
 ## v1.2.10 - 2023-10-27
 
