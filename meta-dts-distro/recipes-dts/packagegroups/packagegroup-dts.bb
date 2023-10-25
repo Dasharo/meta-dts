@@ -47,6 +47,7 @@ RDEPENDS:${PN}-tools-dts = " \
     dts \
     dasharo-ectool \
     txt-suite \
+    bg-suite \
 "
 
 RDEPENDS:${PN}-python = " \
