@@ -5,9 +5,22 @@ on:
       - '*'
 
 jobs:
+  build:
+    name: Build system image
+    runs-on: self-hosted
+    steps:
+      - name: Checkout meta-dts repo
+        uses: actions/checkout@v2
+        with:
+          path: "meta-dts"
+      - name: Build DTS image
+        shell: bash
+        run: |
+          kas-container build meta-dts/kas.yml
   deploy-images:
     name: Deploy DTS artifacts on boot.dasharo.com
     if: always()
+    needs: build
     runs-on: self-hosted
     steps:
       - name: Prepare SSH key
@@ -70,7 +83,7 @@ jobs:
           DTS_VER="${{steps.dts-ver.outputs.DTS_VER}}"
           git clone ssh://git@git.3mdeb.com:2222/3mdeb/dts-release-cicd-pipeline.git
           cd dts-release-cicd-pipeline
-          git tag `echo $DTS_VER | tr -d "v"`
+          git tag $DTS_VER
           git push origin main --tags
           cd -
   cleanup:
