@@ -9,6 +9,7 @@ All notable changes to the DTS project will be documented in this file.
   which allow to change logo displayed on boot.
 * Added SMMSTORE migration for NovaCustom laptops, so the Dasharo Setup settings
   are preserved after firmware update.
+* Added CI/CD pipeline to generate signatures.
 
 ## v1.2.9 - 2023-09-29
 
