@@ -2,13 +2,13 @@
 
 All notable changes to the DTS project will be documented in this file.
 
-## v1.2.10 - 2023-10-x
+## v1.2.10 - 2023-10-27
 
 * Added
   [coreboot_customizer](https://docs.dasharo.com/guides/image-customization/#usage)
   which allow to change logo displayed on boot.
 * Added SMMSTORE migration for NovaCustom laptops, so the Dasharo Setup settings
-  are preserved after firmware update
+  are preserved after firmware update.
 
 ## v1.2.9 - 2023-09-29
 
