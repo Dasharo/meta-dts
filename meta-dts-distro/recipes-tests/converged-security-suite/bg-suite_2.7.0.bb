@@ -1,4 +1,4 @@
-FILESEXTRAPATHS += "converged-security-suite/files"
+FILESEXTRAPATHS += "${THISDIR}/${PN}"
 
 DESCRIPTION = "Converged Security Suite's bg-suite"
 HOMEPAGE = "https://github.com/9elements/converged-security-suite"
