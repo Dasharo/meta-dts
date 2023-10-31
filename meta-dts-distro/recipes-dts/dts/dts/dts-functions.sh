@@ -117,7 +117,7 @@ board_config() {
       case "$SYSTEM_MODEL" in
         "NV4XMB,ME,MZ")
           DASHARO_REL_NAME="novacustom_nv4x_tgl"
-          DASHARO_REL_VER="1.5.0"
+          DASHARO_REL_VER="1.5.1"
           BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
           EC_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_ec_v${DASHARO_REL_VER}.rom"
           HAVE_EC="true"
@@ -146,7 +146,7 @@ board_config() {
           ;;
         "NS50_70MU")
           DASHARO_REL_NAME="novacustom_ns5x_tgl"
-          DASHARO_REL_VER="1.5.0"
+          DASHARO_REL_VER="1.5.1"
           BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
           EC_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_ec_v${DASHARO_REL_VER}.rom"
           HAVE_EC="true"
@@ -175,7 +175,7 @@ board_config() {
           ;;
         "NS5x_NS7xPU")
           DASHARO_REL_NAME="novacustom_ns5x_adl"
-          DASHARO_REL_VER="1.7.0"
+          DASHARO_REL_VER="1.7.1"
           BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
           EC_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_ec_v${DASHARO_REL_VER}.rom"
           HAVE_EC="true"
@@ -204,7 +204,7 @@ board_config() {
           ;;
         "NV4xPZ")
           DASHARO_REL_NAME="novacustom_nv4x_adl"
-          DASHARO_REL_VER="1.7.0"
+          DASHARO_REL_VER="1.7.1"
           BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
           EC_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_ec_v${DASHARO_REL_VER}.rom"
           HAVE_EC="true"
