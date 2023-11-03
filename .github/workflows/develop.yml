@@ -8,7 +8,7 @@ jobs:
   build:
     name: Build system image
     runs-on:
-      label: dts-builder
+      labels: dts-builder
     steps:
       - name: Checkout meta-dts repo
         uses: actions/checkout@v2
@@ -23,7 +23,7 @@ jobs:
     if: always()
     needs: build
     runs-on:
-      label: dts-builder
+      labels: dts-builder
     steps:
       - name: Prepare SSH key
         shell: bash
@@ -75,7 +75,7 @@ jobs:
     if: always()
     needs: deploy-images
     runs-on:
-      label: dts-builder
+      labels: dts-builder
     steps:
       - name: Cleanup after deployment
         shell: bash
