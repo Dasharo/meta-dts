@@ -140,7 +140,7 @@ board_config() {
               FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
             else
               # For Dasharo version greater or equal 1.5.0
-              FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A -i RW_SECTION_B"
+              FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
             fi
           fi
           ;;
@@ -169,7 +169,7 @@ board_config() {
               FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
             else
               # For Dasharo version greater or equal 1.5.0
-              FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A -i RW_SECTION_B"
+              FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
             fi
           fi
           ;;
@@ -198,7 +198,7 @@ board_config() {
               FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
             else
               # For Dasharo version greater or equal 1.7.0
-              FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A -i RW_SECTION_B"
+              FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
             fi
           fi
           ;;
@@ -227,7 +227,7 @@ board_config() {
               FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
             else
               # For Dasharo version greater or equal 1.7.0
-              FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A -i RW_SECTION_B"
+              FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
             fi
           fi
           ;;
