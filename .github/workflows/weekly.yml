@@ -6,7 +6,8 @@ on:
 jobs:
   build:
     name: Build system image without using cache
-    runs-on: self-hosted
+    runs-on:
+      label: dts-builder
     steps:
       - name: Prepare SSH key
         shell: bash
@@ -28,7 +29,8 @@ jobs:
     name: Deploy cache on cache.dasharo.com
     if: always()
     needs: build
-    runs-on: self-hosted
+    runs-on:
+      label: dts-builder
     steps:
       - name: Prepare SSH key
         shell: bash
@@ -50,7 +52,8 @@ jobs:
     name: Cleanup
     if: always()
     needs: deploy-cache
-    runs-on: self-hosted
+    runs-on:
+      label: dts-builder
     steps:
       - name: Cleanup after deployment
         shell: bash

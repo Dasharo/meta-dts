@@ -7,7 +7,8 @@ on:
 jobs:
   build:
     name: Build system image
-    runs-on: self-hosted
+    runs-on:
+      label: dts-builder
     steps:
       - name: Checkout meta-dts repo
         uses: actions/checkout@v2
@@ -21,7 +22,8 @@ jobs:
     name: Deploy DTS artifacts on boot.dasharo.com
     if: always()
     needs: build
-    runs-on: self-hosted
+    runs-on:
+      label: dts-builder
     steps:
       - name: Prepare SSH key
         shell: bash
@@ -72,7 +74,8 @@ jobs:
     name: Cleanup
     if: always()
     needs: deploy-images
-    runs-on: self-hosted
+    runs-on:
+      label: dts-builder
     steps:
       - name: Cleanup after deployment
         shell: bash
