@@ -48,6 +48,7 @@ RDEPENDS:${PN}-tools-dts = " \
     dasharo-ectool \
     txt-suite \
     bg-suite \
+    dasharo-configuration-utility \
 "
 
 RDEPENDS:${PN}-python = " \
