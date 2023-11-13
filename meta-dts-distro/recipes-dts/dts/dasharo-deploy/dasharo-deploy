@@ -427,6 +427,13 @@ update_ec() {
 
 update() {
   local _update_version=""
+
+  check_if_ac
+  if [ $? -ne 0 ]; then
+    echo "Firmware update process interrupted on user request."
+    exit 1
+  fi
+
   echo "Checking for the latest Dasharo update available..."
   echo "Current Dasharo version: $DASHARO_VERSION"
   if [ -v BIOS_HASH_DES ]; then
