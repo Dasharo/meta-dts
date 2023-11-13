@@ -202,7 +202,7 @@ install_ec() {
   error_check "Cannot access $FW_STORE_URL. Please check your internet
  connection"
   sha256sum --check <(echo "$EC_HASH")
-  error_check "Failed to download Dasharo EC firmware update"
+  error_check "Failed to download Dasharo EC firmware update. Please make sure Ethernet cable is connected and try again."
 
   echo "Updating EC..."
   flashrom -p "$PROGRAMMER_EC" ${FLASH_CHIP_SELECT} -w "$EC_UPDATE_FILE" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
@@ -294,7 +294,7 @@ download_keys() {
 blob_transmission() {
   echo "Extracting the UEFI image from BIOS update"
   wget -O "$DBT_BIOS_UPDATE_FILENAME" --user-agent='Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)' "$DBT_BIOS_UPDATE_URL" >> $ERR_LOG_FILE 2>&1
-  error_file_check "$DBT_BIOS_UPDATE_FILENAME" "Failed to download BIOS for $SYSTEM_MODEL"
+  error_file_check "$DBT_BIOS_UPDATE_FILENAME" "Failed to download BIOS for $SYSTEM_MODEL. Please make sure Ethernet cable is connected and try again."
 
   sha256sum --check <(echo "$DBT_BIOS_UPDATE_HASH")
   error_check "Failed SHA-256 sum check on the downloaded BIOS for $SYSTEM_MODEL"
@@ -307,7 +307,7 @@ blob_transmission() {
   if [ -n "$SINIT_ACM_FILENAME" ] && [ -n "$SINIT_ACM_URL" ]; then
     echo "Downloading the Intel SINIT ACM"
     wget -O "$SINIT_ACM_FILENAME" "$SINIT_ACM_URL" >> $ERR_LOG_FILE 2>&1
-    error_file_check "$SINIT_ACM_FILENAME" "Failed to download Intel SINIT ACM."
+    error_file_check "$SINIT_ACM_FILENAME" "Failed to download Intel SINIT ACM. Please make sure Ethernet cable is connected and try again."
 
     # Intel does not provide hash of the package, use SHA256 we know is good
     sha256sum --check <(echo "$SINIT_ACM_HASH")
@@ -435,7 +435,7 @@ update_ec() {
   error_check "Cannot access $FW_STORE_URL. Please check your internet connection"
   echo "Checking sha256sum..."
   sha256sum --check <(echo "$EC_HASH")
-  error_check "Failed to download EC firmware update"
+  error_check "Failed to download EC firmware update. Please make sure Ethernet cable is connected and try again."
 
   echo "Updating EC..."
   dasharo_ectool flash "$EC_UPDATE_FILE" &>> $ERR_LOG_FILE

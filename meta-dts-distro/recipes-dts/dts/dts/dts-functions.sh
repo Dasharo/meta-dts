@@ -148,6 +148,10 @@ check_network_connection() {
 ## Supported boards configuration
 
 board_config() {
+  # We download firmwares via network. At this point, the network connection
+  # must be up already.
+  check_network_connection
+
   echo "Checking if board is Dasharo compatible."
   case "$BOARD_VENDOR" in
     "Notebook")
