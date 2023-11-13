@@ -23,6 +23,43 @@ check_if_dasharo() {
   fi
 }
 
+check_if_ac() {
+  local _ac_file="/sys/class/power_supply/AC/online"
+
+  if [ ! -e "${_ac_file}" ]; then
+    # We want to silently skip if AC file is not there. Most likely this is
+    # not battery-powered device then.
+    return 0
+  fi
+
+  while true; do
+    ac_status=$(cat ${_ac_file})
+
+    if [ "$ac_status" -eq 1 ]; then
+      echo "AC adapter is connected. Continuing with firmware update."
+      return
+    else
+      print_warning "Warning: AC adapter must be connected before performing firmware update."
+      print_warning "Please connect the AC adapter and press 'C' to continue, or 'Q' to quit."
+
+      read -n 1 -r input
+      case $input in
+       [Cc])
+          echo "Checking AC status again..."
+          ;;
+        [Qq])
+          echo "Quitting firmware update."
+          return 1
+          ;;
+        *)
+          echo "Invalid input. Press 'C' to continue, or 'Q' to quit."
+          continue
+          ;;
+      esac
+    fi
+  done
+}
+
 ### Error checks
 
 # instead of error exit in dasharo-deploy exit we need to reboot the platform
