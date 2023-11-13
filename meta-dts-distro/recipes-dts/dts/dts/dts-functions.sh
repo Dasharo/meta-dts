@@ -164,6 +164,7 @@ board_config() {
           BIOS_HASH_COMM="$(wget -O /dev/stdout ${BIOS_LINK_COMM}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
           NEED_SMBIOS_MIGRATION="false"
           NEED_SMMSTORE_MIGRATION="true"
+          NEED_BOOTSPLASH_MIGRATION="false"
           NEED_BLOB_TRANSMISSION="false"
           PROGRAMMER_BIOS="internal"
           PROGRAMMER_EC="ite_ec"
@@ -174,6 +175,7 @@ board_config() {
             compare_versions $DASHARO_VERSION 1.5.0
             if [ $? -eq 1 ]; then
               # For Dasharo version lesser than 1.5.0
+              NEED_BOOTSPLASH_MIGRATION="true"
               FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
             else
               # For Dasharo version greater or equal 1.5.0
@@ -193,6 +195,7 @@ board_config() {
           BIOS_HASH_COMM="$(wget -O /dev/stdout ${BIOS_LINK_COMM}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
           NEED_SMBIOS_MIGRATION="false"
           NEED_SMMSTORE_MIGRATION="true"
+          NEED_BOOTSPLASH_MIGRATION="false"
           NEED_BLOB_TRANSMISSION="false"
           PROGRAMMER_BIOS="internal"
           PROGRAMMER_EC="ite_ec"
@@ -203,6 +206,7 @@ board_config() {
             compare_versions $DASHARO_VERSION 1.5.0
             if [ $? -eq 1 ]; then
               # For Dasharo version lesser than 1.5.0
+              NEED_BOOTSPLASH_MIGRATION="true"
               FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
             else
               # For Dasharo version greater or equal 1.5.0
@@ -232,6 +236,7 @@ board_config() {
             compare_versions $DASHARO_VERSION 1.7.0
             if [ $? -eq 1 ]; then
               # For Dasharo version lesser than 1.7.0
+              NEED_BOOTSPLASH_MIGRATION="true"
               FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
             else
               # For Dasharo version greater or equal 1.7.0
@@ -251,6 +256,7 @@ board_config() {
           BIOS_HASH_COMM="$(wget -O /dev/stdout ${BIOS_LINK_COMM}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
           NEED_SMBIOS_MIGRATION="false"
           NEED_SMMSTORE_MIGRATION="true"
+          NEED_BOOTSPLASH_MIGRATION="false"
           NEED_BLOB_TRANSMISSION="false"
           PROGRAMMER_BIOS="internal"
           PROGRAMMER_EC="ite_ec"
@@ -261,6 +267,7 @@ board_config() {
             compare_versions $DASHARO_VERSION 1.7.0
             if [ $? -eq 1 ]; then
               # For Dasharo version lesser than 1.7.0
+              NEED_BOOTSPLASH_MIGRATION="true"
               FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
             else
               # For Dasharo version greater or equal 1.7.0
@@ -289,6 +296,7 @@ board_config() {
               BIOS_HASH_DES="${BIOS_LINK_DES}.sha256"
               NEED_SMBIOS_MIGRATION="true"
               NEED_SMMSTORE_MIGRATION="true"
+              NEED_BOOTSPLASH_MIGRATION="false"
               NEED_BLOB_TRANSMISSION="false"
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
@@ -299,6 +307,7 @@ board_config() {
                 compare_versions $DASHARO_VERSION 1.1.2
                 if [ $? -eq 1 ]; then
                 # For Dasharo version lesser than 1.1.2
+                    NEED_BOOTSPLASH_MIGRATION="true"
                     FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
                 else
                 # For Dasharo version greater or equal 1.1.2
@@ -318,6 +327,7 @@ board_config() {
               BIOS_HASH_DES="${BIOS_LINK_DES}.sha256"
               NEED_SMBIOS_MIGRATION="true"
               NEED_SMMSTORE_MIGRATION="true"
+              NEED_BOOTSPLASH_MIGRATION="false"
               NEED_BLOB_TRANSMISSION="false"
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
@@ -328,6 +338,7 @@ board_config() {
                 compare_versions $DASHARO_VERSION 1.1.2
                 if [ $? -eq 1 ]; then
                 # For Dasharo version lesser than 1.1.2
+                    NEED_BOOTSPLASH_MIGRATION="true"
                     FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
                 else
                 # For Dasharo version greater or equal 1.1.2
@@ -354,6 +365,7 @@ board_config() {
               BIOS_HASH_DES="${BIOS_LINK_DES}.sha256"
               NEED_SMBIOS_MIGRATION="false"
               NEED_SMMSTORE_MIGRATION="true"
+              NEED_BOOTSPLASH_MIGRATION="false"
               NEED_BLOB_TRANSMISSION="false"
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
@@ -375,6 +387,7 @@ board_config() {
               BIOS_HASH_DES="${BIOS_LINK_DES}.sha256"
               NEED_SMBIOS_MIGRATION="false"
               NEED_SMMSTORE_MIGRATION="true"
+              NEED_BOOTSPLASH_MIGRATION="false"
               NEED_BLOB_TRANSMISSION="false"
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
