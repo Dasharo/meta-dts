@@ -5,33 +5,37 @@ SRC_URI += "gitsm://github.com/Dasharo/ec.git;protocol=https;nobranch=1"
 SRCREV = "411fab9b7c4b4aecfc0ecff2d97f607df6e81914"
 S = "${WORKDIR}/git"
 CARGO_SRC_DIR = "/tool/"
-PV:append = ".AUTOINC+6b0891ed0a"
+PV:append = ".AUTOINC+411fab9b7c"
 
 SRC_URI += " \
-    crate://crates.io/ansi_term/0.12.1 \
     crate://crates.io/atty/0.2.14 \
+    crate://crates.io/autocfg/1.1.0 \
     crate://crates.io/bitflags/1.3.2 \
-    crate://crates.io/cc/1.0.73 \
-    crate://crates.io/clap/2.34.0 \
+    crate://crates.io/cc/1.0.79 \
+    crate://crates.io/clap/3.2.23 \
+    crate://crates.io/clap_lex/0.2.4 \
     crate://crates.io/downcast-rs/1.2.0 \
+    crate://crates.io/hashbrown/0.12.3 \
     crate://crates.io/hermit-abi/0.1.19 \
-    crate://crates.io/hidapi/1.3.4 \
-    crate://crates.io/libc/0.2.121 \
-    crate://crates.io/pkg-config/0.3.25 \
-    crate://crates.io/redox_hwio/0.1.5 \
-    crate://crates.io/strsim/0.8.0 \
-    crate://crates.io/textwrap/0.11.0 \
-    crate://crates.io/unicode-width/0.1.9 \
-    crate://crates.io/vec_map/0.8.2 \
+    crate://crates.io/hidapi/1.5.0 \
+    crate://crates.io/indexmap/1.9.2 \
+    crate://crates.io/libc/0.2.139 \
+    crate://crates.io/os_str_bytes/6.4.1 \
+    crate://crates.io/pkg-config/0.3.26 \
+    crate://crates.io/redox_hwio/0.1.6 \
+    crate://crates.io/strsim/0.10.0 \
+    crate://crates.io/termcolor/1.2.0 \
+    crate://crates.io/textwrap/0.16.0 \
     crate://crates.io/winapi-i686-pc-windows-gnu/0.4.0 \
+    crate://crates.io/winapi-util/0.1.5 \
     crate://crates.io/winapi-x86_64-pc-windows-gnu/0.4.0 \
     crate://crates.io/winapi/0.3.9 \
-    crate://crates.io/dasharo_ectool/0.3.8 \
 "
+
 DEPENDS += "hidapi"
 LIC_FILES_CHKSUM = " \
-    file://LICENSE;md5=1ebbd3e34237af26da5dc08a4e440464 \
+    file://tool/LICENSE;md5=af209eac18ec76ed06fb2839a906b1ad \
 "
 SUMMARY = "Dasharo EC tool"
 HOMEPAGE = "https://github.com/Dasharo/ec"
-LICENSE = "GPL-3.0-only"
+LICENSE = "MIT"
