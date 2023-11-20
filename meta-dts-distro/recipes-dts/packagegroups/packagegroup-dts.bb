@@ -45,7 +45,7 @@ RDEPENDS:${PN}-tools-dts = " \
     dasharo-deploy \
     dasharo-hcl-report \
     dts \
-    system76-ectool \
+    dasharo-ectool \
     txt-suite \
 "
 

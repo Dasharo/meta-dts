@@ -26,7 +26,7 @@ SRC_URI += " \
     crate://crates.io/winapi-i686-pc-windows-gnu/0.4.0 \
     crate://crates.io/winapi-x86_64-pc-windows-gnu/0.4.0 \
     crate://crates.io/winapi/0.3.9 \
-    crate://crates.io/system76_ectool/0.3.8 \
+    crate://crates.io/dasharo_ectool/0.3.8 \
 "
 DEPENDS += "hidapi"
 LIC_FILES_CHKSUM = " \

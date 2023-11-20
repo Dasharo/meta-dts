@@ -56,7 +56,7 @@ board_config() {
 check_for_opensource_firmware()
 {
   echo "Checking for opensource firmware"
-  system76_ectool info >> /dev/null 2>&1
+  dasharo_ectool info >> /dev/null 2>&1
   if [ $? -eq 0 ]; then
     error_exit "Device has already Open Source Embedded Controller firmware, aborting..."
   fi

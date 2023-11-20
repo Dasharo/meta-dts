@@ -178,7 +178,7 @@ backup() {
 
   if [ "$HAVE_EC" = "true" ]; then
     echo "Checking for Open Source Embedded Controller firmware"
-    system76_ectool info >> $ERR_LOG_FILE 2>&1
+    dasharo_ectool info >> $ERR_LOG_FILE 2>&1
     if [ $? -eq 0 ]; then
       echo "Device has already Open Source Embedded Controller firmware, do not backup EC..."
     else
@@ -348,7 +348,7 @@ install() {
 
   if [ "$HAVE_EC" = "true" ]; then
     echo "Checking for Open Source Embedded Controller firmware"
-    system76_ectool info >> $ERR_LOG_FILE 2>&1
+    dasharo_ectool info >> $ERR_LOG_FILE 2>&1
     if [ $? -eq 0 ]; then
       echo "Device has already Open Source Embedded Controller firmware, do not flash EC..."
     else
@@ -421,7 +421,7 @@ update_ec() {
   error_check "Failed to download EC firmware update"
 
   echo "Updating EC..."
-  system76_ectool flash "$EC_UPDATE_FILE" &>> $ERR_LOG_FILE
+  dasharo_ectool flash "$EC_UPDATE_FILE" &>> $ERR_LOG_FILE
   error_check "Failed to update EC firmware"
 }
 
@@ -488,7 +488,7 @@ update() {
   error_check "Failed to verify Dasharo firmware"
 
   if [ "$HAVE_EC" = "true" ]; then
-    system76_ectool info >> $ERR_LOG_FILE 2>&1
+    dasharo_ectool info >> $ERR_LOG_FILE 2>&1
     error_check "Device does not have Dasharo EC firmware - cannot continue update!"
   fi
 
