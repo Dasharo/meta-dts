@@ -2,7 +2,7 @@ inherit cargo
 inherit pkgconfig
 
 SRC_URI += "gitsm://github.com/Dasharo/ec.git;protocol=https;nobranch=1"
-SRCREV = "6b0891ed0a38f6e4e37eb775f2fd235d45524ce4"
+SRCREV = "411fab9b7c4b4aecfc0ecff2d97f607df6e81914"
 S = "${WORKDIR}/git"
 CARGO_SRC_DIR = "/tool/"
 PV:append = ".AUTOINC+6b0891ed0a"
@@ -32,6 +32,6 @@ DEPENDS += "hidapi"
 LIC_FILES_CHKSUM = " \
     file://LICENSE;md5=1ebbd3e34237af26da5dc08a4e440464 \
 "
-SUMMARY = "System76 EC tool"
-HOMEPAGE = "https://github.com/system76/ec"
+SUMMARY = "Dasharo EC tool"
+HOMEPAGE = "https://github.com/Dasharo/ec"
 LICENSE = "GPL-3.0-only"
