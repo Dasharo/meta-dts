@@ -2,6 +2,10 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v1.2.13 - 2023-11-20
+
+* Add dasharo_ectool for updating EC
+
 ## v1.2.12 - 2023-11-03
 
 * Fix updating boards without Vboot slot B
