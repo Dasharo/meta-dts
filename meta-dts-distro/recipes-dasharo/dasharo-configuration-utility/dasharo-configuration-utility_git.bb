@@ -17,7 +17,7 @@ S = "${WORKDIR}/git"
 RDEPENDS:${PN} = " \
     bash \
     cbfstool \
-    imagemagick \ 
+    imagemagick \
     util-linux \
 "
 
