@@ -447,8 +447,8 @@ board_config() {
       PROGRAMMER_BIOS="internal"
       SINIT_ACM_FILENAME="/tmp/630744_002.zip"
       SINIT_ACM_URL="https://cdrdv2.intel.com/v1/dl/getContent/630744"
-      SINIT_ACM_HASH="b23c5e6bd70bdcfde4215a5a252e56c4966f0e06cacf388e654ca906c4ecdad1 $SINIT_ACM_FILENAME"
-      SINIT_ACM="/tmp/630744_002/SNB_IVB_SINIT_20190708_PW.bin"
+      SINIT_ACM_HASH="0b412c1832bd504d4b8f5fa01b32449c344fe0019e5e4da6bb5d80d393df5e8b $SINIT_ACM_FILENAME"
+      SINIT_ACM="/tmp/630744_003/SNB_IVB_SINIT_20190708_PW.bin"
       FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
       FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
       case "$SYSTEM_MODEL" in
