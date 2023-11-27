@@ -445,7 +445,7 @@ board_config() {
       NEED_SMBIOS_MIGRATION="true"
       NEED_BLOB_TRANSMISSION="true"
       PROGRAMMER_BIOS="internal"
-      SINIT_ACM_FILENAME="/tmp/630744_002.zip"
+      SINIT_ACM_FILENAME="/tmp/630744_003.zip"
       SINIT_ACM_URL="https://cdrdv2.intel.com/v1/dl/getContent/630744"
       SINIT_ACM_HASH="0b412c1832bd504d4b8f5fa01b32449c344fe0019e5e4da6bb5d80d393df5e8b $SINIT_ACM_FILENAME"
       SINIT_ACM="/tmp/630744_003/SNB_IVB_SINIT_20190708_PW.bin"
