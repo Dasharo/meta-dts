@@ -34,7 +34,7 @@ All notable changes to the DTS project will be documented in this file.
 
 ## v1.2.7 - 2023-09-05
 
-* Added Dasharo zero-touch initial deployment on MSI PRO Z790-A for
+* Added Dasharo zero-touch initial deployment on MSI PRO Z790-P for
   [DES](https://docs.dasharo.com/ways-you-can-help-us/#become-a-dasharo-entry-subscription-subscriber)
   users.
 * Added Dasharo firmware update to version v1.1.2 on MSI PRO Z690-A for
