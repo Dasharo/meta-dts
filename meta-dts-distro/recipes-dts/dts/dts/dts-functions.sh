@@ -178,7 +178,6 @@ board_config() {
           NEED_BLOB_TRANSMISSION="false"
           PROGRAMMER_BIOS="internal"
           PROGRAMMER_EC="ite_ec"
-          FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
           if check_if_dasharo; then
           # if v1.5.1 or older, flash the whole bios region
             compare_versions $DASHARO_VERSION 1.5.2
@@ -211,7 +210,6 @@ board_config() {
           NEED_BLOB_TRANSMISSION="false"
           PROGRAMMER_BIOS="internal"
           PROGRAMMER_EC="ite_ec"
-          FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
           if check_if_dasharo; then
           # if v1.5.0 or older, flash the whole bios region
             compare_versions $DASHARO_VERSION 1.5.1
@@ -243,7 +241,6 @@ board_config() {
           NEED_BLOB_TRANSMISSION="false"
           PROGRAMMER_BIOS="internal"
           PROGRAMMER_EC="ite_ec"
-          FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
           if check_if_dasharo; then
           # if v1.7.1 or older, flash the whole bios region
             compare_versions $DASHARO_VERSION 1.7.2
@@ -276,7 +273,6 @@ board_config() {
           NEED_BLOB_TRANSMISSION="false"
           PROGRAMMER_BIOS="internal"
           PROGRAMMER_EC="ite_ec"
-          FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
           if check_if_dasharo; then
           # if v1.7.1 or older, flash the whole bios region
             compare_versions $DASHARO_VERSION 1.7.2
@@ -318,7 +314,6 @@ board_config() {
               NEED_BLOB_TRANSMISSION="false"
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
-              FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
               if check_if_dasharo; then
                 # if v1.1.1 or older, flash the whole bios region, as per:
                 # https://docs.dasharo.com/variants/msi_z690/firmware-update/#version-older-than-v110
@@ -352,7 +347,6 @@ board_config() {
               NEED_BLOB_TRANSMISSION="false"
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
-              FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
               if check_if_dasharo; then
                 # if v1.1.1 or older, flash the whole bios region, as per:
                 # https://docs.dasharo.com/variants/msi_z690/firmware-update/#version-older-than-v110
@@ -393,8 +387,6 @@ board_config() {
               NEED_BLOB_TRANSMISSION="false"
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
-              FLASHROM_ADD_OPT_DEPLOY="-N --ifd -i bios"
-              FLASHROM_ADD_OPT_READ="--ifd -i fd -i me -i bios"
               if ! check_if_dasharo; then
                 NEED_ROMHOLE_MIGRATION="true"
               fi
@@ -418,8 +410,6 @@ board_config() {
               NEED_BLOB_TRANSMISSION="false"
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
-              FLASHROM_ADD_OPT_DEPLOY="-N --ifd -i bios"
-              FLASHROM_ADD_OPT_READ="--ifd -i fd -i me -i bios"
               if ! check_if_dasharo; then
                 NEED_ROMHOLE_MIGRATION="true"
               fi
@@ -740,4 +730,185 @@ verify_artifacts() {
     error_check "Failed to verify $_name firmware signature."
   fi
   print_green "Done"
+}
+
+check_intel_regions() {
+
+  FLASH_REGIONS=$(flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} 2> /dev/null)
+
+  # 0 will mean that region is present/writable, else
+
+  grep -q "Flash Descriptor region" "$FLASH_REGIONS"
+  BOARD_HAS_FD_REGION=$?
+  grep -qE "Flash Descriptor region.*read-write" "$FLASH_REGIONS"
+  BOARD_FD_REGION_RW=$?
+
+  grep -q "Management Engine region" "$FLASH_REGIONS"
+  BOARD_HAS_ME_REGION=$?
+  grep -qE "Management Engine region.*read-write" "$FLASH_REGIONS"
+  BOARD_ME_REGION_RW=$?
+  grep -qE "Management Engine region.*locked" "$FLASH_REGIONS"
+  BOARD_ME_REGION_LOCKED=$?
+
+  grep -q "Gigabit Ethernet region" "$FLASH_REGIONS"
+  BOARD_HAS_GBE_REGION=$?
+  grep -qE "Gigabit Ethernet region.*read-write" "$FLASH_REGIONS"
+  BOARD_GBE_REGION_RW=$?
+  grep -qE "Gigabit Ethernet region.*locked" "$FLASH_REGIONS"
+  BOARD_GBE_REGION_LOCKED=$?
+}
+
+check_blobs_in_binary() {
+
+  # Non-zero value means no FD/ME for consistency with Intel regions
+  # presence from check_intel_regions
+  BINARY_HAS_FD=1
+  BINARY_HAS_ME=1
+
+  # If there is no descriptor, there is no ME as well, so skip the check
+  if [ $BOARD_HAS_FD_REGION -eq 0 ]; then
+    flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} --ifd -i fd -r /tmp/descriptor.bin > /dev/null 2>&1
+    if [ $? -eq 0 ] && [ -f "/tmp/descriptor.bin" ]; then
+      ME_OFFSET=$(ifdtool -d /tmp/descriptor.bin | grep "Flash Region 2 (Intel ME):" | sed 's/Flash Region 2 (Intel ME)\://' |awk '{print $1;}')
+      # Check for IFD signature at offset 0 (old descriptors)
+      if [ $(tail -c +0 $1|head -c 2|xxd -ps) == "5aa5f00f"]; then
+        BINARY_HAS_FD=0
+      fi
+      # Check for IFD signature at offset 16 (new descriptors)
+      if [ $(tail -c +17 $1|head -c 2|xxd -ps) == "5aa5f00f"]; then
+        BINARY_HAS_FD=0
+      fi
+      # Check for ME FPT signature at ME offset + 16 (old ME)
+      if [ $(tail -c +$((0x$ME_OFFSET + 17)) |head -c 4) == "\$FPT" ]; then
+        BINARY_HAS_ME=0
+      fi
+      # Check for aa55 signature at ME offset + 4096 (new ME)
+      if [ $(tail -c +$((0x$ME_OFFSET + 4097)) |head -c 2|xxd -ps) == "aa55" ]; then
+        BINARY_HAS_ME=0
+      fi
+    else
+      echo "Failed to read flash descriptor"  >> $ERR_LOG_FILE
+    fi
+  fi
+}
+
+check_if_me_disabled() {
+
+  ME_DISABLED=1
+
+  if [ $BOARD_HAS_ME_REGION -ne 0 ]; then
+    # No ME region
+    ME_DISABLED=0
+    return
+  fi
+
+  # Check if HECI present
+  # FIXME: what if HECI is not device 16.0?
+  if [ $(setpci -s 00:00.0 00.W) == "8086" ]; then
+    # Check ME Current Operation Mode at offset 0x40 bits 19:16
+    ME_OPMODE="$(setpci -s 00:16.0 42.B| cut -c2-)"
+    if [ $ME_OPMODE == "0" ]; then
+      echo "ME is not disabled"  >> $ERR_LOG_FILE
+      return
+    elif [ $ME_OPMODE == "2" ]; then
+      echo "ME is disabled (HAP/Debug Mode)"  >> $ERR_LOG_FILE
+      ME_DISABLED=0
+      return
+    elif [ $ME_OPMODE == "3" ]; then
+      echo "ME is soft disabled (HECI)"  >> $ERR_LOG_FILE
+      ME_DISABLED=0
+      return
+    elif [ $ME_OPMODE == "4" ]; then
+      echo "ME disabled by Security Override Jumper/FDOPS"  >> $ERR_LOG_FILE
+      ME_DISABLED=0
+      return
+    elif [ $ME_OPMODE == "5" ]; then
+      echo "ME disabled by Security Override MEI Message/HMRFPO"  >> $ERR_LOG_FILE
+      ME_DISABLED=0
+      return
+    elif [ $ME_OPMODE == "5" ]; then
+      echo "ME disabled by Security Override MEI Message/HMRFPO"  >> $ERR_LOG_FILE
+      ME_DISABLED=0
+      return
+    elif [ $ME_OPMODE == "7" ]; then
+      echo "ME disabled (Enhanced Debug Mode) or runs Ignition FW"  >> $ERR_LOG_FILE
+      ME_DISABLED=0
+      return
+    else
+      echo "Unknown ME operation mode"  >> $ERR_LOG_FILE
+      return
+    fi
+  else
+    # If we are running coreboot, check for status in logs
+    cbmem -1 | grep "ME is disabled" # HECI (soft) disabled
+    if [ $? -eq 0 ]; then
+      ME_DISABLED=0
+      return
+    fi
+    cbmem -1 | grep "ME is HAP disabled" # HAP disabled
+    if [ $? -eq 0 ]; then
+      ME_DISABLED=0
+      return
+    fi
+    echo "Can not determine if ME is disabled"  >> $ERR_LOG_FILE
+  fi
+}
+
+force_me_update() {
+  while : ; do
+    echo
+    read -r -p "Force the flashing without ME? (Y|n) " OPTION
+    echo
+
+    case ${OPTION} in
+      yes|y|Y|Yes|YES)
+        print_warning "Proceeding without ME flashing, because we were forced to."
+        break
+        ;;
+      n|N)
+        error_exit "Cancelling flashing process..."
+        ;;
+      *)
+        ;;
+    esac
+  done
+}
+
+update_flashrom_params() {
+  if [ $BOARD_HAS_FD_REGION -ne 0 ]; then
+    # No FD on board, so flash everything
+    FLASHROM_ADD_OPT_DEPLOY=""
+  else
+    # Safe defaults, only BIOS region and do not verify all regions,
+    # as some of them may not be readable.
+    FLASHROM_ADD_OPT_DEPLOY="-N --ifd -i bios"
+
+    if [ $BINARY_HAS_FD -eq 0 ]; then
+      if [ $BOARD_FD_REGION_RW -eq 0 ]; then
+        # FD writable and the binary provides FD, safe to flash
+        FLASHROM_ADD_OPT_DEPLOY+=" -i fd"
+      else
+        print_error "The firmware binary contains Flash Descriptor (FD), but FD is not writable!"
+        print_warning "Proceeding without FD flashing, as it is not critical."
+        echo "The firmware binary contains Flash Descriptor (FD), but FD is not writable!"  >> $ERR_LOG_FILE
+      fi
+    fi
+
+    if [ $BINARY_HAS_ME -eq 0 ]; then
+      if [ $BOARD_ME_REGION_RW -eq 0 ]; then
+        # ME writable and the binary provides ME, safe to flash if ME disabled
+        if [ $ME_DISABLED -eq 0 ]; then
+          FLASHROM_ADD_OPT_DEPLOY+=" -i me"
+        else
+          echo "The firmware binary contains Management Engine (ME), but ME is not disabled!"  >> $ERR_LOG_FILE
+          print_error "The firmware binary contains Management Engine (ME), but ME is not disabled!"
+          force_me_update
+        fi
+      else
+        echo "The firmware binary contains Management Engine (ME), but ME is not writable!"  >> $ERR_LOG_FILE
+        print_error "The firmware binary contains Management Engine (ME), but ME is not writable!"
+        force_me_update
+      fi
+    fi
+  fi
 }

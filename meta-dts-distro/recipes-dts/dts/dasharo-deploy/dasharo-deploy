@@ -154,11 +154,23 @@ backup() {
 
   echo "Backing up BIOS firmware and store it locally..."
   echo "Remember that firmware is also backed up in HCL report."
-  # On MSI boards some regions may be not available so we need to use specific
-  # ones
-  if [ "$BOARD_VENDOR" == "Micro-Star International Co., Ltd." ] && [ "$SYSTEM_MODEL" == "MS-7E06" ]; then
-      FLASHROM_ADD_OPT_READ="--ifd -i fd -i me -i bios"
+  check_intel_regions
+  if [ $BOARD_HAS_FD_REGION -eq 0 ]; then
+    # Use safe defaults. Descriptor may contain additional regions not detected
+    # by flashrom and will return failure when attempted to be read. BIOS and
+    # Flash descriptor regions should always be readable. If not, then we have
+    # some ugly case, hard to deal with.
+    FLASHROM_ADD_OPT_READ="--ifd -i fd -i bios"
+    if [ $BOARD_HAS_ME_REGION -eq 0 ] && [ $BOARD_ME_REGION_LOCKED -ne 0 ]; then
+      # ME region is not locked, read it as well
+      FLASHROM_ADD_OPT_READ+=" -i me"
+    fi
+    if [ $BOARD_HAS_GBE_REGION -eq 0 ] && [ $BOARD_GBE_REGION_LOCKED -ne 0 ]; then
+      # GBE region is present and not locked, read it as well
+      FLASHROM_ADD_OPT_READ+=" -i gbe"
+    fi
   else
+      # No descriptor, probably safe to read everything
       FLASHROM_ADD_OPT_READ=" "
   fi
   flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r "${FW_BACKUP_DIR}"/rom.bin ${FLASHROM_ADD_OPT_READ} >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
@@ -186,7 +198,7 @@ backup() {
 
 romhole_migration() {
     echo "Beginning ROM hole migration process..."
-    flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r /tmp/rom.bin ${FLASHROM_ADD_OPT_READ} >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+    flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r /tmp/rom.bin --ifd -i bios >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
     dd if=/tmp/rom.bin of=/tmp/romhole.bin skip=$((0x17C0000)) bs=128K count=1 iflag=skip_bytes
     echo "Migrate to ROMHOLE section."
     cbfstool "$BIOS_UPDATE_FILE" write -r ROMHOLE -f /tmp/romhole.bin -u
@@ -320,6 +332,10 @@ install() {
   check_flash_lock
   verify_artifacts bios
 
+  check_intel_regions
+  check_blobs_in_binary $BIOS_UPDATE_FILE
+  check_if_me_disabled
+
   if [ "$HAVE_EC" = "true" ]; then
     echo "Checking for Open Source Embedded Controller firmware"
     dasharo_ectool info >> $ERR_LOG_FILE 2>&1
@@ -354,6 +370,8 @@ install() {
   if [ "$NEED_BLOB_TRANSMISSION" = "true" ]; then
     blob_transmission
   fi
+
+  update_flashrom_params
 
   echo "Installing Dasharo firmware..."
   flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_DEPLOY} -w "$BIOS_UPDATE_FILE" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
@@ -546,22 +564,29 @@ restore() {
           tar -zxf "$HCL_REPORT_PACKAGE" -C /tmp
           echo "Restoring BIOS firmware..."
           if [ -f "/tmp/logs/rom.bin" ]; then
-            # Write to entire flash when restoring, ask if user want to restore
             print_green "Found $HCL_REPORT_PACKAGE"
             read -p "Do you want to restore firmware from the given HCL report? [N/y] "
             case ${REPLY} in
                 yes|y|Y|Yes|YES)
-                check_flash_lock
-                flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -w "/tmp/logs/rom.bin" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
-                error_check "Failed to restore BIOS firmware! You can try one more time."
-                print_green "Successfully restored firmware"
-                echo "Returning to main menu..."
-                exit 0
-                ;;
+                  # Ideally we would like to write the entire flash when restoring,
+                  # but in reality we may face locked or unaccessible regions.
+                  # To be on the safe side, flash whatever can be flashed by determining
+                  # what is writable.
+                  check_flash_lock
+                  check_intel_regions
+                  check_blobs_in_binary /tmp/logs/rom.bin
+                  check_if_me_disabled
+                  update_flashrom_params
+                  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -w "/tmp/logs/rom.bin" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+                  error_check "Failed to restore BIOS firmware! You can try one more time."
+                  print_green "Successfully restored firmware"
+                  echo "Returning to main menu..."
+                  exit 0
+                  ;;
                 *)
-                echo "Returning to main menu..."
-                exit 0
-                ;;
+                  echo "Returning to main menu..."
+                  exit 0
+                  ;;
             esac
           else
             print_error "Report does not have firmware backup!"
@@ -583,9 +608,16 @@ restore() {
         tar -zxf "$HCL_REPORT_PACKAGE" -C /tmp
         echo "Restoring BIOS firmware..."
         if [ -f "/tmp/logs/rom.bin" ]; then
-          # Write to entire flash when restoring
+          # Ideally we would like to write the entire flash when restoring,
+          # but in reality we may face locked or unaccessible regions.
+          # To be on the safe side, flash whatever can be flashed by determining
+          # what is writable.
           check_flash_lock
-          flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -w "/tmp/logs/rom.bin" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+          check_intel_regions
+          check_blobs_in_binary /tmp/logs/rom.bin
+          check_if_me_disabled
+          update_flashrom_params
+          flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_DEPLOY} -w "/tmp/logs/rom.bin" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
           error_check "Failed to restore BIOS firmware! You can try one more time."
           print_green "Successfully restored firmware"
         else
