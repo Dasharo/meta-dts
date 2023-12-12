@@ -371,7 +371,7 @@ install() {
     blob_transmission
   fi
 
-  update_flashrom_params
+  set_intel_regions_update_params "-N --ifd -i bios"
 
   echo "Installing Dasharo firmware..."
   flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_DEPLOY} -w "$BIOS_UPDATE_FILE" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
@@ -487,10 +487,47 @@ update() {
     bootsplash_migration
   fi
 
+  check_intel_regions
+  check_blobs_in_binary $BIOS_UPDATE_FILE
+  check_if_me_disabled
+  set_flashrom_update_params $BIOS_UPDATE_FILE
+
   echo "Updating Dasharo firmware..."
-  print_warning "This will take around 3 minutes. Please be patient and do not reset your computer, or touch the keyboard!"
+  print_warning "This may take several minutes. Please be patient and do not reset your computer, or touch the keyboard!"
   flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_UPDATE} -w "$BIOS_UPDATE_FILE"  >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
   error_check "Failed to update Dasharo firmware"
+
+  if [ $BINARY_HAS_RW_B -eq 0 ]; then
+    echo "Updating second firmware partition..."
+    flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} --fmap -N -i RW_SECTION_B -w "$BIOS_UPDATE_FILE"  >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+    error_check "Failed to update second firmware partition"
+  fi
+
+  set_intel_regions_update_params "-N --ifd"
+  # We use FLASHROM_ADD_OPT_DEPLOY for updating ME and IFD.
+  # If FLASHROM_ADD_OPT_DEPLOY remains the same after 
+  # set_intel_regions_update_params or is cleared, it means
+  # we either cannot update any region, or were not allowed to,
+  # or platform has no descriptor.
+  if [ "$FLASHROM_ADD_OPT_DEPLOY" != "-N --ifd" ] && [ "$FLASHROM_ADD_OPT_DEPLOY" != "" ]; then
+    UPDATE_STRING=""
+    grep "-i fd" $FLASHROM_ADD_OPT_DEPLOY
+    UPDATE_IFD=$?
+    grep "-i me" $FLASHROM_ADD_OPT_DEPLOY
+    UPDATE_ME=$?
+    if [ $UPDATE_IFD -eq 0 ]; then
+      UPDATE_STRING+="Flash Descriptor"
+      if [ $UPDATE_ME -eq 0 ]; then
+        UPDATE_STRING+=" and "
+      fi
+    fi
+    if [ $$UPDATE_ME -eq 0 ]; then
+      UPDATE_STRING+="Managment Engine"
+    fi
+    echo "Updating $UPDATE_STRING"
+    flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_DEPLOY} -w "$BIOS_UPDATE_FILE" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+    error_check "Failed to update $UPDATE_STRING"
+  fi
 
   if [ "$HAVE_EC" = "true" ]; then
     echo "Dasharo EC update process will start in a moment."
@@ -576,7 +613,7 @@ restore() {
                   check_intel_regions
                   check_blobs_in_binary /tmp/logs/rom.bin
                   check_if_me_disabled
-                  update_flashrom_params
+                  set_intel_regions_update_params "-N --ifd -i bios"
                   flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -w "/tmp/logs/rom.bin" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
                   error_check "Failed to restore BIOS firmware! You can try one more time."
                   print_green "Successfully restored firmware"
@@ -616,7 +653,7 @@ restore() {
           check_intel_regions
           check_blobs_in_binary /tmp/logs/rom.bin
           check_if_me_disabled
-          update_flashrom_params
+          set_intel_regions_update_params "-N --ifd -i bios"
           flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_DEPLOY} -w "/tmp/logs/rom.bin" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
           error_check "Failed to restore BIOS firmware! You can try one more time."
           print_green "Successfully restored firmware"

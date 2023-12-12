@@ -806,7 +806,7 @@ check_if_me_disabled() {
   # FIXME: what if HECI is not device 16.0?
   if [ $(setpci -s 00:00.0 00.W) == "8086" ]; then
     # Check ME Current Operation Mode at offset 0x40 bits 19:16
-    ME_OPMODE="$(setpci -s 00:16.0 42.B| cut -c2-)"
+    ME_OPMODE="$(setpci -s 00:16.0 42.B | cut -c2-)"
     if [ $ME_OPMODE == "0" ]; then
       echo "ME is not disabled"  >> $ERR_LOG_FILE
       return
@@ -835,7 +835,8 @@ check_if_me_disabled() {
       ME_DISABLED=0
       return
     else
-      echo "Unknown ME operation mode"  >> $ERR_LOG_FILE
+      print_warning "Unknown ME operation mode, assuming enabled."
+      echo "Unknown ME operation mode, assuming enabled."  >> $ERR_LOG_FILE
       return
     fi
   else
@@ -850,11 +851,19 @@ check_if_me_disabled() {
       ME_DISABLED=0
       return
     fi
-    echo "Can not determine if ME is disabled"  >> $ERR_LOG_FILE
+    # TODO: If proprietary BIOS, then also try to check SMBIOS for ME FWSTS
+    # BTW we could do the same in coreboot, expose FWSTS in SMBIOS before it
+    # gets disabled
+    print_warning "Can not determine if ME is disabled, assuming enabled."
+    echo "Can not determine if ME is disabled, assuming enabled."  >> $ERR_LOG_FILE
   fi
 }
 
 force_me_update() {
+    echo
+    print_warning "Flashing ME when not in disabled state may cause unexpected power management issues."
+    print_warning "Recovering from such state may require removal of AC power supply and resetting CMOS battery."
+    print_warning "You have been warned."
   while : ; do
     echo
     read -r -p "Force the flashing without ME? (Y|n) " OPTION
@@ -874,14 +883,47 @@ force_me_update() {
   done
 }
 
-update_flashrom_params() {
+set_flashrom_update_params() {
+  # Safe defaults which should always work
+  if [ $BOARD_HAS_FD_REGION -ne 0 ]; then
+    FLASHROM_ADD_OPT_UPDATE=""
+  else
+    FLASHROM_ADD_OPT_UPDATE="-N --ifd -i bios"
+  fi
+  BINARY_HAS_RW_B=1
+  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} --fmap -i FMAP -r /tmp/fmap.bin > /dev/null 2>&1
+  if [ $? -eq 0 ] && [ -f "/tmp/fmap.bin" ]; then
+    BOARD_FMAP_LAYOUT=$(cbfstool /tmp/fmap.bin layout -w)
+    BINARY_FMAP_LAYOUT=$(cbfstool $1 layout -w)
+    # If layout is identical, perform standard update using FMAP only
+    if [ "$BOARD_FMAP_LAYOUT" == "$BINARY_FMAP_LAYOUT" ]; then
+      # Simply update RW_A fmap region if exists
+      grep "RW_SECTION_A" $BINARY_FMAP_LAYOUT
+      if [ $? -eq 0 ]; then
+        FLASHROM_ADD_OPT_UPDATE="-N --fmap -i RW_SECTION_A"
+      else
+        # RW_A does not exists, it means no vboot. Update COREBOOT region only
+        FLASHROM_ADD_OPT_UPDATE="-N --fmap -i COREBOOT"
+      fi
+      grep "RW_SECTION_B" $BINARY_FMAP_LAYOUT
+      # If RW_B present, use this variable later to perform 2-step update
+      BINARY_HAS_RW_B=$?
+    fi
+  else
+    print_warning "Could not read the FMAP region"
+    echo "Could not read the FMAP region" >> $ERR_LOG_FILE
+  fi
+}
+
+set_intel_regions_update_params() {
   if [ $BOARD_HAS_FD_REGION -ne 0 ]; then
     # No FD on board, so flash everything
     FLASHROM_ADD_OPT_DEPLOY=""
   else
     # Safe defaults, only BIOS region and do not verify all regions,
-    # as some of them may not be readable.
-    FLASHROM_ADD_OPT_DEPLOY="-N --ifd -i bios"
+    # as some of them may not be readable. First argument is the initial
+    # params.
+    FLASHROM_ADD_OPT_DEPLOY=$1
 
     if [ $BINARY_HAS_FD -eq 0 ]; then
       if [ $BOARD_FD_REGION_RW -eq 0 ]; then
@@ -907,7 +949,6 @@ update_flashrom_params() {
       else
         echo "The firmware binary contains Management Engine (ME), but ME is not writable!"  >> $ERR_LOG_FILE
         print_error "The firmware binary contains Management Engine (ME), but ME is not writable!"
-        force_me_update
       fi
     fi
   fi
