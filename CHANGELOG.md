@@ -14,7 +14,11 @@ All notable changes to the DTS project will be documented in this file.
 * Added ACPI BGRT support in kernel.
 * Added signature verification of Dasharo firmware binaries.
 * Added posibility to run updates from [local server](./README.md#testing-dasharo-firmware-updates-from-local-sources).
-* Fixed check in internet connection; issue [588](https://github.com/Dasharo/dasharo-issues/issues/588).
+* Added check if charger is connected before update on laptops.
+* Added bootsplash migration to preserve logo while updating Dasharo firmware.
+* Fixed network failure errors and added waiting for network to be up before
+  calling update; issue
+  [588](https://github.com/Dasharo/dasharo-issues/issues/588).
 
 ## v1.2.12 - 2023-11-03
 
