@@ -70,7 +70,7 @@ FLASH_CHIP_LIST="W25Q64BV/W25Q64CV/W25Q64FV W25Q64JV-.Q W25Q128.V..M"
 
 # Dasharo Supporters Entrance variables
 SE_credential_file="/etc/cloud-pass"
-FW_STORE_URL="https://3mdeb.com/open-source-firmware/Dasharo"
+FW_STORE_URL="${FW_STORE_URL_DEV:-https://3mdeb.com/open-source-firmware/Dasharo}"
 FW_STORE_URL_DES="https://cloud.3mdeb.com/public.php/webdav"
 CLOUD_REQUEST="X-Requested-With: XMLHttpRequest"
 
