@@ -27,6 +27,40 @@ for us - please open an issue on
 
 ## Release process
 
+This section contains the technical aspects of the `DTS` release process. The
+recipients of this information should be those authorised to issue `DTS`
+releases.
+
+### How to publish a release
+
+<!--
+We should prepare scripts that automates this.
+-->
+
+Please follow the steps below to release a new `DTS` image.
+
+1. Make sure that everything that should go into the given release is merged to
+   `main`.
+
+1. Bump the version in `meta-dts-distro/conf/distro/dts-distro.conf` file.
+
+    > Note: In cases where MINOR or MAJOR part of version is updated, please inform
+    one of the maintainers as there will be needed new keys to sign the binaries
+    in next step of CI/CD pipeline.
+
+1. Create and push tag that match the newly bumped version.
+
+From here, rest of the jobs should be carried out by the GitHub and Gitea
+Actions. Whole pipeline of creating `DTS` release consists of two steps.
+
+* First is done on GitHub Actions. Here we build the `DTS` image and push the
+  binaries to `boot.dasharo.com`.
+
+* Second is done on Gitea Actions. Here we push the ipxe menu to
+  `boot.3mdeb.com` and sign the `DTS` binaries. The last step of Gitea Actions
+  creates new release at the `https://github.com/Dasharo/meta-dts/releases`
+  from where binaries can be downloaded.
+
 ## Testing Dasharo firmware updates from local sources
 
 By default the `DTS` uses `https://3mdeb.com/open-source-firmware/Dasharo` as a
