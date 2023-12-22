@@ -647,45 +647,45 @@ compare_versions() {
 download_artifacts() {
   echo "Downloading Dasharo firmware..."
   if [ -v BIOS_LINK_COMM ] && [ ${BIOS_LINK} == ${BIOS_LINK_COMM} ]; then
-    curl -L -f "$BIOS_LINK" -o $BIOS_UPDATE_FILE
+    curl -s -L -f "$BIOS_LINK" -o $BIOS_UPDATE_FILE
     error_check "Cannot access $FW_STORE_URL while downloading binary. Please
    check your internet connection"
-    curl -L -f "$BIOS_HASH_LINK" -o $BIOS_HASH_FILE
+    curl -s -L -f "$BIOS_HASH_LINK" -o $BIOS_HASH_FILE
     error_check "Cannot access $FW_STORE_URL while downloading signature. Please
    check your internet connection"
-    curl -L -f "$BIOS_SIGN_LINK" -o $BIOS_SIGN_FILE
+    curl -s -L -f "$BIOS_SIGN_LINK" -o $BIOS_SIGN_FILE
     error_check "Cannot access $FW_STORE_URL while downloading signature. Please
    check your internet connection"
     if [ "$HAVE_EC" = "true" ]; then
-      curl -L -f "$EC_LINK" -o "$EC_UPDATE_FILE"
+      curl -s -L -f "$EC_LINK" -o "$EC_UPDATE_FILE"
       error_check "Cannot access $FW_STORE_URL while downloading binary. Please
      check your internet connection"
-      curl -L -f "$EC_HASH_LINK" -o $EC_HASH_FILE
+      curl -s -L -f "$EC_HASH_LINK" -o $EC_HASH_FILE
       error_check "Cannot access $FW_STORE_URL while downloading signature. Please
      check your internet connection"
-      curl -L -f "$EC_SIGN_LINK" -o $EC_SIGN_FILE
+      curl -s -L -f "$EC_SIGN_LINK" -o $EC_SIGN_FILE
       error_check "Cannot access $FW_STORE_URL while downloading signature. Please
      check your internet connection"
     fi
   else
     USER_DETAILS="$CLOUDSEND_DOWNLOAD_URL:$CLOUDSEND_PASSWORD"
-    curl -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_LINK" -o $BIOS_UPDATE_FILE
+    curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_LINK" -o $BIOS_UPDATE_FILE
     error_check "Cannot access $FW_STORE_URL_DES while downloading binary.
    Please check your internet connection"
-    curl -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_HASH_LINK" -o $BIOS_HASH_FILE
+    curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_HASH_LINK" -o $BIOS_HASH_FILE
     error_check "Cannot access $FW_STORE_URL_DES while downloading signature.
    Please check your internet connection"
-    curl -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_SIGN_LINK" -o $BIOS_SIGN_FILE
+    curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_SIGN_LINK" -o $BIOS_SIGN_FILE
     error_check "Cannot access $FW_STORE_URL_DES while downloading signature.
    Please check your internet connection"
     if [ "$HAVE_EC" = "true" ]; then
-      curl -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$EC_LINK" -o $EC_UPDATE_FILE
+      curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$EC_LINK" -o $EC_UPDATE_FILE
       error_check "Cannot access $FW_STORE_URL while downloading binary. Please
      check your internet connection"
-      curl -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$EC_HASH_LINK" -o $EC_HASH_FILE
+      curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$EC_HASH_LINK" -o $EC_HASH_FILE
       error_check "Cannot access $FW_STORE_URL while downloading signature. Please
      check your internet connection"
-      curl -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$EC_SIGN_LINK" -o $EC_SIGN_FILE
+      curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$EC_SIGN_LINK" -o $EC_SIGN_FILE
       error_check "Cannot access $FW_STORE_URL while downloading signature. Please
      check your internet connection"
     fi
