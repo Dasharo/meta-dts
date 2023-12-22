@@ -2,7 +2,7 @@ inherit cargo
 inherit pkgconfig
 
 SRC_URI += "gitsm://github.com/Dasharo/ec.git;protocol=https;nobranch=1"
-SRCREV = "411fab9b7c4b4aecfc0ecff2d97f607df6e81914"
+SRCREV = "2b2c17ac6e61f45e0fc1bcf6b907a8289f37bcc4"
 S = "${WORKDIR}/git"
 CARGO_SRC_DIR = "/tool/"
 PV:append = ".AUTOINC+411fab9b7c"

@@ -4,9 +4,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
 DEPENDS = "glib-2.0 libxmlb json-glib sqlite3 libjcat gcab vala-native"
 
-SRC_URI = "git://git@github.com/Dasharo/fwupd;protocol=https;branch=dasharo-develop"
+SRC_URI = "git://git@github.com/Dasharo/fwupd;protocol=https;branch=dasharo-release"
 
-SRCREV = "130357336cac19ac6dd7c69223fa29e443d57c1c"
+SRCREV = "1ad6f5156dae1d54963bd3999a89a86567216af2"
 
 S = "${WORKDIR}/git"
 

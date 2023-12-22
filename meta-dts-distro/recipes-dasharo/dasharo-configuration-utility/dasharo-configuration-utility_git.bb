@@ -10,7 +10,7 @@ SRC_URI = " \
     git://github.com/Dasharo/dcu.git;protocol=https;branch=main \
 "
 
-SRCREV = "5e9112493bffb996554cb4d734193eb6c84b4c56"
+SRCREV = "6817e69d8eab55bc72725a3be4a8627b8d71c31b"
 
 S = "${WORKDIR}/git"
 
