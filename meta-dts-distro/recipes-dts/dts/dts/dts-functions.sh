@@ -244,15 +244,15 @@ board_config() {
           PROGRAMMER_EC="ite_ec"
           FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
           if check_if_dasharo; then
-          # if v1.6.0 or older, flash the whole bios region, as per:
+          # if v1.7.2 or older, flash the whole bios region, as per:
           # TBD
-            compare_versions $DASHARO_VERSION 1.7.0
+            compare_versions $DASHARO_VERSION 1.7.2
             if [ $? -eq 1 ]; then
-              # For Dasharo version lesser than 1.7.0
+              # For Dasharo version lesser than 1.7.2
               NEED_BOOTSPLASH_MIGRATION="true"
               FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
             else
-              # For Dasharo version greater or equal 1.7.0
+              # For Dasharo version greater or equal 1.7.2
               FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
             fi
           fi
@@ -278,15 +278,15 @@ board_config() {
           PROGRAMMER_EC="ite_ec"
           FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
           if check_if_dasharo; then
-          # if v1.6.0 or older, flash the whole bios region, as per:
+          # if v1.7.2 or older, flash the whole bios region, as per:
           # TBD
-            compare_versions $DASHARO_VERSION 1.7.0
+            compare_versions $DASHARO_VERSION 1.7.2
             if [ $? -eq 1 ]; then
-              # For Dasharo version lesser than 1.7.0
+              # For Dasharo version lesser than 1.7.2
               NEED_BOOTSPLASH_MIGRATION="true"
               FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
             else
-              # For Dasharo version greater or equal 1.7.0
+              # For Dasharo version greater or equal 1.7.2
               FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
             fi
           fi
