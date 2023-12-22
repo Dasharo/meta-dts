@@ -5,28 +5,13 @@
 source /usr/sbin/dts-environment.sh
 source /usr/sbin/dts-functions.sh
 
-BIOS_UPDATE_CONFIG_FILE="/tmp/biosupdate_config"
-FW_BACKUP_NAME="fw_backup"
-FW_BACKUP_DIR="${ROOT_DIR}${FW_BACKUP_NAME}"
-FW_BACKUP_TAR="${FW_BACKUP_DIR}.tar.gz"
-FW_BACKUP_TAR="$(echo "$FW_BACKUP_TAR" | sed 's/\ /_/g')"
-KEYS_DIR="/tmp/devkeys"
-RESIGNED_BIOS_UPDATE_FILE="/tmp/biosupdate_resigned.rom"
-ROOT_DIR="/"
-SYSTEM_UUID_FILE="/tmp/system_uuid.txt"
-SERIAL_NUMBER_FILE="/tmp/serial_number.txt"
-# default values for flashrom programmer
-PROGRAMMER_BIOS="internal"
-PROGRAMMER_EC="ite_ec"
-
 [ -z "$BOARD_VENDOR" ] && error_exit "BOARD_VENDOR not given"
 [ -z "$SYSTEM_MODEL" ] && error_exit "SYSTEM_MODEL not given"
 
 CMD="$1"
 FUM="$2"
 
-ask_for_version()
-{
+ask_for_version() {
   while : ; do
     echo
     echo "Please, select Dasharo firmware version to install"
@@ -196,21 +181,6 @@ backup() {
   echo "Successfully backed up firmware locally at: $FW_BACKUP_TAR"
 }
 
-install_ec() {
-  echo "Downloading Dasharo EC firmware update..."
-  curl -L -f "$EC_LINK" -o "$EC_UPDATE_FILE"
-  error_check "Cannot access $FW_STORE_URL. Please check your internet
- connection"
-  sha256sum --check <(echo "$EC_HASH")
-  error_check "Failed to download Dasharo EC firmware update. Please make sure Ethernet cable is connected and try again."
-
-  echo "Updating EC..."
-  flashrom -p "$PROGRAMMER_EC" ${FLASH_CHIP_SELECT} -w "$EC_UPDATE_FILE" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
-  error_check "Failed to update EC firmware"
-
-  echo "Successfully updated EC firmware"
-}
-
 romhole_migration() {
     echo "Beginning ROM hole migration process..."
     flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r /tmp/rom.bin ${FLASHROM_ADD_OPT_READ} >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
@@ -282,15 +252,6 @@ resign_binary() {
   fi
 }
 
-download_keys() {
-  mkdir $KEYS_DIR
-  wget -O $KEYS_DIR/recovery_key.vbpubk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/recovery_key.vbpubk >> $ERR_LOG_FILE 2>&1
-  wget -O $KEYS_DIR/firmware.keyblock https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/firmware.keyblock >> $ERR_LOG_FILE 2>&1
-  wget -O $KEYS_DIR/firmware_data_key.vbprivk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/firmware_data_key.vbprivk >> $ERR_LOG_FILE 2>&1
-  wget -O $KEYS_DIR/kernel_subkey.vbpubk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/kernel_subkey.vbpubk >> $ERR_LOG_FILE 2>&1
-  wget -O $KEYS_DIR/root_key.vbpubk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/root_key.vbpubk>> $ERR_LOG_FILE 2>&1
-}
-
 blob_transmission() {
   echo "Extracting the UEFI image from BIOS update"
   wget -O "$DBT_BIOS_UPDATE_FILENAME" --user-agent='Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)' "$DBT_BIOS_UPDATE_URL" >> $ERR_LOG_FILE 2>&1
@@ -339,6 +300,14 @@ blob_transmission() {
     cbfstool "$BIOS_UPDATE_FILE" add -f "$SINIT_ACM" -n txt_sinit_acm.bin -t raw
     print_green "Done"
   fi
+}
+
+install_ec() {
+  verify_artifacts ec
+  echo "Installing EC..."
+  flashrom -p "$PROGRAMMER_EC" ${FLASH_CHIP_SELECT} -w "$EC_UPDATE_FILE" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+  error_check "Failed to install Dasharo EC firmware"
+  echo "Successfully installed Dasharo EC firmware"
 }
 
 install() {
