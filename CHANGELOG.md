@@ -2,12 +2,19 @@
 
 All notable changes to the DTS project will be documented in this file.
 
-## v1.2.13 - 2023-11-x
+## v1.2.13 - 2023-12-22
 
-* Added dasharo_ectool for updating EC.
-* Added
-  [bg-suite](https://github.com/9elements/converged-security-suite/tree/main/cmd/bg-suite).
+* Added [dasharo_ectool](https://github.com/Dasharo/ec) for updating EC.
+* Added [bg-suite](https://github.com/9elements/converged-security-suite/tree/main/cmd/bg-suite).
+* Added [Dasharo configuration utility](https://github.com/Dasharo/dcu) that is
+  a tool designed to configure Dasharo firmware binary images. It includes task
+  such as customizing the boot logo, and setting unique UUIDs or Serial Numbers
+  in SMBIOS tables.
 * Added support fot exFAT and NTFS file systems.
+* Added ACPI BGRT support in kernel.
+* Added signature verification of Dasharo firmware binaries.
+* Added posibility to run updates from [local server](./README.md#testing-dasharo-firmware-updates-from-local-sources).
+* Fixed check in internet connection; issue [588](https://github.com/Dasharo/dasharo-issues/issues/588).
 
 ## v1.2.12 - 2023-11-03
 
