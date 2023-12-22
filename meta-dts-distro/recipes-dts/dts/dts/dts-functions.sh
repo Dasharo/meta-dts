@@ -164,8 +164,11 @@ board_config() {
           HAVE_EC="true"
           NEED_EC_RESET="true"
           COMPATIBLE_EC_FW_VERSION="2022-10-07_c662165"
-          EC_HASH_COMM="$(wget -O /dev/stdout ${EC_LINK_COMM}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $EC_UPDATE_FILE"
-          BIOS_HASH_COMM="$(wget -O /dev/stdout ${BIOS_LINK_COMM}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
+          EC_HASH_LINK_COMM="$EC_LINK_COMM.sha256"
+          BIOS_HASH_LINK_COMM="$BIOS_LINK_COMM.sha256"
+          EC_SIGN_LINK_COMM="$EC_LINK_COMM.sha256.sig"
+          BIOS_SIGN_LINK_COMM="$BIOS_LINK_COMM.sha256.sig"
+          PLATFORM_SIGN_KEY="customer-keys/novacustom/novacustom-open-source-firmware-release-1.x-key.asc"
           NEED_SMBIOS_MIGRATION="false"
           NEED_SMMSTORE_MIGRATION="true"
           NEED_BOOTSPLASH_MIGRATION="false"
@@ -195,8 +198,11 @@ board_config() {
           HAVE_EC="true"
           NEED_EC_RESET="true"
           COMPATIBLE_EC_FW_VERSION="2022-08-31_cbff21b"
-          EC_HASH_COMM="$(wget -O /dev/stdout ${EC_LINK_COMM}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $EC_UPDATE_FILE"
-          BIOS_HASH_COMM="$(wget -O /dev/stdout ${BIOS_LINK_COMM}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
+          EC_HASH_LINK_COMM="$EC_LINK_COMM.sha256"
+          BIOS_HASH_LINK_COMM="$BIOS_LINK_COMM.sha256"
+          EC_SIGN_LINK_COMM="$EC_LINK_COMM.sha256.sig"
+          BIOS_SIGN_LINK_COMM="$BIOS_LINK_COMM.sha256.sig"
+          PLATFORM_SIGN_KEY="customer-keys/novacustom/novacustom-open-source-firmware-release-1.x-key.asc"
           NEED_SMBIOS_MIGRATION="false"
           NEED_SMMSTORE_MIGRATION="true"
           NEED_BOOTSPLASH_MIGRATION="false"
@@ -226,8 +232,11 @@ board_config() {
           HAVE_EC="true"
           NEED_EC_RESET="true"
           COMPATIBLE_EC_FW_VERSION="2022-08-31_cbff21b"
-          EC_HASH_COMM="$(wget -O /dev/stdout ${EC_LINK_COMM}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $EC_UPDATE_FILE"
-          BIOS_HASH_COMM="$(wget -O /dev/stdout ${BIOS_LINK_COMM}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
+          EC_HASH_LINK_COMM="$EC_LINK_COMM.sha256"
+          BIOS_HASH_LINK_COMM="$BIOS_LINK_COMM.sha256"
+          EC_SIGN_LINK_COMM="$EC_LINK_COMM.sha256.sig"
+          BIOS_SIGN_LINK_COMM="$BIOS_LINK_COMM.sha256.sig"
+          PLATFORM_SIGN_KEY="customer-keys/novacustom/novacustom-open-source-firmware-release-1.x-key.asc"
           NEED_SMBIOS_MIGRATION="false"
           NEED_SMMSTORE_MIGRATION="true"
           NEED_BLOB_TRANSMISSION="false"
@@ -256,8 +265,11 @@ board_config() {
           HAVE_EC="true"
           NEED_EC_RESET="true"
           COMPATIBLE_EC_FW_VERSION="2022-08-31_cbff21b"
-          EC_HASH_COMM="$(wget -O /dev/stdout ${EC_LINK_COMM}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $EC_UPDATE_FILE"
-          BIOS_HASH_COMM="$(wget -O /dev/stdout ${BIOS_LINK_COMM}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
+          EC_HASH_LINK_COMM="$EC_LINK_COMM.sha256"
+          BIOS_HASH_LINK_COMM="$BIOS_LINK_COMM.sha256"
+          EC_SIGN_LINK_COMM="$EC_LINK_COMM.sha256.sig"
+          BIOS_SIGN_LINK_COMM="$BIOS_LINK_COMM.sha256.sig"
+          PLATFORM_SIGN_KEY="customer-keys/novacustom/novacustom-open-source-firmware-release-1.x-key.asc"
           NEED_SMBIOS_MIGRATION="false"
           NEED_SMMSTORE_MIGRATION="true"
           NEED_BOOTSPLASH_MIGRATION="false"
@@ -296,8 +308,11 @@ board_config() {
               BIOS_LINK_DES="${FW_STORE_URL_DES}/MS-7D25/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr4.rom"
               HAVE_EC="false"
               NEED_EC_RESET="false"
-              BIOS_HASH_COMM="$(wget -O /dev/stdout ${BIOS_LINK_COMM}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
-              BIOS_HASH_DES="${BIOS_LINK_DES}.sha256"
+              BIOS_HASH_LINK_COMM="${BIOS_LINK_COMM}.sha256"
+              BIOS_HASH_LINK_DES="${BIOS_LINK_DES}.sha256"
+              BIOS_SIGN_LINK_COMM="${BIOS_LINK_COMM}.sha256.sig"
+              BIOS_SIGN_LINK_DES="${BIOS_LINK_DES}.sha256.sig"
+              PLATFORM_SIGN_KEY="dasharo/dasharo-release-1.x-compatible-with-msi-ms-7d25-signing-key.asc"
               NEED_SMBIOS_MIGRATION="true"
               NEED_SMMSTORE_MIGRATION="true"
               NEED_BOOTSPLASH_MIGRATION="false"
@@ -327,8 +342,11 @@ board_config() {
               BIOS_LINK_DES="${FW_STORE_URL_DES}/MS-7D25/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr5.rom"
               HAVE_EC="false"
               NEED_EC_RESET="false"
-              BIOS_HASH_COMM="$(wget -O /dev/stdout ${BIOS_LINK_COMM}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
-              BIOS_HASH_DES="${BIOS_LINK_DES}.sha256"
+              BIOS_HASH_LINK_COMM="${BIOS_LINK_COMM}.sha256"
+              BIOS_HASH_LINK_DES="${BIOS_LINK_DES}.sha256"
+              BIOS_SIGN_LINK_COMM="${BIOS_LINK_COMM}.sha256.sig"
+              BIOS_SIGN_LINK_DES="${BIOS_LINK_DES}.sha256.sig"
+              PLATFORM_SIGN_KEY="dasharo/dasharo-release-1.x-compatible-with-msi-ms-7d25-signing-key.asc"
               NEED_SMBIOS_MIGRATION="true"
               NEED_SMMSTORE_MIGRATION="true"
               NEED_BOOTSPLASH_MIGRATION="false"
@@ -365,8 +383,11 @@ board_config() {
               BIOS_LINK_DES="${FW_STORE_URL_DES}/MS-7E06/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr4.rom"
               HAVE_EC="false"
               NEED_EC_RESET="false"
-              #BIOS_HASH_COMM="$(wget -O /dev/stdout ${BIOS_LINK_COMM}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
-              BIOS_HASH_DES="${BIOS_LINK_DES}.sha256"
+              #BIOS_HASH_LINK_COMM="${BIOS_LINK_COMM}.sha256"
+              BIOS_HASH_LINK_DES="${BIOS_LINK_DES}.sha256"
+              #BIOS_SIGN_LINK_COMM="${BIOS_LINK_COMM}.sha256.sig"
+              BIOS_SIGN_LINK_DES="${BIOS_LINK_DES}.sha256.sig"
+              PLATFORM_SIGN_KEY="dasharo/dasharo-release-0.x-compatible-with-msi-ms-7e06-signing-key.asc"
               NEED_SMBIOS_MIGRATION="false"
               NEED_SMMSTORE_MIGRATION="true"
               NEED_BOOTSPLASH_MIGRATION="false"
@@ -387,8 +408,11 @@ board_config() {
               BIOS_LINK_DES="${FW_STORE_URL_DES}/MS-7E06/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr5.rom"
               HAVE_EC="false"
               NEED_EC_RESET="false"
-              #BIOS_HASH_COMM="$(wget -O /dev/stdout ${BIOS_LINK_COMM}.sha256 2>>$ERR_LOG_FILE | cut -d ' ' -f 1) $BIOS_UPDATE_FILE"
-              BIOS_HASH_DES="${BIOS_LINK_DES}.sha256"
+              #BIOS_HASH_LINK_COMM="${BIOS_LINK_COMM}.sha256"
+              BIOS_HASH_LINK_DES="${BIOS_LINK_DES}.sha256"
+              #BIOS_SIGN_LINK_COMM="${BIOS_LINK_COMM}.sha256.sig"
+              BIOS_SIGN_LINK_DES="${BIOS_LINK_DES}.sha256.sig"
+              PLATFORM_SIGN_KEY="dasharo/dasharo-release-0.x-compatible-with-msi-ms-7e06-signing-key.asc"
               NEED_SMBIOS_MIGRATION="false"
               NEED_SMMSTORE_MIGRATION="true"
               NEED_BOOTSPLASH_MIGRATION="false"
@@ -417,7 +441,7 @@ board_config() {
       BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER.rom"
       HAVE_EC="false"
       NEED_EC_RESET="false"
-      BIOS_HASH_COMM="a880504dfb0497f31e898f62ae5c9f3b145bca0b4fa601e41cddc54bea22ee36  $BIOS_UPDATE_FILE"
+      BIOS_HASH_LINK_COMM="a880504dfb0497f31e898f62ae5c9f3b145bca0b4fa601e41cddc54bea22ee36  $BIOS_UPDATE_FILE"
       NEED_SMBIOS_MIGRATION="true"
       NEED_BLOB_TRANSMISSION="true"
       PROGRAMMER_BIOS="internal"
@@ -471,15 +495,15 @@ board_config() {
           NEED_EC_RESET="false"
           case "$FLASH_CHIP_SIZE" in
           "2")
-            BIOS_HASH_COMM="65e5370e9ea6b8ae7cd6cc878a031a4ff3a8f5d36830ef39656b8e5a6e37e889  $BIOS_UPDATE_FILE"
+            BIOS_HASH_LINK_COMM="65e5370e9ea6b8ae7cd6cc878a031a4ff3a8f5d36830ef39656b8e5a6e37e889  $BIOS_UPDATE_FILE"
             BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_vboot_notpm.rom"
             ;;
           "8")
-            BIOS_HASH_COMM="da4e6217d50f2ac199dcb9a927a0bc02aa4e792ed73c8c9bac8ba74fc787dbef  $BIOS_UPDATE_FILE"
+            BIOS_HASH_LINK_COMM="da4e6217d50f2ac199dcb9a927a0bc02aa4e792ed73c8c9bac8ba74fc787dbef  $BIOS_UPDATE_FILE"
             BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_${FLASH_CHIP_SIZE}M_vboot_notpm.rom"
             ;;
           "16")
-            BIOS_HASH_COMM="20055cf57185f149259706f58d5e9552a1589259c6617999c1ac7d8d3c960020  $BIOS_UPDATE_FILE"
+            BIOS_HASH_LINK_COMM="20055cf57185f149259706f58d5e9552a1589259c6617999c1ac7d8d3c960020  $BIOS_UPDATE_FILE"
             BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_${FLASH_CHIP_SIZE}M_vboot_notpm.rom"
             ;;
           *)
@@ -619,6 +643,55 @@ compare_versions() {
       error_exit "Incorrect version format"
     fi
 }
+
+download_artifacts() {
+  echo "Downloading Dasharo firmware..."
+  if [ -v BIOS_LINK_COMM ] && [ ${BIOS_LINK} == ${BIOS_LINK_COMM} ]; then
+    curl -L -f "$BIOS_LINK" -o $BIOS_UPDATE_FILE
+    error_check "Cannot access $FW_STORE_URL while downloading binary. Please
+   check your internet connection"
+    curl -L -f "$BIOS_HASH_LINK" -o $BIOS_HASH_FILE
+    error_check "Cannot access $FW_STORE_URL while downloading signature. Please
+   check your internet connection"
+    curl -L -f "$BIOS_SIGN_LINK" -o $BIOS_SIGN_FILE
+    error_check "Cannot access $FW_STORE_URL while downloading signature. Please
+   check your internet connection"
+    if [ "$HAVE_EC" = "true" ]; then
+      curl -L -f "$EC_LINK" -o "$EC_UPDATE_FILE"
+      error_check "Cannot access $FW_STORE_URL while downloading binary. Please
+     check your internet connection"
+      curl -L -f "$EC_HASH_LINK" -o $EC_HASH_FILE
+      error_check "Cannot access $FW_STORE_URL while downloading signature. Please
+     check your internet connection"
+      curl -L -f "$EC_SIGN_LINK" -o $EC_SIGN_FILE
+      error_check "Cannot access $FW_STORE_URL while downloading signature. Please
+     check your internet connection"
+    fi
+  else
+    USER_DETAILS="$CLOUDSEND_DOWNLOAD_URL:$CLOUDSEND_PASSWORD"
+    curl -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_LINK" -o $BIOS_UPDATE_FILE
+    error_check "Cannot access $FW_STORE_URL_DES while downloading binary.
+   Please check your internet connection"
+    curl -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_HASH_LINK" -o $BIOS_HASH_FILE
+    error_check "Cannot access $FW_STORE_URL_DES while downloading signature.
+   Please check your internet connection"
+    curl -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_SIGN_LINK" -o $BIOS_SIGN_FILE
+    error_check "Cannot access $FW_STORE_URL_DES while downloading signature.
+   Please check your internet connection"
+    if [ "$HAVE_EC" = "true" ]; then
+      curl -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$EC_LINK" -o $EC_UPDATE_FILE
+      error_check "Cannot access $FW_STORE_URL while downloading binary. Please
+     check your internet connection"
+      curl -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$EC_HASH_LINK" -o $EC_HASH_FILE
+      error_check "Cannot access $FW_STORE_URL while downloading signature. Please
+     check your internet connection"
+      curl -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$EC_SIGN_LINK" -o $EC_SIGN_FILE
+      error_check "Cannot access $FW_STORE_URL while downloading signature. Please
+     check your internet connection"
+    fi
+  fi
+}
+
 download_keys() {
   mkdir $KEYS_DIR
   wget -O $KEYS_DIR/recovery_key.vbpubk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/recovery_key.vbpubk >> $ERR_LOG_FILE 2>&1
@@ -626,4 +699,45 @@ download_keys() {
   wget -O $KEYS_DIR/firmware_data_key.vbprivk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/firmware_data_key.vbprivk >> $ERR_LOG_FILE 2>&1
   wget -O $KEYS_DIR/kernel_subkey.vbpubk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/kernel_subkey.vbpubk >> $ERR_LOG_FILE 2>&1
   wget -O $KEYS_DIR/root_key.vbpubk https://github.com/Dasharo/vboot/raw/dasharo/tests/devkeys/root_key.vbpubk>> $ERR_LOG_FILE 2>&1
+}
+
+get_signing_keys() {
+    wget https://raw.githubusercontent.com/3mdeb/3mdeb-secpack/master/keys/master-key/3mdeb-master-key.asc \
+    -O - | gpg --import -
+    error_check "Cannot get 3mdeb master key to verify signatures."
+    wget https://raw.githubusercontent.com/3mdeb/3mdeb-secpack/master/dasharo/3mdeb-dasharo-master-key.asc  \
+    -O - | gpg --import -
+    error_check "Cannot get 3mdeb Dasharo master key to verify signatures."
+    wget https://raw.githubusercontent.com/3mdeb/3mdeb-secpack/master/$PLATFORM_SIGN_KEY -O - | gpg --import -
+    error_check "Cannot get platform specific key to verify signatures."
+}
+
+verify_artifacts() {
+  local _type="$1"
+  local _update_file=""
+  local _hash_file=""
+  local _sign_file=""
+  local _name=""
+  case ${_type} in
+    ec)
+    _update_file=$EC_UPDATE_FILE
+    _hash_file=$EC_HASH_FILE
+    _sign_file=$EC_SIGN_FILE
+    _name="Dasharo EC"
+    ;;
+    bios)
+    _update_file=$BIOS_UPDATE_FILE
+    _hash_file=$BIOS_HASH_FILE
+    _sign_file=$BIOS_SIGN_FILE
+    _name="Dasharo"
+    ;;
+    *)
+    ;;
+  esac
+  echo "Checking $_name firmware checksum..."
+  sha256sum --check <(echo $(cat $_hash_file | cut -d ' ' -f 1) $_update_file)
+  error_check "Failed to verify $_name firmware checksum"
+  echo "Checking $_name firmware signature..."
+  (cat $_hash_file) | gpg --verify $_sign_file -
+  error_check "Failed to verify $_name firmware signature."
 }
