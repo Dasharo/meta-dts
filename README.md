@@ -63,6 +63,11 @@ Actions. Whole pipeline of creating `DTS` release consists of two steps.
 
 ## Testing Dasharo firmware updates from local sources
 
+<!--
+This section could go to docs.dasharo.com after some clean-up regarding DTS
+documentation.
+-->
+
 By default the `DTS` uses `https://3mdeb.com/open-source-firmware/Dasharo` as a
 source of downloaded artifacts in case of community releases. This behaviour can
 be changed by starting `dts` script from the command line with
@@ -75,10 +80,10 @@ server.
 1. On host PC create `dasharo-updates` directory and from it start the http
    python module, as a port you can use e.g. `1234`.
 
-```bash
-mkdir dasharo-updates && cd dasharo-updates
-python -m http.server 1234
-```
+    ```bash
+    mkdir dasharo-updates && cd dasharo-updates
+    python -m http.server 1234
+    ```
 
 1. Inside `dasharo-updates` directory create the same folder structure as there
    is for your update files on `https://3mdeb.com/open-source-firmware/Dasharo`.
@@ -91,9 +96,9 @@ python -m http.server 1234
 1. Start `dts` script with `FW_STORE_URL_DEV` variable set to started server on
    the host PC. E.g. if the PC has IP address `192.168.1.14` use below command.
 
-```bash
-FW_STORE_URL_DEV="http://192.168.1.14:1234" dts
-```
+    ```bash
+    FW_STORE_URL_DEV="http://192.168.1.14:1234" dts
+    ```
 
 1. Normal `dts` menu entry will be displayed but any request to the server with
    binaries will be done to `http://192.168.1.14:1234` instead of
