@@ -31,9 +31,9 @@ jobs:
           SSH_KEY: ${{secrets.SSH_KEY}}
           SSH_KEY_GITEA: ${{secrets.SSH_KEY_GITEA}}
         run: |
-          echo -e ${SSH_KEY} | sed 's/^ *//' > ~/.ssh/dts-ci-key
+          echo -e ${SSH_KEY} > ~/.ssh/dts-ci-key
           chmod 600 ~/.ssh/dts-ci-key
-          echo ${SSH_KEY_GITEA} | sed 's/^ *//' > ~/.ssh/gitea-key
+          echo -e ${SSH_KEY_GITEA} > ~/.ssh/gitea-key
           chmod 600 ~/.ssh/gitea-key
           cp ~/.ssh/config ~/.ssh/config-old
           echo -e "\n
