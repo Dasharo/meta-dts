@@ -27,7 +27,8 @@ do_prepare_keyring() {
 }
 
 do_install() {
-    install -d 0700 ${D}/${ROOT_HOME}/.dasharo-gnupg
+    install -d ${D}/${ROOT_HOME}/.dasharo-gnupg
+    chmod 0700 ${D}/${ROOT_HOME}/.dasharo-gnupg
     install -m 0644 ${DASHARO_KEYS_HOMEDIR}/pubring.kbx ${D}/${ROOT_HOME}/.dasharo-gnupg/
     install -m 0600 ${DASHARO_KEYS_HOMEDIR}/trustdb.gpg ${D}/${ROOT_HOME}/.dasharo-gnupg/
 
