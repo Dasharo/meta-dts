@@ -33,7 +33,7 @@ jobs:
         run: |
           echo -e ${SSH_KEY} | sed 's/^ *//' > ~/.ssh/dts-ci-key
           chmod 600 ~/.ssh/dts-ci-key
-          echo ${SSH_KEY_GITEA} > ~/.ssh/gitea-key
+          echo ${SSH_KEY_GITEA} | sed 's/^ *//' > ~/.ssh/gitea-key
           chmod 600 ~/.ssh/gitea-key
           cp ~/.ssh/config ~/.ssh/config-old
           echo -e "\n
