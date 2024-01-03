@@ -2,6 +2,12 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v1.2.14 - 2024-01-03
+
+* Added 3mdeb Master Key and 3mdeb Dasharo Master Key from
+  [3mdeb-secpack](https://github.com/3mdeb/3mdeb-secpack/) with trust set to
+  ultimate.
+
 ## v1.2.13 - 2023-12-22
 
 * Added [dasharo_ectool](https://github.com/Dasharo/ec) for updating EC.
