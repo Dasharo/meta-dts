@@ -702,12 +702,6 @@ download_keys() {
 }
 
 get_signing_keys() {
-    wget -q https://raw.githubusercontent.com/3mdeb/3mdeb-secpack/master/keys/master-key/3mdeb-master-key.asc \
-    -O - | gpg --import -
-    error_check "Cannot get 3mdeb master key to verify signatures."
-    wget -q https://raw.githubusercontent.com/3mdeb/3mdeb-secpack/master/dasharo/3mdeb-dasharo-master-key.asc  \
-    -O - | gpg --import -
-    error_check "Cannot get 3mdeb Dasharo master key to verify signatures."
     wget -q https://raw.githubusercontent.com/3mdeb/3mdeb-secpack/master/$PLATFORM_SIGN_KEY -O - | gpg --import -
     error_check "Cannot get platform specific key to verify signatures."
 }
