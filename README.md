@@ -31,13 +31,21 @@ This section contains the technical aspects of the `DTS` release process. The
 recipients of this information should be those authorised to issue `DTS`
 releases.
 
-### How to publish a release
+Below are information on how to publish `production` and `develop` releases.
+
+* `Production` releases deploy images to GitHub Release pages and
+  `boot.3mdeb.com`/`boot.dasharo.com` pages to boot via iPXE.
+
+* `Develop` releases deploy images to GitHub Release pages, so not all users
+  will be able to use them via iPXE.
+
+### How to publish a production release
 
 <!--
 We should prepare scripts that automates this.
 -->
 
-Please follow the steps below to release a new `DTS` image.
+Please follow the steps below to release a new production `DTS` image.
 
 1. Make sure that everything that should go into the given release is merged to
    `main`.
@@ -59,6 +67,29 @@ Actions. Whole pipeline of creating `DTS` release consists of two steps.
 * Second is done on Gitea Actions. Here we push the ipxe menu to
   `boot.3mdeb.com` and sign the `DTS` binaries. The last step of Gitea Actions
   creates new release at the `https://github.com/Dasharo/meta-dts/releases`
+  from where binaries can be downloaded.
+
+### How to publish a develop release
+
+Please follow the steps below to release a new develop `DTS` image.
+
+1. Make sure that everything that should go into the given release is merged to
+   `main`.
+
+1. Bump the version in `meta-dts-distro/conf/distro/dts-distro.conf` file by
+   adding `-rcX` suffix.
+
+    > Note: X should increase every time new develop release is created.
+
+1. Create and push tag that match the newly bumped version.
+
+From here, rest of the jobs should be carried out by the GitHub and Gitea
+Actions. Whole pipeline of creating `DTS` release consists of two steps.
+
+* First is done on GitHub Actions. Here we build the `DTS` image.
+
+* Second is done on Gitea Actions. Here we sign the `DTS` binaries and creates
+  new develop release at the `https://github.com/Dasharo/meta-dts/releases`
   from where binaries can be downloaded.
 
 ## Testing Dasharo firmware updates from local sources
