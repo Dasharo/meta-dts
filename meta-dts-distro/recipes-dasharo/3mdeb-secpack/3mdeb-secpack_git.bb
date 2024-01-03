@@ -9,6 +9,7 @@ DEPENDS = "gnupg"
 
 SRC_URI = " \
     git://github.com/3mdeb/3mdeb-secpack.git;protocol=https;branch=master \
+    file://3mdeb-secpack.sh \
 "
 SRCREV = "70e533e641ed6fbff2a152d7226e8ffe01b68550"
 S = "${WORKDIR}/git"
@@ -29,10 +30,14 @@ do_install() {
     install -d 0700 ${D}/${ROOT_HOME}/.dasharo-gnupg
     install -m 0644 ${DASHARO_KEYS_HOMEDIR}/pubring.kbx ${D}/${ROOT_HOME}/.dasharo-gnupg/
     install -m 0600 ${DASHARO_KEYS_HOMEDIR}/trustdb.gpg ${D}/${ROOT_HOME}/.dasharo-gnupg/
+
+    install -d ${D}${sysconfdir}/profile.d/
+    install -m 0755 ${WORKDIR}/3mdeb-secpack.sh ${D}${sysconfdir}/profile.d/
 }
 
 addtask prepare_keyring after do_compile before do_install
 
 FILES:${PN} = " \
     ${ROOT_HOME} \
+    ${sysconfdir} \
 "
