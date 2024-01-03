@@ -14,6 +14,7 @@ PACKAGES = " \
 "
 
 RDEPENDS:${PN}-system = " \
+    3mdeb-secpack \
     packagegroup-core-boot \
     packagegroup-core-base-utils \
     ca-certificates \
