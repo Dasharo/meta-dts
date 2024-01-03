@@ -7,6 +7,8 @@ All notable changes to the DTS project will be documented in this file.
 * Added 3mdeb Master Key and 3mdeb Dasharo Master Key from
   [3mdeb-secpack](https://github.com/3mdeb/3mdeb-secpack/) with trust set to
   ultimate.
+* Added wic.bmap files to release artifacts; issue
+  [70](https://github.com/Dasharo/meta-dts/issues/70).
 
 ## v1.2.13 - 2023-12-22
 
