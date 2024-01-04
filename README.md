@@ -61,7 +61,8 @@ Please follow the steps below to release a new production `DTS` image.
 From here, rest of the jobs should be carried out by the GitHub and Gitea
 Actions. Whole pipeline of creating `DTS` release consists of two steps.
 
-* First is done on GitHub Actions. Here we build the `DTS` image and push the
+* First is done on GitHub Actions. Here we update [Dasharo
+  components](./scripts/update_components.sh) build the `DTS` image and push
   binaries to `boot.dasharo.com`.
 
 * Second is done on Gitea Actions. Here we push the ipxe menu to
