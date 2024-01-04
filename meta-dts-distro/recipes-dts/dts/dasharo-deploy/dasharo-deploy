@@ -226,24 +226,40 @@ smbios_migration() {
 }
 
 smmstore_migration() {
-    echo "Beginning SMMSTORE migration process..."
+    echo -n "Backing up firmware configuration... "
     flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r /tmp/dasharo_dump.rom ${FLASHROM_ADD_OPT_READ} --fmap -i FMAP -i SMMSTORE >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
-    cbfstool /tmp/dasharo_dump.rom read -r SMMSTORE -f /tmp/smmstore.bin
-    echo "Migrate to SMMSTORE section."
-    cbfstool "$BIOS_UPDATE_FILE" write -r SMMSTORE -f /tmp/smmstore.bin -u
+    cbfstool /tmp/dasharo_dump.rom read -r SMMSTORE -f /tmp/smmstore.bin >> $ERR_LOG_FILE 2>&1
+    if [ $? -ne 0 ]; then
+        echo "Failed! Default settings will be used."
+        return 1
+    fi
+    cbfstool "$BIOS_UPDATE_FILE" write -r SMMSTORE -f /tmp/smmstore.bin -u >> $ERR_LOG_FILE 2>&1
+    if [ $? -ne 0 ]; then
+        echo "Failed! Default settings will be used."
+        return 1
+    fi
+    echo Done.
 }
 
 bootsplash_migration() {
-    echo "Beginning BOOTSPLASH migration process..."
     flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r /tmp/dasharo_dump.rom ${FLASHROM_ADD_OPT_READ} --fmap -i FMAP -i BOOTSPLASH >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
     cbfstool /tmp/dasharo_dump.rom extract -r BOOTSPLASH -n logo.bmp -f /tmp/logo.bmp >> $ERR_LOG_FILE 2>&1
     if [ $? -ne 0 ]; then
-      echo "logo.bmp not found, nothing to migrate"
-      return 1
+        # No logo, so exit early and don't show unnecessary messages
+        return 1
     fi
-    echo "Migrate logo.bmp to BOOTSPLASH section."
+    echo -n "Backing up custom boot logo... "
     cbfstool $BIOS_UPDATE_FILE remove -n logo.bmp -r BOOTSPLASH >> $ERR_LOG_FILE 2>&1
+    if [ $? -ne 0 ]; then
+        echo "Failed! Default boot splash will be used."
+        return 1
+    fi
     cbfstool $BIOS_UPDATE_FILE add -f /tmp/logo.bmp -r BOOTSPLASH -n logo.bmp -t raw -c lzma >> $ERR_LOG_FILE 2>&1
+    if [ $? -ne 0 ]; then
+        echo "Failed! Default boot splash will be used."
+        return 1
+    fi
+    echo Done.
 }
 
 resign_binary() {
