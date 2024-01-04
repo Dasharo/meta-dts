@@ -229,37 +229,22 @@ smmstore_migration() {
     echo -n "Backing up firmware configuration... "
     flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r /tmp/dasharo_dump.rom ${FLASHROM_ADD_OPT_READ} --fmap -i FMAP -i SMMSTORE >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
     cbfstool /tmp/dasharo_dump.rom read -r SMMSTORE -f /tmp/smmstore.bin >> $ERR_LOG_FILE 2>&1
-    if [ $? -ne 0 ]; then
-        echo "Failed! Default settings will be used."
-        return 1
-    fi
+    error_check "Failed! Default settings will be used."
     cbfstool "$BIOS_UPDATE_FILE" write -r SMMSTORE -f /tmp/smmstore.bin -u >> $ERR_LOG_FILE 2>&1
-    if [ $? -ne 0 ]; then
-        echo "Failed! Default settings will be used."
-        return 1
-    fi
-    echo Done.
+    error_check "Failed! Default settings will be used."
+    print_green Done.
 }
 
 bootsplash_migration() {
     flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r /tmp/dasharo_dump.rom ${FLASHROM_ADD_OPT_READ} --fmap -i FMAP -i BOOTSPLASH >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
     cbfstool /tmp/dasharo_dump.rom extract -r BOOTSPLASH -n logo.bmp -f /tmp/logo.bmp >> $ERR_LOG_FILE 2>&1
-    if [ $? -ne 0 ]; then
-        # No logo, so exit early and don't show unnecessary messages
-        return 1
-    fi
+    error_check # No custom logo, so exit early and don't show unnecessary messages
     echo -n "Backing up custom boot logo... "
     cbfstool $BIOS_UPDATE_FILE remove -n logo.bmp -r BOOTSPLASH >> $ERR_LOG_FILE 2>&1
-    if [ $? -ne 0 ]; then
-        echo "Failed! Default boot splash will be used."
-        return 1
-    fi
+    error_check "Failed! Default boot splash will be used."
     cbfstool $BIOS_UPDATE_FILE add -f /tmp/logo.bmp -r BOOTSPLASH -n logo.bmp -t raw -c lzma >> $ERR_LOG_FILE 2>&1
-    if [ $? -ne 0 ]; then
-        echo "Failed! Default boot splash will be used."
-        return 1
-    fi
-    echo Done.
+    error_check "Failed! Default boot splash will be used."
+    print_green Done.
 }
 
 resign_binary() {
@@ -417,10 +402,7 @@ update() {
   local _update_version=""
 
   check_if_ac
-  if [ $? -ne 0 ]; then
-    echo "Firmware update process interrupted on user request."
-    exit 1
-  fi
+  error_check "Firmware update process interrupted on user request."
 
   echo "Checking for the latest Dasharo update available..."
   echo "Current Dasharo version: $DASHARO_VERSION"
