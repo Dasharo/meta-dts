@@ -3,6 +3,8 @@
 SCRIPTDIR=$(readlink -f $(dirname "$0"))
 ROOT=$(readlink -f "${SCRIPTDIR}/..")
 GET_LAST_COMMIT="${SCRIPTDIR}/get_last_commit.sh"
+CHANGELOG_FILE="$ROOT/CHANGELOG.md"
+CHANGELOG_TMP_FILE="$ROOT/CHANGELOG-tmp.md"
 
 die() {
     echo "$@"
@@ -11,6 +13,11 @@ die() {
 
 (
 cd "${ROOT}"
+
+#
+# Determine DTS release version
+#
+DTS_VER=v`cat meta-dts-distro/conf/distro/dts-distro.conf | grep DISTRO_VERSION | tr -d "\" [A-Z]_="`
 
 #
 # Arguments
@@ -77,6 +84,14 @@ do_update() {
         echo "Updating $1 to $last_commit"
         do_update_srcrev "${recipe_path}" "${last_commit}"
 
+        # update changelog, determine which line to modify, it should be X-2
+        # where X is header of one after latest release, as we want to add new
+        # changelog info at the end of latest release
+        line_number=$(grep -n '##' CHANGELOG.md | sed -n '2p' | cut -d ":" -f 1)
+        result=$((line_number - 2))
+
+        sed ""$result"a\* Updated $1 to revision $last_commit" $CHANGELOG_FILE > $CHANGELOG_TMP_FILE
+        cp $CHANGELOG_TMP_FILE $CHANGELOG_FILE
         git add "${recipe_path}"
         git commit -F - <<< "${component_name}: update to ${last_commit}"
     fi
@@ -112,5 +127,15 @@ do_update "3mdeb-secpack" \
     "3mdeb/3mdeb-secpack" \
     "master"
 
-#git push --set-upstream origin "main"
+if [ -f "$CHANGELOG_TMP_FILE" ]; then
+    rm -rf $CHANGELOG_TMP_FILE
+    git add $CHANGELOG_FILE
+    git commit -F - <<< "CHANGELOG.md: fill up after automatic update of components"
+fi
+
+git commit -F - <<< "Release ${DTS_VER}"
+git push --set-upstream origin "main"
+# update tag position, should not trigger new pipeline
+git tag --force "${DTS_VER}"
+git push --set-upstream --force origin "${DTS_VER}"
 )
