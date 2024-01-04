@@ -1,6 +1,6 @@
 name: CI on push tag
 on:
-  push:
+  create:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+$'
 
