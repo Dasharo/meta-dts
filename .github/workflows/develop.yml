@@ -1,6 +1,6 @@
 name: CI on push to develop
 on:
-  push:
+  create:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+-rc[0-9]+'
 
