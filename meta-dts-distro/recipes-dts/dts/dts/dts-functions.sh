@@ -312,7 +312,7 @@ board_config() {
               BIOS_HASH_LINK_DES="${BIOS_LINK_DES}.sha256"
               BIOS_SIGN_LINK_COMM="${BIOS_LINK_COMM}.sha256.sig"
               BIOS_SIGN_LINK_DES="${BIOS_LINK_DES}.sha256.sig"
-              PLATFORM_SIGN_KEY="dasharo/dasharo-release-1.x-compatible-with-msi-ms-7d25-signing-key.asc"
+              PLATFORM_SIGN_KEY="dasharo/msi_ms7d25/dasharo-release-1.x-compatible-with-msi-ms-7d25-signing-key.asc"
               NEED_SMBIOS_MIGRATION="true"
               NEED_SMMSTORE_MIGRATION="true"
               NEED_BOOTSPLASH_MIGRATION="false"
