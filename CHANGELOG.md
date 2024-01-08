@@ -2,6 +2,10 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v1.2.15 - 2024-01-08
+
+* Fix GPG signature verification on MSI platforms.
+
 ## v1.2.14 - 2024-01-03
 
 * Added 3mdeb Master Key and 3mdeb Dasharo Master Key from
