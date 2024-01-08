@@ -731,7 +731,9 @@ verify_artifacts() {
   echo "Checking $_name firmware checksum..."
   sha256sum --check <(echo $(cat $_hash_file | cut -d ' ' -f 1) $_update_file)
   error_check "Failed to verify $_name firmware checksum"
-  echo "Checking $_name firmware signature..."
-  (cat $_hash_file) | gpg --verify $_sign_file -
-  error_check "Failed to verify $_name firmware signature."
+  if [ -v PLATFORM_SIGN_KEY ]; then
+    echo "Checking $_name firmware signature..."
+    (cat $_hash_file) | gpg --verify $_sign_file -
+    error_check "Failed to verify $_name firmware signature."
+  fi
 }

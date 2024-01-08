@@ -620,7 +620,9 @@ fi
 
 board_config
 check_flash_chip
-get_signing_keys
+if [ -v PLATFORM_SIGN_KEY ]; then
+    get_signing_keys
+fi
 
 case "$CMD" in
   install)
