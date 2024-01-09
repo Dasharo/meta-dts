@@ -2,6 +2,7 @@ name: Weekly clean & rebuild
 on:
   schedule:
     - cron: '0 8 * * 6'
+  workflow_dispatch:
 
 jobs:
   build:
