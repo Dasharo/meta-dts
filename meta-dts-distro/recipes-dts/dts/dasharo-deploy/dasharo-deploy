@@ -267,6 +267,34 @@ resign_binary() {
   fi
 }
 
+check_vboot_keys() {
+  if [ "$HAVE_VBOOT" -eq 0 ]; then
+    # If we flash whole BIOS region, no need to check if keys match
+    grep -q "\-\-ifd" <<< "$FLASHROM_ADD_OPT_UPDATE" && grep -q "\-i bios" <<< "$FLASHROM_ADD_OPT_UPDATE" && return
+    # No FMAP flashing? Also skip
+    grep -q "\-\-fmap" <<< "$FLASHROM_ADD_OPT_UPDATE" || return
+
+    CBFSTOOL=$(which cbfstool)
+    BINARY_KEYS=$(futility show $BIOS_UPDATE_FILE| grep -i 'key sha1sum')
+
+    if [ $BOARD_HAS_FD_REGION -eq 0 ]; then
+      FLASHROM_ADD_OPT_READ=""
+    else
+      FLASHROM_ADD_OPT_READ="--ifd -i bios"
+    fi
+
+    flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_READ} -r /tmp/bios.bin > /dev/null 2>/dev/null
+    if [ $? -eq 0 ] && [ -f "/tmp/bios.bin" ]; then
+      FLASH_KEYS=$(futility show /tmp/bios.bin | grep -i 'key sha1sum')
+      diff <(echo "$BINARY_KEYS") <(echo "$FLASH_KEYS") > /dev/null 2>&1
+      # If keys are different we must additionally flash at least GBB region as well
+      if [ $? -ne 0 ]; then
+        FLASHROM_ADD_OPT_UPDATE+=" -i GBB"
+      fi
+    fi
+  fi
+}
+
 blob_transmission() {
   echo "Extracting the UEFI image from BIOS update"
   wget -O "$DBT_BIOS_UPDATE_FILENAME" --user-agent='Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)' "$DBT_BIOS_UPDATE_URL" >> $ERR_LOG_FILE 2>&1
@@ -486,10 +514,16 @@ update() {
     bootsplash_migration
   fi
 
+  cbfstool "$BIOS_UPDATE_FILE" extract -r COREBOOT -n config -f "$BIOS_UPDATE_CONFIG_FILE"
+  grep -q "CONFIG_VBOOT=y" "$BIOS_UPDATE_CONFIG_FILE"
+  HAVE_VBOOT="$?"
+
   check_intel_regions
   check_blobs_in_binary $BIOS_UPDATE_FILE
   check_if_me_disabled
   set_flashrom_update_params $BIOS_UPDATE_FILE
+  set_intel_regions_update_params "-N --ifd"
+  check_vboot_keys
 
   echo "Updating Dasharo firmware..."
   print_warning "This may take several minutes. Please be patient and do not reset your computer, or touch the keyboard!"
