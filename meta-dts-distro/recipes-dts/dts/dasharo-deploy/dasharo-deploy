@@ -155,23 +155,23 @@ backup() {
   echo "Backing up BIOS firmware and store it locally..."
   echo "Remember that firmware is also backed up in HCL report."
   check_intel_regions
-  if [ $BOARD_HAS_FD_REGION -eq 0 ]; then
+  if [ $BOARD_HAS_FD_REGION -ne 0 ]; then
     # Use safe defaults. Descriptor may contain additional regions not detected
     # by flashrom and will return failure when attempted to be read. BIOS and
     # Flash descriptor regions should always be readable. If not, then we have
     # some ugly case, hard to deal with.
     FLASHROM_ADD_OPT_READ="--ifd -i fd -i bios"
-    if [ $BOARD_HAS_ME_REGION -eq 0 ] && [ $BOARD_ME_REGION_LOCKED -ne 0 ]; then
+    if [ $BOARD_HAS_ME_REGION -ne 0 ] && [ $BOARD_ME_REGION_LOCKED -eq 0 ]; then
       # ME region is not locked, read it as well
       FLASHROM_ADD_OPT_READ+=" -i me"
     fi
-    if [ $BOARD_HAS_GBE_REGION -eq 0 ] && [ $BOARD_GBE_REGION_LOCKED -ne 0 ]; then
+    if [ $BOARD_HAS_GBE_REGION -ne 0 ] && [ $BOARD_GBE_REGION_LOCKED -eq 0 ]; then
       # GBE region is present and not locked, read it as well
       FLASHROM_ADD_OPT_READ+=" -i gbe"
     fi
   else
       # No descriptor, probably safe to read everything
-      FLASHROM_ADD_OPT_READ=" "
+      FLASHROM_ADD_OPT_READ=""
   fi
   flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r "${FW_BACKUP_DIR}"/rom.bin ${FLASHROM_ADD_OPT_READ} >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
   error_check "Failed to read BIOS firmware backup"
@@ -335,6 +335,7 @@ install() {
   check_intel_regions
   check_blobs_in_binary $BIOS_UPDATE_FILE
   check_if_me_disabled
+  set_intel_regions_update_params "-N --ifd -i bios"
 
   if [ "$HAVE_EC" = "true" ]; then
     echo "Checking for Open Source Embedded Controller firmware"
@@ -371,10 +372,8 @@ install() {
     blob_transmission
   fi
 
-  set_intel_regions_update_params "-N --ifd -i bios"
-
   echo "Installing Dasharo firmware..."
-  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_DEPLOY} -w "$BIOS_UPDATE_FILE" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_INTEL_REGIONS} -w "$BIOS_UPDATE_FILE" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
   error_check "Failed to install Dasharo firmware"
 
   print_green "Successfully installed Dasharo firmware"
@@ -503,17 +502,16 @@ update() {
     error_check "Failed to update second firmware partition"
   fi
 
-  set_intel_regions_update_params "-N --ifd"
-  # We use FLASHROM_ADD_OPT_DEPLOY for updating ME and IFD.
-  # If FLASHROM_ADD_OPT_DEPLOY remains the same after 
+  # We use FLASHROM_ADD_OPT_REGIONS for updating ME and IFD.
+  # If FLASHROM_ADD_OPT_REGIONS remains the same after 
   # set_intel_regions_update_params or is cleared, it means
   # we either cannot update any region, or were not allowed to,
   # or platform has no descriptor.
-  if [ "$FLASHROM_ADD_OPT_DEPLOY" != "-N --ifd" ] && [ "$FLASHROM_ADD_OPT_DEPLOY" != "" ]; then
+  if [ "$FLASHROM_ADD_OPT_REGIONS" != "-N --ifd" ] && [ "$FLASHROM_ADD_OPT_REGIONS" != "" ]; then
     UPDATE_STRING=""
-    grep "-i fd" $FLASHROM_ADD_OPT_DEPLOY
+    grep -q "\-i fd" <<< "$FLASHROM_ADD_OPT_REGIONS"
     UPDATE_IFD=$?
-    grep "-i me" $FLASHROM_ADD_OPT_DEPLOY
+    grep -q "\-i me" <<< "$FLASHROM_ADD_OPT_REGIONS"
     UPDATE_ME=$?
     if [ $UPDATE_IFD -eq 0 ]; then
       UPDATE_STRING+="Flash Descriptor"
@@ -521,11 +519,11 @@ update() {
         UPDATE_STRING+=" and "
       fi
     fi
-    if [ $$UPDATE_ME -eq 0 ]; then
+    if [ $UPDATE_ME -eq 0 ]; then
       UPDATE_STRING+="Managment Engine"
     fi
     echo "Updating $UPDATE_STRING"
-    flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_DEPLOY} -w "$BIOS_UPDATE_FILE" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+    flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_REGIONS} -w "$BIOS_UPDATE_FILE" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
     error_check "Failed to update $UPDATE_STRING"
   fi
 
@@ -614,7 +612,7 @@ restore() {
                   check_blobs_in_binary /tmp/logs/rom.bin
                   check_if_me_disabled
                   set_intel_regions_update_params "-N --ifd -i bios"
-                  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -w "/tmp/logs/rom.bin" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+                  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_REGIONS} -w "/tmp/logs/rom.bin" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
                   error_check "Failed to restore BIOS firmware! You can try one more time."
                   print_green "Successfully restored firmware"
                   echo "Returning to main menu..."
@@ -654,7 +652,7 @@ restore() {
           check_blobs_in_binary /tmp/logs/rom.bin
           check_if_me_disabled
           set_intel_regions_update_params "-N --ifd -i bios"
-          flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_DEPLOY} -w "/tmp/logs/rom.bin" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+          flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_REGIONS} -w "/tmp/logs/rom.bin" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
           error_check "Failed to restore BIOS firmware! You can try one more time."
           print_green "Successfully restored firmware"
         else
