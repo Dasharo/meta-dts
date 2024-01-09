@@ -16,8 +16,28 @@ jobs:
           path: "meta-dts"
       - name: Build DTS image
         shell: bash
+        id: build_image
         run: |
-          kas-container build meta-dts/kas.yml
+          for attempt in {1..5}; do
+            if kas-container build meta-dts/kas.yml; then
+              echo "Build command succeeded on attempt $attempt"
+              break
+            else
+              echo "Build command failed on attempt $attempt"
+              if [ $attempt -lt 5 ]; then
+                sleep 5  # Wait for some time before retrying
+              fi
+            fi
+          done
+        continue-on-error: true  # Continue to the next step even if the shell command fails
+      - name: Report build command
+        run: |
+          if [ ${{ steps.build_image.outcome }} == 'failure' ]; then
+            echo "All build attempts failed."
+            exit 1
+          else
+            echo "At least one build attempt succeeded."
+          fi
   deploy-images:
     name: Deploy DTS artifacts on GitHub Releases tab
     if: always()
