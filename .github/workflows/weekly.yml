@@ -36,11 +36,11 @@ jobs:
             else
               echo "Build command failed on attempt $attempt"
               if [ $attempt -lt 5 ]; then
-                sleep 5  # Wait for some time before retrying
+                sleep 5
               fi
             fi
           done
-        continue-on-error: true  # Continue to the next step even if the shell command fails
+        continue-on-error: true
       - name: Report build command
         run: |
           if [ ${{ steps.build_image.outcome }} == 'failure' ]; then
