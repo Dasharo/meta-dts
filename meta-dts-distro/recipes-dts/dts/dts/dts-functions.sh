@@ -75,7 +75,7 @@ fum_exit() {
 
 error_exit() {
   _error_msg="$1"
-  if [ -n $_error_msg ]; then
+  if [ -n "$_error_msg" ]; then
     # Avoid printing empty line if no message was passed
     print_error "$_error_msg"
   fi
