@@ -876,6 +876,7 @@ set_flashrom_update_params() {
   BINARY_HAS_RW_B=0
   # We need to read whole binary (or BIOS region), otherwise cbfstool will
   # return different attributes for CBFS regions
+  echo "Checking flash layout."
   flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_UPDATE} -r /tmp/bios.bin > /dev/null 2>&1
   if [ $? -eq 0 ] && [ -f "/tmp/bios.bin" ]; then
     BOARD_FMAP_LAYOUT=$(cbfstool /tmp/bios.bin layout -w 2> /dev/null)

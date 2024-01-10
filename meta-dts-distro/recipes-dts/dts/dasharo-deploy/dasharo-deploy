@@ -282,7 +282,7 @@ check_vboot_keys() {
     else
       FLASHROM_ADD_OPT_READ="--ifd -i bios"
     fi
-
+    echo "Checking vboot keys."
     flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_READ} -r /tmp/bios.bin > /dev/null 2>/dev/null
     if [ $? -eq 0 ] && [ -f "/tmp/bios.bin" ]; then
       FLASH_KEYS=$(futility show /tmp/bios.bin | grep -i 'key sha1sum')
