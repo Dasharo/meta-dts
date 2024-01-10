@@ -705,8 +705,10 @@ download_keys() {
 }
 
 get_signing_keys() {
-    wget -q https://raw.githubusercontent.com/3mdeb/3mdeb-secpack/master/$PLATFORM_SIGN_KEY -O - | gpg --import -
+    echo "Getting platform specific GPG key... "
+    wget -q https://raw.githubusercontent.com/3mdeb/3mdeb-secpack/master/$PLATFORM_SIGN_KEY -O - | gpg --import - >> $ERR_LOG_FILE 2>&1
     error_check "Cannot get platform specific key to verify signatures."
+    print_green "Done"
 }
 
 verify_artifacts() {
@@ -732,11 +734,13 @@ verify_artifacts() {
     ;;
   esac
   echo "Checking $_name firmware checksum..."
-  sha256sum --check <(echo $(cat $_hash_file | cut -d ' ' -f 1) $_update_file)
+  sha256sum --check <(echo $(cat $_hash_file | cut -d ' ' -f 1) $_update_file) >> $ERR_LOG_FILE 2>&1
   error_check "Failed to verify $_name firmware checksum"
+  print_green "Done"
   if [ -v PLATFORM_SIGN_KEY ]; then
     echo "Checking $_name firmware signature..."
     (cat $_hash_file) | gpg --verify $_sign_file -
     error_check "Failed to verify $_name firmware signature."
   fi
+  print_green "Done"
 }
