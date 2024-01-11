@@ -2,6 +2,11 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v1.2.16 - 2024-01-11
+
+* Bumped supported firmware versions of NovaCustom NV4X TGL to v1.5.2.
+* Improved release process of DTS images in release-candidate versions.
+
 ## v1.2.15 - 2024-01-11
 
 * Fixed GPG signature verification on MSI and Dell OptiPlex platforms.
