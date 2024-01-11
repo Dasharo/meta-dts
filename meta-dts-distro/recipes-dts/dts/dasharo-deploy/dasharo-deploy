@@ -241,10 +241,8 @@ bootsplash_migration() {
     # unnecessary messages
     cbfstool /tmp/dasharo_dump.rom extract -r BOOTSPLASH -n logo.bmp -f /tmp/logo.bmp >> $ERR_LOG_FILE 2>&1 || return 1
     echo -n "Backing up custom boot logo... "
-    cbfstool $BIOS_UPDATE_FILE remove -n logo.bmp -r BOOTSPLASH >> $ERR_LOG_FILE 2>&1 || \
-      print_warning "Failed! Default boot splash will be used."
-    cbfstool $BIOS_UPDATE_FILE add -f /tmp/logo.bmp -r BOOTSPLASH -n logo.bmp -t raw -c lzma >> $ERR_LOG_FILE 2>&1 || \
-      print_warning "Failed! Default boot splash will be used."
+    dcu logo $BIOS_UPDATE_FILE -l /tmp/logo.bmp >> $ERR_LOG_FILE 2>&1 || \
+      print_warning "Failed! Default boot splash will be used." || return 1
     print_green Done.
 }
 
