@@ -96,7 +96,9 @@ Actions. Whole pipeline of creating `DTS` release consists of two steps.
 
 * Second is done on Gitea Actions. Here we sign the `DTS` binaries and push
   them to [boot.dasharo.com](https://boot.dasharo.com/dts) under the directory
-  named after rcX version.
+  named after rcX version. Also
+  [dts-rc.ipxe](http://boot.dasharo.com/dts/dts-rc.ipxe) is created so the
+  newest rc release is available over iPXE.
 
 ## Testing Dasharo firmware updates from local sources
 
