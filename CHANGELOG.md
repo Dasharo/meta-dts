@@ -2,9 +2,14 @@
 
 All notable changes to the DTS project will be documented in this file.
 
-## v1.2.15 - 2024-01-08
+## v1.2.15 - 2024-01-11
 
-* Fix GPG signature verification on MSI platforms.
+* Fixed GPG signature verification on MSI and Dell OptiPlex platforms.
+* Updated ACM checksums used when deploying Dasharo firmware on Dell OptiPlex.
+* Enhanced the user experience (UX) when running deployment or update
+  procedures. Fewer logs are displayed on the terminal, while all of them are
+  still stored under the `/var/local` path.
+* Improved the CI/CD pipelines.
 
 ## v1.2.14 - 2024-01-03
 
