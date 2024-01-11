@@ -40,7 +40,7 @@ jobs:
           fi
   deploy-images:
     name: Deploy DTS artifacts on GitHub Releases tab
-    if: ${{ jobs.build.result == success }}
+    if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
     needs: build
     runs-on:
       labels: dts-builder
