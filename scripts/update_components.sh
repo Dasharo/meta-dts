@@ -136,6 +136,6 @@ fi
 git commit -F - <<< "Release ${DTS_VER}"
 git push --set-upstream origin "main"
 # update tag position, should not trigger new pipeline
-git tag --force "${DTS_VER}"
-git push --set-upstream --force origin "${DTS_VER}"
+git tag "${DTS_VER}"
+git push --set-upstream origin "${DTS_VER}"
 )
