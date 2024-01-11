@@ -98,6 +98,11 @@ jobs:
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.wic.gz.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.wic.bmap.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.iso.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
+      - name: Update iPXE menu
+        shell: bash
+        run: |
+          ./meta-dts/scripts/generate-ipxe-menu.sh ${{steps.dts-ver.outputs.DTS_VER}}
+          scp -i ~/.ssh/dts-ci-key dts-rc.ipxe builder@10.1.40.2:boot/dts/
       - name: Trigger signing
         shell: bash
         run: |
