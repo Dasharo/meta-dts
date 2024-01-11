@@ -1,11 +1,18 @@
 #!/usr/bin/env bash
 
 VERSION=$1
+RC_VER_PATTERN="v[0-9]+.[0-9]+.[0-9]+-rc[0-9]+$"
 IPXE_FILE="dts.ipxe"
+IPXE_RC_FILE="dts-rc.ipxe"
 
 if [ $# -ne 1 ]; then
   echo "Provide version, e.g. v1.2.3"
   exit
+fi
+
+# use different name for ipxe file when creating rc release
+if [[ $VERSION =~ $RC_VER_PATTERN ]]; then
+  IPXE_FILE=$IPXE_RC_FILE
 fi
 
 # imgverify can be enabled as a next step on top of the HTTPS. The imgtrust
