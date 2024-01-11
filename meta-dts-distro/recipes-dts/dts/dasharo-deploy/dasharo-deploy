@@ -226,7 +226,7 @@ smbios_migration() {
 }
 
 smmstore_migration() {
-    echo "Backing up firmware configuration... "
+    echo -n "Backing up firmware configuration... "
     flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r /tmp/dasharo_dump.rom ${FLASHROM_ADD_OPT_READ} --fmap -i FMAP -i SMMSTORE >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
     cbfstool /tmp/dasharo_dump.rom read -r SMMSTORE -f /tmp/smmstore.bin >> $ERR_LOG_FILE 2>&1 || \
       print_warning "Failed! Default settings will be used."
@@ -240,7 +240,7 @@ bootsplash_migration() {
     # If no custom logo, return from bootsplash_migration early and don't show
     # unnecessary messages
     cbfstool /tmp/dasharo_dump.rom extract -r BOOTSPLASH -n logo.bmp -f /tmp/logo.bmp >> $ERR_LOG_FILE 2>&1 || return 1
-    echo "Backing up custom boot logo... "
+    echo -n "Backing up custom boot logo... "
     cbfstool $BIOS_UPDATE_FILE remove -n logo.bmp -r BOOTSPLASH >> $ERR_LOG_FILE 2>&1 || \
       print_warning "Failed! Default boot splash will be used."
     cbfstool $BIOS_UPDATE_FILE add -f /tmp/logo.bmp -r BOOTSPLASH -n logo.bmp -t raw -c lzma >> $ERR_LOG_FILE 2>&1 || \

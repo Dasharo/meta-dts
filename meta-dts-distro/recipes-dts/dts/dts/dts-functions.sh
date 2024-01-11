@@ -648,7 +648,7 @@ compare_versions() {
 }
 
 download_artifacts() {
-  echo "Downloading Dasharo firmware..."
+  echo -n "Downloading Dasharo firmware..."
   if [ -v BIOS_LINK_COMM ] && [ ${BIOS_LINK} == ${BIOS_LINK_COMM} ]; then
     curl -s -L -f "$BIOS_LINK" -o $BIOS_UPDATE_FILE
     error_check "Cannot access $FW_STORE_URL while downloading binary. Please
@@ -693,6 +693,7 @@ download_artifacts() {
      check your internet connection"
     fi
   fi
+  print_green "Done"
 }
 
 download_keys() {
@@ -705,7 +706,7 @@ download_keys() {
 }
 
 get_signing_keys() {
-    echo "Getting platform specific GPG key... "
+    echo -n "Getting platform specific GPG key... "
     wget -q https://raw.githubusercontent.com/3mdeb/3mdeb-secpack/master/$PLATFORM_SIGN_KEY -O - | gpg --import - >> $ERR_LOG_FILE 2>&1
     error_check "Cannot get platform specific key to verify signatures."
     print_green "Done"
@@ -733,12 +734,12 @@ verify_artifacts() {
     *)
     ;;
   esac
-  echo "Checking $_name firmware checksum..."
+  echo -n "Checking $_name firmware checksum..."
   sha256sum --check <(echo $(cat $_hash_file | cut -d ' ' -f 1) $_update_file) >> $ERR_LOG_FILE 2>&1
   error_check "Failed to verify $_name firmware checksum"
   print_green "Done"
   if [ -v PLATFORM_SIGN_KEY ]; then
-    echo "Checking $_name firmware signature..."
+    echo -n "Checking $_name firmware signature..."
     (cat $_hash_file) | gpg --verify $_sign_file -
     error_check "Failed to verify $_name firmware signature."
   fi
