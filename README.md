@@ -56,7 +56,12 @@ Please follow the steps below to release a new production `DTS` image.
     one of the maintainers as there will be needed new keys to sign the binaries
     in next step of CI/CD pipeline.
 
-1. Create and push tag that match the newly bumped version.
+1. Fill up the [CHANGELOG.md](./CHANGELOG.md) file with latest changes.
+
+1. Run [update_components.sh](./scripts/update_components.sh) script which will
+   update revision of Dasharo related recipes (e.g.
+   [dasharo-ectool](./meta-dts-distro/recipes-support/dasharo-ectool/dasharo-ectool_0.3.8.bb)),
+   create a tag and push it to the remote repository.
 
 From here, rest of the jobs should be carried out by the GitHub and Gitea
 Actions. Whole pipeline of creating `DTS` release consists of two steps.
@@ -75,7 +80,7 @@ Actions. Whole pipeline of creating `DTS` release consists of two steps.
 Please follow the steps below to release a new develop `DTS` image.
 
 1. Make sure that everything that should go into the given release is merged to
-   `main`.
+   `develop`.
 
 1. Bump the version in `meta-dts-distro/conf/distro/dts-distro.conf` file by
    adding `-rcX` suffix.
@@ -89,9 +94,9 @@ Actions. Whole pipeline of creating `DTS` release consists of two steps.
 
 * First is done on GitHub Actions. Here we build the `DTS` image.
 
-* Second is done on Gitea Actions. Here we sign the `DTS` binaries and creates
-  new develop release at the `https://github.com/Dasharo/meta-dts/releases`
-  from where binaries can be downloaded.
+* Second is done on Gitea Actions. Here we sign the `DTS` binaries and push
+  them to [boot.dasharo.com](https://boot.dasharo.com/dts) under the directory
+  named after rcX version.
 
 ## Testing Dasharo firmware updates from local sources
 
