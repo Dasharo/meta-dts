@@ -93,7 +93,7 @@ while : ; do
   case ${OPTION} in
     1)
       print_disclaimer
-      read -p "Do you want to support Dasharo development by sending us logs with hardware configuration? [N/y] "
+      read -p "Do you want to support Dasharo development by sending us logs with your hardware configuration? [N/y] "
       case ${REPLY} in
           yes|y|Y|Yes|YES)
           export SEND_LOGS="true"
@@ -125,8 +125,8 @@ while : ; do
             export SEND_LOGS="true"
             export DEPLOY_REPORT="true"
             if ! ${CMD_DASHARO_HCL_REPORT}; then
-              echo -e "Cannot reach 3mdeb cloud to leave HCL report. Please
-                        \rrecheck your internet connection."
+              echo -e "Unable to connect to cloud.3mdeb.com for submitting the
+                        \rHCL report. Please recheck your internet connection."
             else
               logs_sent="1"
             fi
@@ -155,14 +155,14 @@ while : ; do
       echo ${TMP_CLOUDSEND_DOWNLOAD_URL} >> ${SE_credential_file}
       echo ${TMP_CLOUDSEND_PASSWORD} >> ${SE_credential_file}
 
-      print_green "Dasharo DES credentials has been saved"
-      echo "Veryfing Dasharo DES credentials..."
+      print_green "Dasharo DES credentials have been saved"
+      echo "Verifying Dasharo DES credentials..."
 
       check_se_creds
       if [ $? -eq 0 ]; then
-        print_green "Dasharo DES credentials are correct and ready to use"
+         print_green "Verification of the Dasharo DES was successful. They are valid and will be used."
       else
-        echo -e "Something may be wrong with credentials. Please use option 4 to change DES keys
+        echo -e "Something may be wrong with the DES credentials. Please use option 4 to change the DES keys
                   \rand make sure that there is no typo."
         rm ${SE_credential_file}
         export CLOUDSEND_LOGS_URL="$BASE_CLOUDSEND_LOGS_URL"
