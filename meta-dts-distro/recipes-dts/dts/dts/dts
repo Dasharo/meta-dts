@@ -8,12 +8,6 @@ trap : 3
 
 check_os_version() {
   local os_version=$(grep "VERSION_ID" ${OS_VERSION_FILE} | cut -d "=" -f 2-)
-
-  if [ -n "${DES_IS_LOGGED}" ]; then
-    echo "  Logs key:        " ${CLOUDSEND_LOGS_URL}
-    echo "  Download key:    " ${CLOUDSEND_DOWNLOAD_URL}
-    echo "  Password:        " ${CLOUDSEND_PASSWORD}
-  fi
   echo "  DTS version v${os_version}"
 }
 
@@ -72,12 +66,18 @@ while : ; do
     echo "  3) Restore firmware from Dasharo HCL report"
   fi
   if [ -n "${DES_IS_LOGGED}" ]; then
-      echo "  4) Edit DES keys"
+      echo "  4) Edit your DES keys"
+      echo "     Logs key    : " ${CLOUDSEND_LOGS_URL}
+      echo "     Download key: " ${CLOUDSEND_DOWNLOAD_URL}
+      echo "     Password    : " ${CLOUDSEND_PASSWORD}
+    echo
+  fi
+
   else
-      echo "  4) Load DES keys"
+      echo "  4) Load your DES keys"
   fi
   if check_if_dasharo; then
-    echo "  5) Update Dasharo firmware"
+    echo "  5) Check and apply Dasharo firmware updates"
   fi
   if systemctl is-active sshd.socket > /dev/null 2>&1; then
       echo "  8) Stop SSH server"
@@ -98,7 +98,7 @@ while : ; do
       case ${REPLY} in
           yes|y|Y|Yes|YES)
           export SEND_LOGS="true"
-          echo "Thank you for contributing to the Dasharo development! "
+          echo "Thank you for contributing to the Dasharo development!"
           ;;
           *)
           export SEND_LOGS="false"
