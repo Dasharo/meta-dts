@@ -210,7 +210,7 @@ romhole_migration() {
         return
       else
     else
-      dd if=/tmp/rom.bin of=/tmp/romhole.bin skip=$((0x17C0000)) bs=128K count=1 iflag=skip_bytes > /dev/null 2>&1 
+      dd if=/tmp/rom.bin of=/tmp/romhole.bin skip=$((0x17C0000)) bs=128K count=1 iflag=skip_bytes > /dev/null 2>&1
     fi
 
     cbfstool "$BIOS_UPDATE_FILE" write -r ROMHOLE -f /tmp/romhole.bin -u 2> /dev/null
@@ -539,7 +539,7 @@ update() {
   echo "Updating Dasharo firmware..."
   print_warning "This may take several minutes. Please be patient and do not reset your computer, or touch the keyboard!"
 
-  # FLASHROM_ADD_OPT_UPDATE_OVERRIDE takes priority over auto-detected udpate params.
+  # FLASHROM_ADD_OPT_UPDATE_OVERRIDE takes priority over auto-detected update params.
   # It set only by platform-specific and firmware version-specific conditions
   if [ -v FLASHROM_ADD_OPT_UPDATE_OVERRIDE ]; then
     flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_UPDATE_OVERRIDE} -w "$BIOS_UPDATE_FILE"  >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
@@ -556,7 +556,7 @@ update() {
   fi
 
   # We use FLASHROM_ADD_OPT_REGIONS for updating ME and IFD.
-  # If FLASHROM_ADD_OPT_REGIONS remains the same after 
+  # If FLASHROM_ADD_OPT_REGIONS remains the same after
   # set_intel_regions_update_params or is cleared, it means
   # we either cannot update any region, or were not allowed to,
   # or platform has no descriptor.
