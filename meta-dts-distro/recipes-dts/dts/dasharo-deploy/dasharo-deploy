@@ -208,7 +208,7 @@ romhole_migration() {
       if [ $? -ne 0 ]; then
         print_warning "Failed to migrate MSI ROMHOLE, your platform's unique SMBIOS/DMI data may be lost"
         return
-      else
+      fi
     else
       dd if=/tmp/rom.bin of=/tmp/romhole.bin skip=$((0x17C0000)) bs=128K count=1 iflag=skip_bytes > /dev/null 2>&1
     fi
