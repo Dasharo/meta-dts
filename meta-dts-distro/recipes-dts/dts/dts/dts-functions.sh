@@ -301,19 +301,7 @@ board_config() {
               NEED_BLOB_TRANSMISSION="false"
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
-              if check_if_dasharo; then
-                # if v1.1.1 or older, flash the whole bios region, as per:
-                # https://docs.dasharo.com/variants/msi_z690/firmware-update/#version-older-than-v110
-                compare_versions $DASHARO_VERSION 1.1.2
-                if [ $? -eq 1 ]; then
-                # For Dasharo version lesser than 1.1.2
-                    NEED_BOOTSPLASH_MIGRATION="true"
-                    FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
-                else
-                # For Dasharo version greater or equal 1.1.2
-                    FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A -i RW_SECTION_B"
-                fi
-              fi
+              NEED_ROMHOLE_MIGRATION="true"
               ;;
             "PRO Z690-A WIFI (MS-7D25)" | "PRO Z690-A (MS-7D25)")
               DASHARO_REL_NAME="msi_ms7d25"
@@ -334,19 +322,7 @@ board_config() {
               NEED_BLOB_TRANSMISSION="false"
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
-              if check_if_dasharo; then
-                # if v1.1.1 or older, flash the whole bios region, as per:
-                # https://docs.dasharo.com/variants/msi_z690/firmware-update/#version-older-than-v110
-                compare_versions $DASHARO_VERSION 1.1.2
-                if [ $? -eq 1 ]; then
-                # For Dasharo version lesser than 1.1.2
-                    NEED_BOOTSPLASH_MIGRATION="true"
-                    FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
-                else
-                # For Dasharo version greater or equal 1.1.2
-                    FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A -i RW_SECTION_B"
-                fi
-              fi
+              NEED_ROMHOLE_MIGRATION="true"
               ;;
             *)
               error_exit "Board model $BOARD_MODEL is currently not supported"
@@ -374,9 +350,7 @@ board_config() {
               NEED_BLOB_TRANSMISSION="false"
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
-              if ! check_if_dasharo; then
-                NEED_ROMHOLE_MIGRATION="true"
-              fi
+              NEED_ROMHOLE_MIGRATION="true"
               ;;
             "PRO Z790-P WIFI (MS-7E06)" | "PRO Z790-P (MS-7E06)")
               DASHARO_REL_NAME="msi_ms7e06"
@@ -397,9 +371,7 @@ board_config() {
               NEED_BLOB_TRANSMISSION="false"
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
-              if ! check_if_dasharo; then
-                NEED_ROMHOLE_MIGRATION="true"
-              fi
+              NEED_ROMHOLE_MIGRATION="true"
               ;;
             *)
               error_exit "Board model $BOARD_MODEL is currently not supported"
