@@ -180,6 +180,10 @@ board_config() {
           PROGRAMMER_EC="ite_ec"
           if check_if_dasharo; then
           # if v1.5.1 or older, flash the whole bios region
+          # TODO: Let DTS determine which parameters are suitable.
+          # FIXME: Can we ever get rid of that? We change so much in each release,
+          # that we almost always need to flash whole BIOS regions
+          # because of non-backward compatbile or breaking changes.
             compare_versions $DASHARO_VERSION 1.5.2
             if [ $? -eq 1 ]; then
               # For Dasharo version lesser than 1.5.2
@@ -208,7 +212,11 @@ board_config() {
           PROGRAMMER_BIOS="internal"
           PROGRAMMER_EC="ite_ec"
           if check_if_dasharo; then
-          # if v1.5.0 or older, flash the whole bios region
+          # if v1.5.1 or older, flash the whole bios region
+          # TODO: Let DTS determine which parameters are suitable.
+          # FIXME: Can we ever get rid of that? We change so much in each release,
+          # that we almost always need to flash whole BIOS regions
+          # because of non-backward compatbile or breaking changes.
             compare_versions $DASHARO_VERSION 1.5.1
             if [ $? -eq 1 ]; then
               # For Dasharo version lesser than 1.5.1
@@ -237,6 +245,10 @@ board_config() {
           PROGRAMMER_EC="ite_ec"
           if check_if_dasharo; then
           # if v1.7.2 or older, flash the whole bios region
+          # TODO: Let DTS determine which parameters are suitable.
+          # FIXME: Can we ever get rid of that? We change so much in each release,
+          # that we almost always need to flash whole BIOS regions
+          # because of non-backward compatbile or breaking changes.
             compare_versions $DASHARO_VERSION 1.7.2
             if [ $? -eq 1 ]; then
               # For Dasharo version lesser than 1.7.2
@@ -266,6 +278,10 @@ board_config() {
           PROGRAMMER_EC="ite_ec"
           if check_if_dasharo; then
           # if v1.7.2 or older, flash the whole bios region
+          # TODO: Let DTS determine which parameters are suitable.
+          # FIXME: Can we ever get rid of that? We change so much in each release,
+          # that we almost always need to flash whole BIOS regions
+          # because of non-backward compatbile or breaking changes.
             compare_versions $DASHARO_VERSION 1.7.2
             if [ $? -eq 1 ]; then
               # For Dasharo version lesser than 1.7.2
@@ -775,7 +791,7 @@ check_if_me_disabled() {
       echo "ME disabled by Security Override MEI Message/HMRFPO"  >> $ERR_LOG_FILE
       ME_DISABLED=1
       return
-    elif [ $ME_OPMODE == "5" ]; then
+    elif [ $ME_OPMODE == "6" ]; then
       echo "ME disabled by Security Override MEI Message/HMRFPO"  >> $ERR_LOG_FILE
       ME_DISABLED=1
       return
@@ -808,12 +824,12 @@ force_me_update() {
     print_warning "You have been warned."
   while : ; do
     echo
-    read -r -p "Force the flashing without updating ME? (Y|n) " OPTION
+    read -r -p "Skip ME flashing and proceed with BIOS/firmware flashing/udpating? (Y|n) " OPTION
     echo
 
     case ${OPTION} in
       yes|y|Y|Yes|YES)
-        print_warning "Proceeding without ME flashing, because we were forced to."
+        print_warning "Proceeding without ME flashing, because we were asked to."
         break
         ;;
       n|N)
@@ -887,7 +903,7 @@ set_intel_regions_update_params() {
         if [ $ME_DISABLED -eq 1 ]; then
           FLASHROM_ADD_OPT_REGIONS+=" -i me"
         else
-          echo "The firmware binary to be flashed  contains Management Engine (ME), but ME is not disabled!"  >> $ERR_LOG_FILE
+          echo "The firmware binary to be flashed contains Management Engine (ME), but ME is not disabled!"  >> $ERR_LOG_FILE
           print_error "The firmware binary contains Management Engine (ME), but ME is not disabled!"
           force_me_update
         fi

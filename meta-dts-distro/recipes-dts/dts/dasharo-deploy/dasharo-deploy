@@ -199,17 +199,20 @@ backup() {
 romhole_migration() {
     cbfstool $BIOS_UPDATE_FILE layout -w | grep -q "ROMHOLE" || return
 
-    echo "Beginning ROM hole migration process..."
     flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r /tmp/rom.bin --ifd -i bios >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
-    error_check "Failed to read current firmware"
+    error_check "Failed to read current firmware to migrate MSI ROMHOLE"
     if check_if_dasharo; then
       cbfstool /tmp/rom.bin layout -w | grep -q "ROMHOLE" || return
-      cbfstool /tmp/rom.bin read -r ROMHOLE -f /tmp/romhole.bin || return
+      # This one is rather unlikely to fail, but just in case print a warning
+      cbfstool /tmp/rom.bin read -r ROMHOLE -f /tmp/romhole.bin 2> /dev/null
+      if [ $? -ne 0 ]; then
+        print_warning "Failed to migrate MSI ROMHOLE, your platform's unique SMBIOS/DMI data may be lost"
+        return
+      else
     else
-      dd if=/tmp/rom.bin of=/tmp/romhole.bin skip=$((0x17C0000)) bs=128K count=1 iflag=skip_bytes
+      dd if=/tmp/rom.bin of=/tmp/romhole.bin skip=$((0x17C0000)) bs=128K count=1 iflag=skip_bytes > /dev/null 2>&1 
     fi
 
-    echo "Migrate to ROMHOLE section."
     cbfstool "$BIOS_UPDATE_FILE" write -r ROMHOLE -f /tmp/romhole.bin -u 2> /dev/null
 }
 
@@ -283,8 +286,7 @@ check_vboot_keys() {
     # No FMAP flashing? Also skip
     grep -q "\-\-fmap" <<< "$FLASHROM_ADD_OPT_UPDATE" || return
 
-    CBFSTOOL=$(which cbfstool)
-    BINARY_KEYS=$(futility show $BIOS_UPDATE_FILE| grep -i 'key sha1sum')
+    BINARY_KEYS=$(CBFSTOOL=$(which cbfstool) futility show $BIOS_UPDATE_FILE| grep -i 'key sha1sum')
 
     if [ $BOARD_HAS_FD_REGION -eq 0 ]; then
       FLASHROM_ADD_OPT_READ=""
@@ -294,7 +296,7 @@ check_vboot_keys() {
     echo "Checking vboot keys."
     flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_READ} -r /tmp/bios.bin > /dev/null 2>/dev/null
     if [ $? -eq 0 ] && [ -f "/tmp/bios.bin" ]; then
-      FLASH_KEYS=$(futility show /tmp/bios.bin | grep -i 'key sha1sum')
+      FLASH_KEYS=$(CBFSTOOL=$(which cbfstool) futility show /tmp/bios.bin | grep -i 'key sha1sum')
       diff <(echo "$BINARY_KEYS") <(echo "$FLASH_KEYS") > /dev/null 2>&1
       # If keys are different we must additionally flash at least GBB region as well
       if [ $? -ne 0 ]; then
@@ -410,7 +412,7 @@ install() {
   fi
 
   echo "Installing Dasharo firmware..."
-  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_INTEL_REGIONS} -w "$BIOS_UPDATE_FILE" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_REGIONS} -w "$BIOS_UPDATE_FILE" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
   error_check "Failed to install Dasharo firmware"
 
   print_green "Successfully installed Dasharo firmware"
