@@ -194,7 +194,7 @@ board_config() {
           ;;
         "NS50_70MU")
           DASHARO_REL_NAME="novacustom_ns5x_tgl"
-          DASHARO_REL_VER="1.5.1"
+          DASHARO_REL_VER="1.5.2"
           BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
           EC_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_ec_v${DASHARO_REL_VER}.rom"
           HAVE_EC="true"
@@ -217,9 +217,9 @@ board_config() {
           # FIXME: Can we ever get rid of that? We change so much in each release,
           # that we almost always need to flash whole BIOS regions
           # because of non-backward compatbile or breaking changes.
-            compare_versions $DASHARO_VERSION 1.5.1
+            compare_versions $DASHARO_VERSION 1.5.2
             if [ $? -eq 1 ]; then
-              # For Dasharo version lesser than 1.5.1
+              # For Dasharo version lesser than 1.5.2
               NEED_BOOTSPLASH_MIGRATION="true"
               FLASHROM_ADD_OPT_UPDATE_OVERRIDE="--ifd -i bios"
             fi
@@ -301,7 +301,7 @@ board_config() {
             "PRO Z690-A WIFI DDR4(MS-7D25)" | "PRO Z690-A DDR4(MS-7D25)")
               DASHARO_REL_NAME="msi_ms7d25"
               DASHARO_REL_VER="1.1.1"
-              DASHARO_REL_VER_DES="1.1.2"
+              DASHARO_REL_VER_DES="1.1.3"
               BIOS_LINK_COMM="${FW_STORE_URL}/${DASHARO_REL_NAME}/v${DASHARO_REL_VER}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_ddr4.rom"
               BIOS_LINK_DES="${FW_STORE_URL_DES}/MS-7D25/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr4.rom"
               HAVE_EC="false"
@@ -322,7 +322,7 @@ board_config() {
             "PRO Z690-A WIFI (MS-7D25)" | "PRO Z690-A (MS-7D25)")
               DASHARO_REL_NAME="msi_ms7d25"
               DASHARO_REL_VER="1.1.1"
-              DASHARO_REL_VER_DES="1.1.2"
+              DASHARO_REL_VER_DES="1.1.3"
               BIOS_LINK_COMM="${FW_STORE_URL}/${DASHARO_REL_NAME}/v${DASHARO_REL_VER}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_ddr5.rom"
               BIOS_LINK_DES="${FW_STORE_URL_DES}/MS-7D25/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr5.rom"
               HAVE_EC="false"
@@ -350,7 +350,7 @@ board_config() {
             "PRO Z790-P WIFI DDR4(MS-7E06)" | "PRO Z790-P DDR4(MS-7E06)")
               DASHARO_REL_NAME="msi_ms7e06"
               #DASHARO_REL_VER=""
-              DASHARO_REL_VER_DES="0.9.0"
+              DASHARO_REL_VER_DES="0.9.1"
               #BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_ddr4.rom"
               BIOS_LINK_DES="${FW_STORE_URL_DES}/MS-7E06/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr4.rom"
               HAVE_EC="false"
@@ -371,7 +371,7 @@ board_config() {
             "PRO Z790-P WIFI (MS-7E06)" | "PRO Z790-P (MS-7E06)")
               DASHARO_REL_NAME="msi_ms7e06"
               #DASHARO_REL_VER=""
-              DASHARO_REL_VER_DES="0.9.0"
+              DASHARO_REL_VER_DES="0.9.1"
               #BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_ddr5.rom"
               BIOS_LINK_DES="${FW_STORE_URL_DES}/MS-7E06/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr5.rom"
               HAVE_EC="false"
