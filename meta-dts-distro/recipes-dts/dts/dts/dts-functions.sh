@@ -287,6 +287,7 @@ board_config() {
               # For Dasharo version lesser than 1.7.2
               NEED_BOOTSPLASH_MIGRATION="true"
               FLASHROM_ADD_OPT_UPDATE_OVERRIDE="--ifd -i bios"
+            fi
           fi
           ;;
         *)
