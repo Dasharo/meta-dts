@@ -184,10 +184,7 @@ board_config() {
             if [ $? -eq 1 ]; then
               # For Dasharo version lesser than 1.5.2
               NEED_BOOTSPLASH_MIGRATION="true"
-              FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
-            else
-              # For Dasharo version greater or equal 1.5.2
-              FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
+              FLASHROM_ADD_OPT_UPDATE_OVERRIDE="--ifd -i bios"
             fi
           fi
           ;;
@@ -216,10 +213,7 @@ board_config() {
             if [ $? -eq 1 ]; then
               # For Dasharo version lesser than 1.5.1
               NEED_BOOTSPLASH_MIGRATION="true"
-              FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
-            else
-              # For Dasharo version greater or equal 1.5.1
-              FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
+              FLASHROM_ADD_OPT_UPDATE_OVERRIDE="--ifd -i bios"
             fi
           fi
           ;;
@@ -242,15 +236,12 @@ board_config() {
           PROGRAMMER_BIOS="internal"
           PROGRAMMER_EC="ite_ec"
           if check_if_dasharo; then
-          # if v1.7.1 or older, flash the whole bios region
+          # if v1.7.2 or older, flash the whole bios region
             compare_versions $DASHARO_VERSION 1.7.2
             if [ $? -eq 1 ]; then
               # For Dasharo version lesser than 1.7.2
               NEED_BOOTSPLASH_MIGRATION="true"
-              FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
-            else
-              # For Dasharo version greater or equal 1.7.2
-              FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
+              FLASHROM_ADD_OPT_UPDATE_OVERRIDE="--ifd -i bios"
             fi
           fi
           ;;
@@ -274,16 +265,12 @@ board_config() {
           PROGRAMMER_BIOS="internal"
           PROGRAMMER_EC="ite_ec"
           if check_if_dasharo; then
-          # if v1.7.1 or older, flash the whole bios region
+          # if v1.7.2 or older, flash the whole bios region
             compare_versions $DASHARO_VERSION 1.7.2
             if [ $? -eq 1 ]; then
               # For Dasharo version lesser than 1.7.2
               NEED_BOOTSPLASH_MIGRATION="true"
-              FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
-            else
-              # For Dasharo version greater or equal 1.7.2
-              FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
-            fi
+              FLASHROM_ADD_OPT_UPDATE_OVERRIDE="--ifd -i bios"
           fi
           ;;
         *)

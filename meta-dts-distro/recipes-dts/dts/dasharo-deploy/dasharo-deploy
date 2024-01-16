@@ -527,13 +527,21 @@ update() {
 
   echo "Updating Dasharo firmware..."
   print_warning "This may take several minutes. Please be patient and do not reset your computer, or touch the keyboard!"
-  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_UPDATE} -w "$BIOS_UPDATE_FILE"  >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
-  error_check "Failed to update Dasharo firmware"
 
-  if [ $BINARY_HAS_RW_B -eq 0 ]; then
-    echo "Updating second firmware partition..."
-    flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} --fmap -N -i RW_SECTION_B -w "$BIOS_UPDATE_FILE"  >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
-    error_check "Failed to update second firmware partition"
+  # FLASHROM_ADD_OPT_UPDATE_OVERRIDE takes priority over auto-detected udpate params.
+  # It set only by platform-specific and firmware version-specific conditions
+  if [ -v FLASHROM_ADD_OPT_UPDATE_OVERRIDE ]; then
+    flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_UPDATE_OVERRIDE} -w "$BIOS_UPDATE_FILE"  >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+    error_check "Failed to update Dasharo firmware"
+  else
+    flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_UPDATE} -w "$BIOS_UPDATE_FILE"  >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+    error_check "Failed to update Dasharo firmware"
+
+    if [ $BINARY_HAS_RW_B -eq 0 ]; then
+      echo "Updating second firmware partition..."
+      flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} --fmap -N -i RW_SECTION_B -w "$BIOS_UPDATE_FILE"  >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+      error_check "Failed to update second firmware partition"
+    fi
   fi
 
   # We use FLASHROM_ADD_OPT_REGIONS for updating ME and IFD.
