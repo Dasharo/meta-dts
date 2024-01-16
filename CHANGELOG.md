@@ -2,6 +2,10 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v1.2.17 - 2024-01-TBD
+
+* Fixed DTS build with UEFI Secure Boot enabled.
+
 ## v1.2.16 - 2024-01-11
 
 * Bumped supported firmware versions of NovaCustom NV4X TGL to v1.5.2.
