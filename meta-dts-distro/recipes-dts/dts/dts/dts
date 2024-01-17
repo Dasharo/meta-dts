@@ -70,8 +70,6 @@ while : ; do
       echo "     Logs key    : " ${CLOUDSEND_LOGS_URL}
       echo "     Download key: " ${CLOUDSEND_DOWNLOAD_URL}
       echo "     Password    : " ${CLOUDSEND_PASSWORD}
-  fi
-
   else
       echo "  4) Load your DES keys"
   fi
