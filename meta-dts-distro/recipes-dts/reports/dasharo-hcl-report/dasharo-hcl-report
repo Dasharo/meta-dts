@@ -168,11 +168,24 @@ update_result "Input bus types"  logs/ioports.err.log
 printf '################################                                   |\r'
 
 # echo "Trying to read firmware image with flashrom..."
-# On MSI boards some regions may be not available so we need to use specific
-# ones
-if [ "$BOARD_VENDOR" == "Micro-Star International Co., Ltd." ] && [ "$SYSTEM_MODEL" == "MS-7E06" ]; then
-    FLASHROM_ADD_OPT_READ="--ifd -i fd -i me -i bios"
+# Some regions may be not available so we need to use specific regions to read
+check_intel_regions
+if [ $BOARD_HAS_FD_REGION -eq 0 ]; then
+  # Use safe defaults. Descriptor may contain additional regions not detected
+  # by flashrom and will return failure when attempted to be read. BIOS and
+  # Flash descriptor regions should always be readable. If not, then we have
+  # some ugly case, hard to deal with.
+  FLASHROM_ADD_OPT_READ="--ifd -i fd -i bios"
+  if [ $BOARD_HAS_ME_REGION -eq 0 ] && [ $BOARD_ME_REGION_LOCKED -ne 0 ]; then
+    # ME region is not locked, read it as well
+    FLASHROM_ADD_OPT_READ+=" -i me"
+  fi
+  if [ $BOARD_HAS_GBE_REGION -eq 0 ] && [ $BOARD_GBE_REGION_LOCKED -ne 0 ]; then
+    # GBE region is present and not locked, read it as well
+    FLASHROM_ADD_OPT_READ+=" -i gbe"
+  fi
 else
+    # No descriptor, probably safe to read everything
     FLASHROM_ADD_OPT_READ=" "
 fi
 flashrom -V -p internal:laptop=force_I_want_a_brick ${FLASH_CHIP_SELECT} -r logs/rom.bin ${FLASHROM_ADD_OPT_READ} > logs/flashrom_read.log 2> logs/flashrom_read.err.log
