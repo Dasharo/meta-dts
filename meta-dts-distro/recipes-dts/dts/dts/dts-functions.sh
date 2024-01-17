@@ -178,23 +178,23 @@ board_config() {
           NEED_BLOB_TRANSMISSION="false"
           PROGRAMMER_BIOS="internal"
           PROGRAMMER_EC="ite_ec"
+          FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
           if check_if_dasharo; then
           # if v1.5.1 or older, flash the whole bios region
-          # TODO: Let DTS determine which parameters are suitable.
-          # FIXME: Can we ever get rid of that? We change so much in each release,
-          # that we almost always need to flash whole BIOS regions
-          # because of non-backward compatbile or breaking changes.
             compare_versions $DASHARO_VERSION 1.5.2
             if [ $? -eq 1 ]; then
               # For Dasharo version lesser than 1.5.2
               NEED_BOOTSPLASH_MIGRATION="true"
-              FLASHROM_ADD_OPT_UPDATE_OVERRIDE="--ifd -i bios"
+              FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
+            else
+              # For Dasharo version greater or equal 1.5.2
+              FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
             fi
           fi
           ;;
         "NS50_70MU")
           DASHARO_REL_NAME="novacustom_ns5x_tgl"
-          DASHARO_REL_VER="1.5.2"
+          DASHARO_REL_VER="1.5.1"
           BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
           EC_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_ec_v${DASHARO_REL_VER}.rom"
           HAVE_EC="true"
@@ -211,17 +211,17 @@ board_config() {
           NEED_BLOB_TRANSMISSION="false"
           PROGRAMMER_BIOS="internal"
           PROGRAMMER_EC="ite_ec"
+          FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
           if check_if_dasharo; then
-          # if v1.5.1 or older, flash the whole bios region
-          # TODO: Let DTS determine which parameters are suitable.
-          # FIXME: Can we ever get rid of that? We change so much in each release,
-          # that we almost always need to flash whole BIOS regions
-          # because of non-backward compatbile or breaking changes.
-            compare_versions $DASHARO_VERSION 1.5.2
+          # if v1.5.0 or older, flash the whole bios region
+            compare_versions $DASHARO_VERSION 1.5.1
             if [ $? -eq 1 ]; then
-              # For Dasharo version lesser than 1.5.2
+              # For Dasharo version lesser than 1.5.1
               NEED_BOOTSPLASH_MIGRATION="true"
-              FLASHROM_ADD_OPT_UPDATE_OVERRIDE="--ifd -i bios"
+              FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
+            else
+              # For Dasharo version greater or equal 1.5.1
+              FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
             fi
           fi
           ;;
@@ -243,17 +243,17 @@ board_config() {
           NEED_BLOB_TRANSMISSION="false"
           PROGRAMMER_BIOS="internal"
           PROGRAMMER_EC="ite_ec"
+          FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
           if check_if_dasharo; then
-          # if v1.7.2 or older, flash the whole bios region
-          # TODO: Let DTS determine which parameters are suitable.
-          # FIXME: Can we ever get rid of that? We change so much in each release,
-          # that we almost always need to flash whole BIOS regions
-          # because of non-backward compatbile or breaking changes.
+          # if v1.7.1 or older, flash the whole bios region
             compare_versions $DASHARO_VERSION 1.7.2
             if [ $? -eq 1 ]; then
               # For Dasharo version lesser than 1.7.2
               NEED_BOOTSPLASH_MIGRATION="true"
-              FLASHROM_ADD_OPT_UPDATE_OVERRIDE="--ifd -i bios"
+              FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
+            else
+              # For Dasharo version greater or equal 1.7.2
+              FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
             fi
           fi
           ;;
@@ -276,17 +276,17 @@ board_config() {
           NEED_BLOB_TRANSMISSION="false"
           PROGRAMMER_BIOS="internal"
           PROGRAMMER_EC="ite_ec"
+          FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
           if check_if_dasharo; then
-          # if v1.7.2 or older, flash the whole bios region
-          # TODO: Let DTS determine which parameters are suitable.
-          # FIXME: Can we ever get rid of that? We change so much in each release,
-          # that we almost always need to flash whole BIOS regions
-          # because of non-backward compatbile or breaking changes.
+          # if v1.7.1 or older, flash the whole bios region
             compare_versions $DASHARO_VERSION 1.7.2
             if [ $? -eq 1 ]; then
               # For Dasharo version lesser than 1.7.2
               NEED_BOOTSPLASH_MIGRATION="true"
-              FLASHROM_ADD_OPT_UPDATE_OVERRIDE="--ifd -i bios"
+              FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
+            else
+              # For Dasharo version greater or equal 1.7.2
+              FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A"
             fi
           fi
           ;;
@@ -302,7 +302,7 @@ board_config() {
             "PRO Z690-A WIFI DDR4(MS-7D25)" | "PRO Z690-A DDR4(MS-7D25)")
               DASHARO_REL_NAME="msi_ms7d25"
               DASHARO_REL_VER="1.1.1"
-              DASHARO_REL_VER_DES="1.1.3"
+              DASHARO_REL_VER_DES="1.1.2"
               BIOS_LINK_COMM="${FW_STORE_URL}/${DASHARO_REL_NAME}/v${DASHARO_REL_VER}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_ddr4.rom"
               BIOS_LINK_DES="${FW_STORE_URL_DES}/MS-7D25/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr4.rom"
               HAVE_EC="false"
@@ -318,12 +318,25 @@ board_config() {
               NEED_BLOB_TRANSMISSION="false"
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
-              NEED_ROMHOLE_MIGRATION="true"
+              FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
+              if check_if_dasharo; then
+                # if v1.1.1 or older, flash the whole bios region, as per:
+                # https://docs.dasharo.com/variants/msi_z690/firmware-update/#version-older-than-v110
+                compare_versions $DASHARO_VERSION 1.1.2
+                if [ $? -eq 1 ]; then
+                # For Dasharo version lesser than 1.1.2
+                    NEED_BOOTSPLASH_MIGRATION="true"
+                    FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
+                else
+                # For Dasharo version greater or equal 1.1.2
+                    FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A -i RW_SECTION_B"
+                fi
+              fi
               ;;
             "PRO Z690-A WIFI (MS-7D25)" | "PRO Z690-A (MS-7D25)")
               DASHARO_REL_NAME="msi_ms7d25"
               DASHARO_REL_VER="1.1.1"
-              DASHARO_REL_VER_DES="1.1.3"
+              DASHARO_REL_VER_DES="1.1.2"
               BIOS_LINK_COMM="${FW_STORE_URL}/${DASHARO_REL_NAME}/v${DASHARO_REL_VER}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_ddr5.rom"
               BIOS_LINK_DES="${FW_STORE_URL_DES}/MS-7D25/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr5.rom"
               HAVE_EC="false"
@@ -339,7 +352,20 @@ board_config() {
               NEED_BLOB_TRANSMISSION="false"
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
-              NEED_ROMHOLE_MIGRATION="true"
+              FLASHROM_ADD_OPT_DEPLOY="--ifd -i bios"
+              if check_if_dasharo; then
+                # if v1.1.1 or older, flash the whole bios region, as per:
+                # https://docs.dasharo.com/variants/msi_z690/firmware-update/#version-older-than-v110
+                compare_versions $DASHARO_VERSION 1.1.2
+                if [ $? -eq 1 ]; then
+                # For Dasharo version lesser than 1.1.2
+                    NEED_BOOTSPLASH_MIGRATION="true"
+                    FLASHROM_ADD_OPT_UPDATE="--ifd -i bios"
+                else
+                # For Dasharo version greater or equal 1.1.2
+                    FLASHROM_ADD_OPT_UPDATE="--fmap -i RW_SECTION_A -i RW_SECTION_B"
+                fi
+              fi
               ;;
             *)
               error_exit "Board model $BOARD_MODEL is currently not supported"
@@ -351,7 +377,7 @@ board_config() {
             "PRO Z790-P WIFI DDR4(MS-7E06)" | "PRO Z790-P DDR4(MS-7E06)")
               DASHARO_REL_NAME="msi_ms7e06"
               #DASHARO_REL_VER=""
-              DASHARO_REL_VER_DES="0.9.1"
+              DASHARO_REL_VER_DES="0.9.0"
               #BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_ddr4.rom"
               BIOS_LINK_DES="${FW_STORE_URL_DES}/MS-7E06/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr4.rom"
               HAVE_EC="false"
@@ -367,12 +393,16 @@ board_config() {
               NEED_BLOB_TRANSMISSION="false"
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
-              NEED_ROMHOLE_MIGRATION="true"
+              FLASHROM_ADD_OPT_DEPLOY="-N --ifd -i bios"
+              FLASHROM_ADD_OPT_READ="--ifd -i fd -i me -i bios"
+              if ! check_if_dasharo; then
+                NEED_ROMHOLE_MIGRATION="true"
+              fi
               ;;
             "PRO Z790-P WIFI (MS-7E06)" | "PRO Z790-P (MS-7E06)")
               DASHARO_REL_NAME="msi_ms7e06"
               #DASHARO_REL_VER=""
-              DASHARO_REL_VER_DES="0.9.1"
+              DASHARO_REL_VER_DES="0.9.0"
               #BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_ddr5.rom"
               BIOS_LINK_DES="${FW_STORE_URL_DES}/MS-7E06/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr5.rom"
               HAVE_EC="false"
@@ -388,7 +418,11 @@ board_config() {
               NEED_BLOB_TRANSMISSION="false"
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
-              NEED_ROMHOLE_MIGRATION="true"
+              FLASHROM_ADD_OPT_DEPLOY="-N --ifd -i bios"
+              FLASHROM_ADD_OPT_READ="--ifd -i fd -i me -i bios"
+              if ! check_if_dasharo; then
+                NEED_ROMHOLE_MIGRATION="true"
+              fi
               ;;
             *)
               error_exit "Board model $BOARD_MODEL is currently not supported"
@@ -706,212 +740,4 @@ verify_artifacts() {
     error_check "Failed to verify $_name firmware signature."
   fi
   print_green "Done"
-}
-
-check_intel_regions() {
-
-  FLASH_REGIONS=$(flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} 2>&1)
-  BOARD_HAS_FD_REGION=0
-  BOARD_FD_REGION_RW=0
-  BOARD_HAS_ME_REGION=0
-  BOARD_ME_REGION_RW=0
-  BOARD_ME_REGION_LOCKED=0
-  BOARD_HAS_GBE_REGION=0
-  BOARD_GBE_REGION_RW=0
-  BOARD_GBE_REGION_LOCKED=0
-
-  grep -q "Flash Descriptor region" <<< "$FLASH_REGIONS" && BOARD_HAS_FD_REGION=1
-  grep -qE "Flash Descriptor region.*read-write" <<< "$FLASH_REGIONS" && BOARD_FD_REGION_RW=1
-
-  grep -q "Management Engine region" <<< "$FLASH_REGIONS" && BOARD_HAS_ME_REGION=1
-  grep -qE "Management Engine region.*read-write" <<< "$FLASH_REGIONS" && BOARD_ME_REGION_RW=1
-  grep -qE "Management Engine region.*locked" <<<  "$FLASH_REGIONS" && BOARD_ME_REGION_LOCKED=1
-
-  grep -q "Gigabit Ethernet region" <<<  "$FLASH_REGIONS" && BOARD_HAS_GBE_REGION=1
-  grep -qE "Gigabit Ethernet region.*read-write" <<<  "$FLASH_REGIONS" && BOARD_GBE_REGION_RW=1
-  grep -qE "Gigabit Ethernet region.*locked" <<< "$FLASH_REGIONS" && BOARD_GBE_REGION_LOCKED=1
-}
-
-check_blobs_in_binary() {
-  BINARY_HAS_FD=0
-  BINARY_HAS_ME=0
-
-  # If there is no descriptor, there is no ME as well, so skip the check
-  if [ $BOARD_HAS_FD_REGION -ne 0 ]; then
-    ME_OFFSET=$(ifdtool -d $1 2> /dev/null | grep "Flash Region 2 (Intel ME):" | sed 's/Flash Region 2 (Intel ME)\://' |awk '{print $1;}')
-    # Check for IFD signature at offset 0 (old descriptors)
-    if [ $(tail -c +0 $1|head -c 4|xxd -ps) == "5aa5f00f" ]; then
-      BINARY_HAS_FD=1
-    fi
-    # Check for IFD signature at offset 16 (new descriptors)
-    if [ $(tail -c +17 $1|head -c 4|xxd -ps) == "5aa5f00f" ]; then
-      BINARY_HAS_FD=1
-    fi
-    # Check for ME FPT signature at ME offset + 16 (old ME)
-    if [ $(tail -c +$((0x$ME_OFFSET + 17)) $1|head -c 4|tr -d '\0') == "\$FPT" ]; then
-      BINARY_HAS_ME=1
-    fi
-    # Check for aa55 signature at ME offset + 4096 (new ME)
-    if [ $(tail -c +$((0x$ME_OFFSET + 4097)) $1|head -c 2|xxd -ps) == "aa55" ]; then
-      BINARY_HAS_ME=1
-    fi
-  fi
-}
-
-check_if_me_disabled() {
-
-  ME_DISABLED=0
-
-  if [ $BOARD_HAS_ME_REGION -eq 0 ]; then
-    # No ME region
-    ME_DISABLED=1
-    return
-  fi
-
-  # Check if HECI present
-  # FIXME: what if HECI is not device 16.0?
-  if [ -d /sys/class/pci_bus/0000:00/device/0000:00:16.0 ]; then
-    # Check ME Current Operation Mode at offset 0x40 bits 19:16
-    ME_OPMODE="$(setpci -s 00:16.0 42.B 2> /dev/null | cut -c2-)"
-    if [ $ME_OPMODE == "0" ]; then
-      echo "ME is not disabled"  >> $ERR_LOG_FILE
-      return
-    elif [ $ME_OPMODE == "2" ]; then
-      echo "ME is disabled (HAP/Debug Mode)"  >> $ERR_LOG_FILE
-      ME_DISABLED=1
-      return
-    elif [ $ME_OPMODE == "3" ]; then
-      echo "ME is soft disabled (HECI)"  >> $ERR_LOG_FILE
-      ME_DISABLED=1
-      return
-    elif [ $ME_OPMODE == "4" ]; then
-      echo "ME disabled by Security Override Jumper/FDOPS"  >> $ERR_LOG_FILE
-      ME_DISABLED=1
-      return
-    elif [ $ME_OPMODE == "5" ]; then
-      echo "ME disabled by Security Override MEI Message/HMRFPO"  >> $ERR_LOG_FILE
-      ME_DISABLED=1
-      return
-    elif [ $ME_OPMODE == "6" ]; then
-      echo "ME disabled by Security Override MEI Message/HMRFPO"  >> $ERR_LOG_FILE
-      ME_DISABLED=1
-      return
-    elif [ $ME_OPMODE == "7" ]; then
-      echo "ME disabled (Enhanced Debug Mode) or runs Ignition FW"  >> $ERR_LOG_FILE
-      ME_DISABLED=1
-      return
-    else
-      print_warning "Unknown ME operation mode, assuming enabled."
-      echo "Unknown ME operation mode, assuming enabled."  >> $ERR_LOG_FILE
-      return
-    fi
-  else
-    # If we are running coreboot, check for status in logs
-    cbmem -1 | grep -q "ME is disabled" && ME_DISABLED=1 && return # HECI (soft) disabled
-    cbmem -1 | grep -q "ME is HAP disabled" && ME_DISABLED=1 && return # HAP disabled
-    # TODO: If proprietary BIOS, then also try to check SMBIOS for ME FWSTS
-    # BTW we could do the same in coreboot, expose FWSTS in SMBIOS before it
-    # gets disabled
-    print_warning "Can not determine if ME is disabled, assuming enabled."
-    echo "Can not determine if ME is disabled, assuming enabled."  >> $ERR_LOG_FILE
-  fi
-}
-
-force_me_update() {
-    echo
-    print_warning "Flashing ME when not in disabled state may cause unexpected power management issues."
-    print_warning "Recovering from such state may require removal of AC power supply and resetting CMOS battery."
-    print_warning "Keeping an older version of ME may cause a CPU to perform less efficient, e.g. if upgraded the CPU to a newer generation."
-    print_warning "You have been warned."
-  while : ; do
-    echo
-    read -r -p "Skip ME flashing and proceed with BIOS/firmware flashing/udpating? (Y|n) " OPTION
-    echo
-
-    case ${OPTION} in
-      yes|y|Y|Yes|YES)
-        print_warning "Proceeding without ME flashing, because we were asked to."
-        break
-        ;;
-      n|N)
-        error_exit "Cancelling flashing process..."
-        ;;
-      *)
-        ;;
-    esac
-  done
-}
-
-set_flashrom_update_params() {
-  # Safe defaults which should always work
-  if [ $BOARD_HAS_FD_REGION -eq 0 ]; then
-    FLASHROM_ADD_OPT_UPDATE=""
-  else
-    FLASHROM_ADD_OPT_UPDATE="-N --ifd -i bios"
-  fi
-  BINARY_HAS_RW_B=0
-  # We need to read whole binary (or BIOS region), otherwise cbfstool will
-  # return different attributes for CBFS regions
-  echo "Checking flash layout."
-  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_UPDATE} -r /tmp/bios.bin > /dev/null 2>&1
-  if [ $? -eq 0 ] && [ -f "/tmp/bios.bin" ]; then
-    BOARD_FMAP_LAYOUT=$(cbfstool /tmp/bios.bin layout -w 2> /dev/null)
-    BINARY_FMAP_LAYOUT=$(cbfstool $1 layout -w 2> /dev/null)
-    diff <(echo "$BOARD_FMAP_LAYOUT") <(echo "$BINARY_FMAP_LAYOUT") > /dev/null 2>&1
-    # If layout is identical, perform standard update using FMAP only
-    if [ $? -eq 0 ]; then
-      # Simply update RW_A fmap region if exists
-      grep -q "RW_SECTION_A" <<< $BINARY_FMAP_LAYOUT
-      if [ $? -eq 0 ]; then
-        FLASHROM_ADD_OPT_UPDATE="-N --fmap -i RW_SECTION_A"
-      else
-        # RW_A does not exists, it means no vboot. Update COREBOOT region only
-        FLASHROM_ADD_OPT_UPDATE="-N --fmap -i COREBOOT"
-      fi
-      # If RW_B present, use this variable later to perform 2-step update
-      grep -q "RW_SECTION_B" <<< $BINARY_FMAP_LAYOUT && BINARY_HAS_RW_B=1
-    fi
-  else
-    print_warning "Could not read the FMAP region"
-    echo "Could not read the FMAP region" >> $ERR_LOG_FILE
-  fi
-}
-
-set_intel_regions_update_params() {
-  if [ $BOARD_HAS_FD_REGION -eq 0 ]; then
-    # No FD on board, so no further flashing
-    FLASHROM_ADD_OPT_REGIONS=""
-  else
-    # Safe defaults, only BIOS region and do not verify all regions,
-    # as some of them may not be readable. First argument is the initial
-    # params.
-    FLASHROM_ADD_OPT_REGIONS=$1
-
-    if [ $BINARY_HAS_FD -ne 0 ]; then
-      if [ $BOARD_FD_REGION_RW -ne 0 ]; then
-        # FD writable and the binary provides FD, safe to flash
-        FLASHROM_ADD_OPT_REGIONS+=" -i fd"
-      else
-        print_error "The firmware binary to be flashed contains Flash Descriptor (FD), but FD is not writable!"
-        print_warning "Proceeding without FD flashing, as it is not critical."
-        echo "The firmware binary contains Flash Descriptor (FD), but FD is not writable!"  >> $ERR_LOG_FILE
-      fi
-    fi
-
-    if [ $BINARY_HAS_ME -ne 0 ]; then
-      if [ $BOARD_ME_REGION_RW -ne 0 ]; then
-        # ME writable and the binary provides ME, safe to flash if ME disabled
-        if [ $ME_DISABLED -eq 1 ]; then
-          FLASHROM_ADD_OPT_REGIONS+=" -i me"
-        else
-          echo "The firmware binary to be flashed contains Management Engine (ME), but ME is not disabled!"  >> $ERR_LOG_FILE
-          print_error "The firmware binary contains Management Engine (ME), but ME is not disabled!"
-          force_me_update
-        fi
-      else
-        echo "The firmware binary to be flashed contains Management Engine (ME), but ME is not writable!"  >> $ERR_LOG_FILE
-        print_error "The firmware binary contains Management Engine (ME), but ME is not writable!"
-      fi
-    fi
-  fi
 }

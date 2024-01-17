@@ -154,24 +154,12 @@ backup() {
 
   echo "Backing up BIOS firmware and store it locally..."
   echo "Remember that firmware is also backed up in HCL report."
-  check_intel_regions
-  if [ $BOARD_HAS_FD_REGION -ne 0 ]; then
-    # Use safe defaults. Descriptor may contain additional regions not detected
-    # by flashrom and will return failure when attempted to be read. BIOS and
-    # Flash descriptor regions should always be readable. If not, then we have
-    # some ugly case, hard to deal with.
-    FLASHROM_ADD_OPT_READ="--ifd -i fd -i bios"
-    if [ $BOARD_HAS_ME_REGION -ne 0 ] && [ $BOARD_ME_REGION_LOCKED -eq 0 ]; then
-      # ME region is not locked, read it as well
-      FLASHROM_ADD_OPT_READ+=" -i me"
-    fi
-    if [ $BOARD_HAS_GBE_REGION -ne 0 ] && [ $BOARD_GBE_REGION_LOCKED -eq 0 ]; then
-      # GBE region is present and not locked, read it as well
-      FLASHROM_ADD_OPT_READ+=" -i gbe"
-    fi
+  # On MSI boards some regions may be not available so we need to use specific
+  # ones
+  if [ "$BOARD_VENDOR" == "Micro-Star International Co., Ltd." ] && [ "$SYSTEM_MODEL" == "MS-7E06" ]; then
+      FLASHROM_ADD_OPT_READ="--ifd -i fd -i me -i bios"
   else
-      # No descriptor, probably safe to read everything
-      FLASHROM_ADD_OPT_READ=""
+      FLASHROM_ADD_OPT_READ=" "
   fi
   flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r "${FW_BACKUP_DIR}"/rom.bin ${FLASHROM_ADD_OPT_READ} >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
   error_check "Failed to read BIOS firmware backup"
@@ -197,23 +185,11 @@ backup() {
 }
 
 romhole_migration() {
-    cbfstool $BIOS_UPDATE_FILE layout -w | grep -q "ROMHOLE" || return
-
-    flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r /tmp/rom.bin --ifd -i bios >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
-    error_check "Failed to read current firmware to migrate MSI ROMHOLE"
-    if check_if_dasharo; then
-      cbfstool /tmp/rom.bin layout -w | grep -q "ROMHOLE" || return
-      # This one is rather unlikely to fail, but just in case print a warning
-      cbfstool /tmp/rom.bin read -r ROMHOLE -f /tmp/romhole.bin 2> /dev/null
-      if [ $? -ne 0 ]; then
-        print_warning "Failed to migrate MSI ROMHOLE, your platform's unique SMBIOS/DMI data may be lost"
-        return
-      fi
-    else
-      dd if=/tmp/rom.bin of=/tmp/romhole.bin skip=$((0x17C0000)) bs=128K count=1 iflag=skip_bytes > /dev/null 2>&1
-    fi
-
-    cbfstool "$BIOS_UPDATE_FILE" write -r ROMHOLE -f /tmp/romhole.bin -u 2> /dev/null
+    echo "Beginning ROM hole migration process..."
+    flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r /tmp/rom.bin ${FLASHROM_ADD_OPT_READ} >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+    dd if=/tmp/rom.bin of=/tmp/romhole.bin skip=$((0x17C0000)) bs=128K count=1 iflag=skip_bytes
+    echo "Migrate to ROMHOLE section."
+    cbfstool "$BIOS_UPDATE_FILE" write -r ROMHOLE -f /tmp/romhole.bin -u
 }
 
 smbios_migration() {
@@ -276,33 +252,6 @@ resign_binary() {
     sign_firmware.sh $BIOS_UPDATE_FILE $KEYS_DIR $RESIGNED_BIOS_UPDATE_FILE
     error_check "Cannot resign binary file. Please, make sure if you have proper keys. Aborting..."
     BIOS_UPDATE_FILE="$RESIGNED_BIOS_UPDATE_FILE"
-  fi
-}
-
-check_vboot_keys() {
-  if [ "$HAVE_VBOOT" -eq 0 ]; then
-    # If we flash whole BIOS region, no need to check if keys match
-    grep -q "\-\-ifd" <<< "$FLASHROM_ADD_OPT_UPDATE" && grep -q "\-i bios" <<< "$FLASHROM_ADD_OPT_UPDATE" && return
-    # No FMAP flashing? Also skip
-    grep -q "\-\-fmap" <<< "$FLASHROM_ADD_OPT_UPDATE" || return
-
-    BINARY_KEYS=$(CBFSTOOL=$(which cbfstool) futility show $BIOS_UPDATE_FILE| grep -i 'key sha1sum')
-
-    if [ $BOARD_HAS_FD_REGION -eq 0 ]; then
-      FLASHROM_ADD_OPT_READ=""
-    else
-      FLASHROM_ADD_OPT_READ="--ifd -i bios"
-    fi
-    echo "Checking vboot keys."
-    flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_READ} -r /tmp/bios.bin > /dev/null 2>/dev/null
-    if [ $? -eq 0 ] && [ -f "/tmp/bios.bin" ]; then
-      FLASH_KEYS=$(CBFSTOOL=$(which cbfstool) futility show /tmp/bios.bin | grep -i 'key sha1sum')
-      diff <(echo "$BINARY_KEYS") <(echo "$FLASH_KEYS") > /dev/null 2>&1
-      # If keys are different we must additionally flash at least GBB region as well
-      if [ $? -ne 0 ]; then
-        FLASHROM_ADD_OPT_UPDATE+=" -i GBB"
-      fi
-    fi
   fi
 }
 
@@ -371,11 +320,6 @@ install() {
   check_flash_lock
   verify_artifacts bios
 
-  check_intel_regions
-  check_blobs_in_binary $BIOS_UPDATE_FILE
-  check_if_me_disabled
-  set_intel_regions_update_params "-N --ifd -i bios"
-
   if [ "$HAVE_EC" = "true" ]; then
     echo "Checking for Open Source Embedded Controller firmware"
     dasharo_ectool info >> $ERR_LOG_FILE 2>&1
@@ -412,7 +356,7 @@ install() {
   fi
 
   echo "Installing Dasharo firmware..."
-  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_REGIONS} -w "$BIOS_UPDATE_FILE" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_DEPLOY} -w "$BIOS_UPDATE_FILE" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
   error_check "Failed to install Dasharo firmware"
 
   print_green "Successfully installed Dasharo firmware"
@@ -525,60 +469,10 @@ update() {
     bootsplash_migration
   fi
 
-  cbfstool "$BIOS_UPDATE_FILE" extract -r COREBOOT -n config -f "$BIOS_UPDATE_CONFIG_FILE"
-  grep -q "CONFIG_VBOOT=y" "$BIOS_UPDATE_CONFIG_FILE"
-  HAVE_VBOOT="$?"
-
-  check_intel_regions
-  check_blobs_in_binary $BIOS_UPDATE_FILE
-  check_if_me_disabled
-  set_flashrom_update_params $BIOS_UPDATE_FILE
-  set_intel_regions_update_params "-N --ifd"
-  check_vboot_keys
-
   echo "Updating Dasharo firmware..."
-  print_warning "This may take several minutes. Please be patient and do not reset your computer, or touch the keyboard!"
-
-  # FLASHROM_ADD_OPT_UPDATE_OVERRIDE takes priority over auto-detected update params.
-  # It set only by platform-specific and firmware version-specific conditions
-  if [ -v FLASHROM_ADD_OPT_UPDATE_OVERRIDE ]; then
-    flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_UPDATE_OVERRIDE} -w "$BIOS_UPDATE_FILE"  >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
-    error_check "Failed to update Dasharo firmware"
-  else
-    flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_UPDATE} -w "$BIOS_UPDATE_FILE"  >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
-    error_check "Failed to update Dasharo firmware"
-
-    if [ $BINARY_HAS_RW_B -eq 0 ]; then
-      echo "Updating second firmware partition..."
-      flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} --fmap -N -i RW_SECTION_B -w "$BIOS_UPDATE_FILE"  >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
-      error_check "Failed to update second firmware partition"
-    fi
-  fi
-
-  # We use FLASHROM_ADD_OPT_REGIONS for updating ME and IFD.
-  # If FLASHROM_ADD_OPT_REGIONS remains the same after
-  # set_intel_regions_update_params or is cleared, it means
-  # we either cannot update any region, or were not allowed to,
-  # or platform has no descriptor.
-  if [ "$FLASHROM_ADD_OPT_REGIONS" != "-N --ifd" ] && [ "$FLASHROM_ADD_OPT_REGIONS" != "" ]; then
-    UPDATE_STRING=""
-    grep -q "\-i fd" <<< "$FLASHROM_ADD_OPT_REGIONS"
-    UPDATE_IFD=$?
-    grep -q "\-i me" <<< "$FLASHROM_ADD_OPT_REGIONS"
-    UPDATE_ME=$?
-    if [ $UPDATE_IFD -eq 0 ]; then
-      UPDATE_STRING+="Flash Descriptor"
-      if [ $UPDATE_ME -eq 0 ]; then
-        UPDATE_STRING+=" and "
-      fi
-    fi
-    if [ $UPDATE_ME -eq 0 ]; then
-      UPDATE_STRING+="Managment Engine"
-    fi
-    echo "Updating $UPDATE_STRING"
-    flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_REGIONS} -w "$BIOS_UPDATE_FILE" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
-    error_check "Failed to update $UPDATE_STRING"
-  fi
+  print_warning "This will take around 3 minutes. Please be patient and do not reset your computer, or touch the keyboard!"
+  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_UPDATE} -w "$BIOS_UPDATE_FILE"  >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+  error_check "Failed to update Dasharo firmware"
 
   if [ "$HAVE_EC" = "true" ]; then
     echo "Dasharo EC update process will start in a moment."
@@ -652,29 +546,22 @@ restore() {
           tar -zxf "$HCL_REPORT_PACKAGE" -C /tmp
           echo "Restoring BIOS firmware..."
           if [ -f "/tmp/logs/rom.bin" ]; then
+            # Write to entire flash when restoring, ask if user want to restore
             print_green "Found $HCL_REPORT_PACKAGE"
             read -p "Do you want to restore firmware from the given HCL report? [N/y] "
             case ${REPLY} in
                 yes|y|Y|Yes|YES)
-                  # Ideally we would like to write the entire flash when restoring,
-                  # but in reality we may face locked or unaccessible regions.
-                  # To be on the safe side, flash whatever can be flashed by determining
-                  # what is writable.
-                  check_flash_lock
-                  check_intel_regions
-                  check_blobs_in_binary /tmp/logs/rom.bin
-                  check_if_me_disabled
-                  set_intel_regions_update_params "-N --ifd -i bios"
-                  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_REGIONS} -w "/tmp/logs/rom.bin" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
-                  error_check "Failed to restore BIOS firmware! You can try one more time."
-                  print_green "Successfully restored firmware"
-                  echo "Returning to main menu..."
-                  exit 0
-                  ;;
+                check_flash_lock
+                flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -w "/tmp/logs/rom.bin" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+                error_check "Failed to restore BIOS firmware! You can try one more time."
+                print_green "Successfully restored firmware"
+                echo "Returning to main menu..."
+                exit 0
+                ;;
                 *)
-                  echo "Returning to main menu..."
-                  exit 0
-                  ;;
+                echo "Returning to main menu..."
+                exit 0
+                ;;
             esac
           else
             print_error "Report does not have firmware backup!"
@@ -696,16 +583,9 @@ restore() {
         tar -zxf "$HCL_REPORT_PACKAGE" -C /tmp
         echo "Restoring BIOS firmware..."
         if [ -f "/tmp/logs/rom.bin" ]; then
-          # Ideally we would like to write the entire flash when restoring,
-          # but in reality we may face locked or unaccessible regions.
-          # To be on the safe side, flash whatever can be flashed by determining
-          # what is writable.
+          # Write to entire flash when restoring
           check_flash_lock
-          check_intel_regions
-          check_blobs_in_binary /tmp/logs/rom.bin
-          check_if_me_disabled
-          set_intel_regions_update_params "-N --ifd -i bios"
-          flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_REGIONS} -w "/tmp/logs/rom.bin" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+          flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -w "/tmp/logs/rom.bin" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
           error_check "Failed to restore BIOS firmware! You can try one more time."
           print_green "Successfully restored firmware"
         else
