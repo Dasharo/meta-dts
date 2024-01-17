@@ -5,6 +5,7 @@ IMAGE_INSTALL:append = " \
     packagegroup-efi-secure-boot \
     kernel-initramfs \
     dnf \
+    sbctl \
 "
 
 IMAGE_LINGUAS = " "

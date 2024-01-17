@@ -2,6 +2,13 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v1.2.17 - 2024-01-17
+
+* Bumped supported firmware versions of NovaCustom NS5X TGL to v1.5.2.
+* Fixed DTS build with UEFI Secure Boot enabled.
+* Fixed minor typos in scripts.
+* Updated 3mdeb-secpack to revision 2225894887fc81a1c72b067edbe348b5f3f02a05
+
 ## v1.2.16 - 2024-01-11
 
 * Bumped supported firmware versions of NovaCustom NV4X TGL to v1.5.2.
