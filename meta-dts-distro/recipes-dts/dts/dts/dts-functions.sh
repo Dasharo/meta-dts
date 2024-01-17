@@ -319,6 +319,19 @@ board_config() {
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
               NEED_ROMHOLE_MIGRATION="true"
+              if check_if_dasharo; then
+                # if v1.1.3 or older, flash the whole bios region
+                # TODO: Let DTS determine which parameters are suitable.
+                # FIXME: Can we ever get rid of that? We change so much in each release,
+                # that we almost always need to flash whole BIOS region
+                # because of non-backward compatbile or breaking changes.
+                compare_versions $DASHARO_VERSION 1.1.3
+                if [ $? -eq 1 ]; then
+                  # For Dasharo version lesser than 1.1.3
+                  NEED_BOOTSPLASH_MIGRATION="true"
+                  FLASHROM_ADD_OPT_UPDATE_OVERRIDE="--ifd -i bios"
+                fi
+              fi
               ;;
             "PRO Z690-A WIFI (MS-7D25)" | "PRO Z690-A (MS-7D25)")
               DASHARO_REL_NAME="msi_ms7d25"
@@ -340,6 +353,19 @@ board_config() {
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
               NEED_ROMHOLE_MIGRATION="true"
+              if check_if_dasharo; then
+                # if v1.1.3 or older, flash the whole bios region
+                # TODO: Let DTS determine which parameters are suitable.
+                # FIXME: Can we ever get rid of that? We change so much in each release,
+                # that we almost always need to flash whole BIOS region
+                # because of non-backward compatbile or breaking changes.
+                compare_versions $DASHARO_VERSION 1.1.3
+                if [ $? -eq 1 ]; then
+                  # For Dasharo version lesser than 1.1.3
+                  NEED_BOOTSPLASH_MIGRATION="true"
+                  FLASHROM_ADD_OPT_UPDATE_OVERRIDE="--ifd -i bios"
+                fi
+              fi
               ;;
             *)
               error_exit "Board model $BOARD_MODEL is currently not supported"
@@ -368,6 +394,19 @@ board_config() {
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
               NEED_ROMHOLE_MIGRATION="true"
+              if check_if_dasharo; then
+                # if v0.9.1 or older, flash the whole bios region
+                # TODO: Let DTS determine which parameters are suitable.
+                # FIXME: Can we ever get rid of that? We change so much in each release,
+                # that we almost always need to flash whole BIOS region
+                # because of non-backward compatbile or breaking changes.
+                compare_versions $DASHARO_VERSION 0.9.1
+                if [ $? -eq 1 ]; then
+                  # For Dasharo version lesser than 0.9.1
+                  NEED_BOOTSPLASH_MIGRATION="true"
+                  FLASHROM_ADD_OPT_UPDATE_OVERRIDE="--ifd -i bios"
+                fi
+              fi
               ;;
             "PRO Z790-P WIFI (MS-7E06)" | "PRO Z790-P (MS-7E06)")
               DASHARO_REL_NAME="msi_ms7e06"
@@ -389,6 +428,19 @@ board_config() {
               PROGRAMMER_BIOS="internal"
               PROGRAMMER_EC=""
               NEED_ROMHOLE_MIGRATION="true"
+              if check_if_dasharo; then
+                # if v0.9.1 or older, flash the whole bios region
+                # TODO: Let DTS determine which parameters are suitable.
+                # FIXME: Can we ever get rid of that? We change so much in each release,
+                # that we almost always need to flash whole BIOS region
+                # because of non-backward compatbile or breaking changes.
+                compare_versions $DASHARO_VERSION 0.9.1
+                if [ $? -eq 1 ]; then
+                  # For Dasharo version lesser than 0.9.1
+                  NEED_BOOTSPLASH_MIGRATION="true"
+                  FLASHROM_ADD_OPT_UPDATE_OVERRIDE="--ifd -i bios"
+                fi
+              fi
               ;;
             *)
               error_exit "Board model $BOARD_MODEL is currently not supported"
