@@ -2,6 +2,12 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v1.2.18 - 2024-01-22
+
+* Bumped supported firmware versions of MSI Z690-A to v1.1.3 and MSI Z790-P to
+  v0.9.1.
+* Improved logic for determining flashrom update parameters.
+
 ## v1.2.17 - 2024-01-17
 
 * Bumped supported firmware versions of NovaCustom NS5X TGL to v1.5.2.
