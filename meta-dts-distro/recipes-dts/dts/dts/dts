@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-source /usr/sbin/dts-environment.sh
-source /usr/sbin/dts-functions.sh
+source $DTS_ENV
+source $DTS_FUNCS
 
 trap : 2
 trap : 3
@@ -49,15 +49,16 @@ while : ; do
   # Each time the main menu is displayed, check for DES credentials and export
   # them, if file exists
   if [ -e "${SE_credential_file}" ]; then
-      export CLOUDSEND_LOGS_URL=$(sed -n '1p' < ${SE_credential_file} | tr -d '\n')
-      export CLOUDSEND_DOWNLOAD_URL=$(sed -n '2p' < ${SE_credential_file} | tr -d '\n')
-      export CLOUDSEND_PASSWORD=$(sed -n '3p' < ${SE_credential_file} | tr -d '\n')
-      export DES_IS_LOGGED="true"
+    export CLOUDSEND_LOGS_URL=$(sed -n '1p' < ${SE_credential_file} | tr -d '\n')
+    export CLOUDSEND_DOWNLOAD_URL=$(sed -n '2p' < ${SE_credential_file} | tr -d '\n')
+    export CLOUDSEND_PASSWORD=$(sed -n '3p' < ${SE_credential_file} | tr -d '\n')
+    export USER_DETAILS="$CLOUDSEND_DOWNLOAD_URL:$CLOUDSEND_PASSWORD"
+    export DES_IS_LOGGED="true"
   else
-      export CLOUDSEND_LOGS_URL="$BASE_CLOUDSEND_LOGS_URL"
-      export CLOUDSEND_PASSWORD="$BASE_CLOUDSEND_PASSWORD"
-      unset CLOUDSEND_DOWNLOAD_URL
-      unset DES_IS_LOGGED
+    export CLOUDSEND_LOGS_URL="$BASE_CLOUDSEND_LOGS_URL"
+    export CLOUDSEND_PASSWORD="$BASE_CLOUDSEND_PASSWORD"
+    unset CLOUDSEND_DOWNLOAD_URL
+    unset DES_IS_LOGGED
   fi
 
   echo

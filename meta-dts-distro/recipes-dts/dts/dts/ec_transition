@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-source /usr/sbin/dts-environment.sh
-source /usr/sbin/dts-functions.sh
+source $DTS_ENV
+source $DTS_FUNCS
 
 check_network_connection() {
   echo 'Waiting for network connection ...'
@@ -56,7 +56,7 @@ board_config() {
 check_for_opensource_firmware()
 {
   echo "Checking for opensource firmware"
-  dasharo_ectool info >> /dev/null 2>&1
+  $DASHARO_ECTOOL info >> /dev/null 2>&1
   if [ $? -eq 0 ]; then
     error_exit "Device has already Open Source Embedded Controller firmware, aborting..."
   fi
@@ -79,7 +79,7 @@ update_ec() {
   error_check "Failed to download EC firmware update"
 
   echo "Updating EC..."
-  flashrom -p ${PROGRAMMER_EC} -w /tmp/ecupdate.rom >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+  $FLASHROM -p ${PROGRAMMER_EC} -w /tmp/ecupdate.rom >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
   error_check "Failed to update EC firmware"
 
   echo "Successfully updated EC firmware"
@@ -89,8 +89,8 @@ install() {
   sha256sum --check <(echo "$BIOS_HASH")
   error_check "Failed to verify Dasharo firmware"
 
-  if [ "$HAVE_EC" = "true" ]; then
-    _ec_fw_version=$(flashrom -p ${PROGRAMMER_EC} | grep "Mainboard EC Version" | tr -d ' ' | cut -d ':' -f 2)
+  if [ "$HAVE_EC" == "true" ]; then
+    _ec_fw_version=$($FLASHROM -p ${PROGRAMMER_EC} | grep "Mainboard EC Version" | tr -d ' ' | cut -d ':' -f 2)
 
     if [ "$_ec_fw_version" != "$COMPATIBLE_EC_FW_VERSION" ]; then
       echo "EC version: $_ec_fw_version is not supported, update required"
@@ -99,7 +99,7 @@ install() {
   fi
 
   echo "Installing Dasharo firmware..."
-  flashrom -p ${PROGRAMMER_BIOS} --ifd -i bios -w /tmp/biosupdate.rom >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+  $FLASHROM -p ${PROGRAMMER_BIOS} --ifd -i bios -w /tmp/biosupdate.rom >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
   error_check "Failed to install Dasharo firmware"
 
   echo "Successfully installed Dasharo firmware"

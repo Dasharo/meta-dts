@@ -1,10 +1,14 @@
 #!/bin/bash
 
+SBIN_DIR="/usr/sbin"
 FUM_EFIVAR="/sys/firmware/efi/vars/FirmwareUpdateMode-d15b327e-ff2d-4fc1-abf6-c12bd08c1359"
 
+export DTS_FUNCS="$SBIN_DIR/dts-functions.sh"
+export DTS_ENV="$SBIN_DIR/dts-environment.sh"
+
 if [ -d $FUM_EFIVAR ]; then
-    /usr/sbin/dasharo-deploy update fum
+    $SBIN_DIR/dasharo-deploy update fum
 else
-    /usr/sbin/dts
+    $SBIN_DIR/dts
 fi
 
