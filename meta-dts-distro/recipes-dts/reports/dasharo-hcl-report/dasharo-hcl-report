@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-source /usr/sbin/dts-environment.sh
-source /usr/sbin/dts-functions.sh
+source $DTS_ENV
+source $DTS_FUNC
 
 update_result() {
   TOOL=$1
@@ -188,7 +188,7 @@ else
     # No descriptor, probably safe to read everything
     FLASHROM_ADD_OPT_READ=" "
 fi
-flashrom -V -p internal:laptop=force_I_want_a_brick ${FLASH_CHIP_SELECT} -r logs/rom.bin ${FLASHROM_ADD_OPT_READ} > logs/flashrom_read.log 2> logs/flashrom_read.err.log
+$FLASHROM -V -p internal:laptop=force_I_want_a_brick ${FLASH_CHIP_SELECT} -r logs/rom.bin ${FLASHROM_ADD_OPT_READ} > logs/flashrom_read.log 2> logs/flashrom_read.err.log
 if [ $? -ne 0 ]; then
   echo "CRITICAL ERROR: cannot dump firmware"
 fi

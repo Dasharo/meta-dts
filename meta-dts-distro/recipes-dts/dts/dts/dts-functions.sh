@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source /usr/sbin/dts-environment.sh
+source $DTS_ENV
 
 ### Color functions
 print_warning() {
@@ -260,6 +260,8 @@ board_config() {
         "NV4xPZ")
           DASHARO_REL_NAME="novacustom_nv4x_adl"
           DASHARO_REL_VER="1.7.2"
+          HEADS_REL_VER_DES="0.9.1"
+          HEADS_LINK_DES="${FW_STORE_URL_DES}/${DASHARO_REL_NAME}/v${HEADS_REL_VER_DES}/${DASHARO_REL_NAME}_v${HEADS_REL_VER_DES}_heads.rom"
           BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
           EC_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_ec_v${DASHARO_REL_VER}.rom"
           HAVE_EC="true"
@@ -287,6 +289,11 @@ board_config() {
               # For Dasharo version lesser than 1.7.2
               NEED_BOOTSPLASH_MIGRATION="true"
               FLASHROM_ADD_OPT_UPDATE_OVERRIDE="--ifd -i bios"
+            else
+              HAVE_HEADS_FW="true"
+            fi
+            if [ "$DASHARO_FLAVOR" == "Dasharo (coreboot+heads)" ]; then
+              HAVE_HEADS_FW="true"
             fi
           fi
           ;;
@@ -543,7 +550,7 @@ board_config() {
 }
 
 check_flash_lock() {
-    flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} > /tmp/check_flash_lock 2> /tmp/check_flash_lock.err
+    $FLASHROM -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} > /tmp/check_flash_lock 2> /tmp/check_flash_lock.err
     # Check in flashrom output if lock is enabled
     grep -q 'PR0: Warning:.* is read-only\|SMM protection is enabled' /tmp/check_flash_lock.err
     if [ $? -eq 0 ]; then
@@ -556,22 +563,22 @@ check_flash_lock() {
 
 check_flash_chip() {
   echo "Gathering flash chip and chipset information..."
-  flashrom -p "$PROGRAMMER_BIOS" --flash-name >> "$FLASH_INFO_FILE" 2>> "$ERR_LOG_FILE"
+  $FLASHROM -p "$PROGRAMMER_BIOS" --flash-name >> "$FLASH_INFO_FILE" 2>> "$ERR_LOG_FILE"
   if [ $? -eq 0 ]; then
     echo -n "Flash information: "
     tail -n1 "$FLASH_INFO_FILE"
-    FLASH_CHIP_SIZE=$(($(flashrom -p "$PROGRAMMER_BIOS" --flash-size 2>> /dev/null | tail -n1) / 1024 / 1024))
+    FLASH_CHIP_SIZE=$(($($FLASHROM -p "$PROGRAMMER_BIOS" --flash-size 2>> /dev/null | tail -n1) / 1024 / 1024))
     echo -n "Flash size: "
     echo ${FLASH_CHIP_SIZE}M
   else
     for flash_name in $FLASH_CHIP_LIST
     do
-      flashrom -p "$PROGRAMMER_BIOS" -c "$flash_name" --flash-name >> "$FLASH_INFO_FILE" 2>> "$ERR_LOG_FILE"
+      $FLASHROM -p "$PROGRAMMER_BIOS" -c "$flash_name" --flash-name >> "$FLASH_INFO_FILE" 2>> "$ERR_LOG_FILE"
       if [ $? -eq 0 ]; then
         echo "Chipset found"
         tail -n1 "$FLASH_INFO_FILE"
         FLASH_CHIP_SELECT="-c ${flash_name}"
-        FLASH_CHIP_SIZE=$(($(flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} --flash-size 2>> /dev/null | tail -n1) / 1024 / 1024))
+        FLASH_CHIP_SIZE=$(($($FLASHROM -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} --flash-size 2>> /dev/null | tail -n1) / 1024 / 1024))
         echo "Chipset size"
         echo ${FLASH_CHIP_SIZE}M
         break
@@ -673,7 +680,7 @@ download_artifacts() {
     curl -s -L -f "$BIOS_SIGN_LINK" -o $BIOS_SIGN_FILE
     error_check "Cannot access $FW_STORE_URL while downloading signature. Please
    check your internet connection"
-    if [ "$HAVE_EC" = "true" ]; then
+    if [ "$HAVE_EC" == "true" ]; then
       curl -s -L -f "$EC_LINK" -o "$EC_UPDATE_FILE"
       error_check "Cannot access $FW_STORE_URL while downloading binary. Please
      check your internet connection"
@@ -695,16 +702,28 @@ download_artifacts() {
     curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_SIGN_LINK" -o $BIOS_SIGN_FILE
     error_check "Cannot access $FW_STORE_URL_DES while downloading signature.
    Please check your internet connection"
-    if [ "$HAVE_EC" = "true" ]; then
-      curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$EC_LINK" -o $EC_UPDATE_FILE
-      error_check "Cannot access $FW_STORE_URL while downloading binary. Please
-     check your internet connection"
-      curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$EC_HASH_LINK" -o $EC_HASH_FILE
-      error_check "Cannot access $FW_STORE_URL while downloading signature. Please
-     check your internet connection"
-      curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$EC_SIGN_LINK" -o $EC_SIGN_FILE
-      error_check "Cannot access $FW_STORE_URL while downloading signature. Please
-     check your internet connection"
+    if [ "$HAVE_EC" == "true" ]; then
+      if [ -v EC_LINK_COMM ] && [ ${EC_LINK} == ${EC_LINK_COMM} ]; then
+        curl -s -L -f "$EC_LINK" -o "$EC_UPDATE_FILE"
+        error_check "Cannot access $FW_STORE_URL while downloading binary. Please
+          check your internet connection"
+        curl -s -L -f "$EC_HASH_LINK" -o $EC_HASH_FILE
+        error_check "Cannot access $FW_STORE_URL while downloading signature. Please
+          check your internet connection"
+        curl -s -L -f "$EC_SIGN_LINK" -o $EC_SIGN_FILE
+        error_check "Cannot access $FW_STORE_URL while downloading signature. Please
+          check your internet connection"
+      else
+        curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$EC_LINK" -o $EC_UPDATE_FILE
+        error_check "Cannot access $FW_STORE_URL while downloading binary. Please
+          check your internet connection"
+        curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$EC_HASH_LINK" -o $EC_HASH_FILE
+        error_check "Cannot access $FW_STORE_URL while downloading signature. Please
+          check your internet connection"
+        curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$EC_SIGN_LINK" -o $EC_SIGN_FILE
+        error_check "Cannot access $FW_STORE_URL while downloading signature. Please
+          check your internet connection"
+     fi
     fi
   fi
   print_green "Done"
@@ -732,6 +751,8 @@ verify_artifacts() {
   local _hash_file=""
   local _sign_file=""
   local _name=""
+  local _sig_result=""
+
   case ${_type} in
     ec)
     _update_file=$EC_UPDATE_FILE
@@ -754,15 +775,16 @@ verify_artifacts() {
   print_green "Done"
   if [ -v PLATFORM_SIGN_KEY ]; then
     echo -n "Checking $_name firmware signature..."
-    (cat $_hash_file) | gpg --verify $_sign_file -
-    error_check "Failed to verify $_name firmware signature."
+    _sig_result="$(cat $_hash_file | gpg --verify $_sign_file - 2>&1)"
+    error_check "Failed to verify $_name firmware signature.$'\n'$_sig_result"
   fi
   print_green "Done"
+  echo "$_sig_result"
 }
 
 check_intel_regions() {
 
-  FLASH_REGIONS=$(flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} 2>&1)
+  FLASH_REGIONS=$($FLASHROM -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} 2>&1)
   BOARD_HAS_FD_REGION=0
   BOARD_FD_REGION_RW=0
   BOARD_HAS_ME_REGION=0
@@ -905,7 +927,7 @@ set_flashrom_update_params() {
   # We need to read whole binary (or BIOS region), otherwise cbfstool will
   # return different attributes for CBFS regions
   echo "Checking flash layout."
-  flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_UPDATE} -r /tmp/bios.bin > /dev/null 2>&1
+  $FLASHROM -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_UPDATE} -r /tmp/bios.bin > /dev/null 2>&1
   if [ $? -eq 0 ] && [ -f "/tmp/bios.bin" ]; then
     BOARD_FMAP_LAYOUT=$(cbfstool /tmp/bios.bin layout -w 2> /dev/null)
     BINARY_FMAP_LAYOUT=$(cbfstool $1 layout -w 2> /dev/null)
@@ -964,6 +986,125 @@ set_intel_regions_update_params() {
         echo "The firmware binary to be flashed contains Management Engine (ME), but ME is not writable!"  >> $ERR_LOG_FILE
         print_error "The firmware binary contains Management Engine (ME), but ME is not writable!"
       fi
+    fi
+  fi
+}
+
+handle_fw_switching() {
+  local _can_switch_to_heads=$1
+
+  if [ "$_can_switch_to_heads" == "true" ] && [ "$DASHARO_FLAVOR" != "Dasharo (coreboot+heads)" ]; then
+    while : ; do
+      echo
+      read -r -p "Would you like to switch to Dasharo heads firmware? (Y|n) " OPTION
+      echo
+
+      case ${OPTION} in
+        yes|y|Y|Yes|YES)
+          UPDATE_VERSION=$HEADS_REL_VER_DES
+          FLASHROM_ADD_OPT_UPDATE_OVERRIDE="--ifd -i bios"
+          BIOS_HASH_LINK="${HEADS_LINK_DES}.sha256"
+          BIOS_SIGN_LINK="${HEADS_LINK_DES}.sha256.sig"
+          BIOS_LINK=$HEADS_LINK_DES
+          echo
+          echo "Switching to Dasharo heads firmware v$UPDATE_VERSION"
+          echo
+          break
+          ;;
+        n|N)
+          compare_versions $DASHARO_VERSION $UPDATE_VERSION
+          if [ $? -ne 1 ]; then
+            error_exit "No update available for your machine"
+          fi
+          echo "Will not install Dasharo heads firmware. Proceeding with regular Dasharo firmware update."
+          break
+          ;;
+        *)
+          ;;
+      esac
+    done
+  elif [ -v DES_IS_LOGGED ] && [ -v HEADS_LINK_DES ]; then
+    [ "$DASHARO_FLAVOR" == "Dasharo (coreboot+heads)" ]
+    local _heads_des=1
+    curl -sfI -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$HEADS_LINK_DES" -o /dev/null
+    _heads_des=$?
+    # We are on heads, offer switch back or perform update if DES gives access to heads
+    if [ "$DASHARO_FLAVOR" == "Dasharo (coreboot+heads)" ]; then
+      while : ; do
+        echo
+        read -r -p "Would you like to switch back to the regular Dasharo firmware? (Y|n) " OPTION
+        echo
+
+        case ${OPTION} in
+          yes|y|Y|Yes|YES)
+            echo
+            echo "Switching back to regular Dasharo firmware v$UPDATE_VERSION"
+            echo
+            FLASHROM_ADD_OPT_UPDATE_OVERRIDE="--ifd -i bios"
+            break
+            ;;
+          n|N)
+            if [ $_heads_des -ne 0 ]; then
+              error_exit "No update available for your machine"
+            fi
+            UPDATE_VERSION=$HEADS_REL_VER_DES
+            compare_versions $DASHARO_VERSION $UPDATE_VERSION
+            if [ $? -ne 1 ]; then
+              error_exit "No update available for your machine"
+            fi
+            echo "Will not switch back to regular Dasharo firmware. Proceeding with Dasharo heads firmware update to $UPDATE_VERSION."
+            FLASHROM_ADD_OPT_UPDATE_OVERRIDE="--ifd -i bios"
+            BIOS_HASH_LINK="${HEADS_LINK_DES}.sha256"
+            BIOS_SIGN_LINK="${HEADS_LINK_DES}.sha256.sig"
+            BIOS_LINK=$HEADS_LINK_DES
+            break
+            ;;
+          *)
+            ;;
+        esac
+      done
+    fi
+  elif [ ! -v DES_IS_LOGGED ] && [ "$DASHARO_FLAVOR" == "Dasharo (coreboot+heads)" ]; then
+    # Not logged with DES and we are on heads, offer switch back
+    while : ; do
+      compare_versions $DASHARO_VERSION $HEADS_REL_VER_DES
+      if [ $? -eq 1 ]; then
+        print_warning "You are running heads firmware, but did not provide DES credentials."
+        print_warning "There are updates available if you provide DES credentials in main DTS menu."
+      fi
+      echo
+      read -r -p "Would you like to switch back to the regular Dasharo firmware? (Y|n) " OPTION
+      echo
+
+      case ${OPTION} in
+        yes|y|Y|Yes|YES)
+          echo
+          echo "Switching back to regular Dasharo firmware v$UPDATE_VERSION"
+          echo
+          FLASHROM_ADD_OPT_UPDATE_OVERRIDE="--ifd -i bios"
+          break
+          ;;
+        n|N)
+          compare_versions $DASHARO_VERSION $HEADS_REL_VER_DES
+          if [ $? -eq 1 ]; then
+            print_warning "You are running heads firmware, but did not provide DES credentials."
+            print_warning "There are updates available if you provide DES credentials in main DTS menu."
+            echo
+            echo "Latest available Dasharo version: $HEADS_REL_VER_DES"
+            echo
+          fi
+          print_warning "No update currently possible. Aborting update process..."
+          exit 0
+          break;
+          ;;
+        *)
+          ;;
+      esac
+    done
+  else
+    compare_versions $DASHARO_VERSION $UPDATE_VERSION
+    if [ $? -ne 1 ]; then
+      error_exit "No update available for your machine"
     fi
   fi
 }

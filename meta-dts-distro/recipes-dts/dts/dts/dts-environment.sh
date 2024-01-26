@@ -13,6 +13,7 @@ BOARD_MODEL="$(dmidecode -s baseboard-product-name)"
 BIOS_VENDOR="$(dmidecode -s bios-vendor)"
 BIOS_VERSION="$(dmidecode -s bios-version)"
 DASHARO_VERSION="$(echo $BIOS_VERSION | cut -d ' ' -f 3 | tr -d 'v')"
+DASHARO_FLAVOR="$(echo $BIOS_VERSION | cut -d ' ' -f 1,2)"
 
 # path to temporary files, created while deploying or updating Dasharo firmware
 BIOS_UPDATE_FILE="/tmp/biosupdate.rom"
@@ -56,8 +57,11 @@ CMD_CLOUD_LIST="/usr/sbin/cloud_list"
 CMD_EC_TRANSITION="/usr/sbin/ec_transition"
 
 # default values for flashrom programmer
+FLASHROM="flashrom"
 PROGRAMMER_BIOS="internal"
 PROGRAMMER_EC="ite_ec"
+
+DASHARO_ECTOOL="dasharo_ectool"
 
 # variables defining Dasharo specific entries in DMI tables, used to check if
 # Dasharo FW is already installed
@@ -70,7 +74,7 @@ FLASH_CHIP_LIST="W25Q64BV/W25Q64CV/W25Q64FV W25Q64JV-.Q W25Q128.V..M"
 
 # Dasharo Supporters Entrance variables
 SE_credential_file="/etc/cloud-pass"
-FW_STORE_URL="${FW_STORE_URL_DEV:-https://3mdeb.com/open-source-firmware/Dasharo}"
+FW_STORE_URL="${FW_STORE_URL_DEV:-https://dl.3mdeb.com/open-source-firmware/Dasharo}"
 FW_STORE_URL_DES="https://cloud.3mdeb.com/public.php/webdav"
 CLOUD_REQUEST="X-Requested-With: XMLHttpRequest"
 
