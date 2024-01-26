@@ -374,7 +374,7 @@ board_config() {
           ;;
         "MS-7E06")
           case "$BOARD_MODEL" in
-            "PRO Z790-P WIFI DDR4(MS-7E06)" | "PRO Z790-P DDR4(MS-7E06)")
+            "PRO Z790-P WIFI DDR4(MS-7E06)" | "PRO Z790-P DDR4(MS-7E06)" | "PRO Z790-P WIFI DDR4 (MS-7E06)" | "PRO Z790-P DDR4 (MS-7E06)")
               DASHARO_REL_NAME="msi_ms7e06"
               #DASHARO_REL_VER=""
               DASHARO_REL_VER_DES="0.9.1"
@@ -391,7 +391,7 @@ board_config() {
               NEED_SMMSTORE_MIGRATION="true"
               NEED_BOOTSPLASH_MIGRATION="false"
               NEED_BLOB_TRANSMISSION="false"
-              PROGRAMMER_BIOS="internal"
+              PROGRAMMER_BIOS="internal:boardmismatch=force"
               PROGRAMMER_EC=""
               NEED_ROMHOLE_MIGRATION="true"
               if check_if_dasharo; then
