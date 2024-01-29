@@ -1,0 +1,6 @@
+ID=dts-distro
+NAME="Dasharo Tools Suite"
+VERSION="1.2.18 (kirkstone)"
+VERSION_ID=1.2.18
+PRETTY_NAME="Dasharo Tools Suite 1.2.18 (kirkstone)"
+DISTRO_CODENAME="kirkstone"

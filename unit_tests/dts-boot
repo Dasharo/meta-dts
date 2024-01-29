@@ -1,0 +1,26 @@
+#!/bin/bash
+
+if [ $TEST_DES == "y" ] && [ ! -f cloud-pass ]; then
+  rm cloud-pass
+  if [ $BOARD_VENDOR == "Notebook" ]; then 
+    # For NVC testing
+    echo "SHY8Lfteq2bCLGD" >> cloud-pass
+    echo "diCqE9Q5wL8eLZH" >> cloud-pass
+    echo "%K5RKof!" >> cloud-pass
+  elif [ $BOARD_VENDOR == "Micro-Star International Co., Ltd." ]; then 
+    # For MSI testing, put the credentials here
+  fi
+elif [ $TEST_DES != "y" ] && [ -f cloud-pass ]; then
+  rm cloud-pass
+fi
+
+if [ -f /tmp/bios.bin ]; then
+  rm /tmp/bios.bin
+fi
+
+wget https://dl.3mdeb.com/open-source-firmware/Dasharo/novacustom_nv4x_adl/v1.7.2/novacustom_nv4x_adl_v1.7.2.rom -O /tmp/bios.bin
+
+export DTS_FUNCS="$PWD/../meta-dts-distro/recipes-dts/dts/dts/dts-functions.sh"
+export DTS_ENV="$PWD/dts-environment.sh"
+
+source $PWD/../meta-dts-distro/recipes-dts/dts/dts/dts
