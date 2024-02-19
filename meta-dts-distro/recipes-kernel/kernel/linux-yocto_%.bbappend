@@ -8,6 +8,7 @@ SRC_URI:append = " \
     file://intel-mei.cfg \
     file://intel-other.cfg \
     file://intel-sound.cfg \
+    file://iommu.cfg \
     file://silence-terminal-logs.cfg \
     file://touchpad.cfg \
     file://tpm.cfg \
