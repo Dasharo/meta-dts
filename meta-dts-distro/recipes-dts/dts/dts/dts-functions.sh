@@ -795,16 +795,16 @@ verify_artifacts() {
     *)
     ;;
   esac
-  echo -n "Checking $_name firmware checksum..."
+  echo -n "Checking $_name firmware checksum... "
   sha256sum --check <(echo $(cat $_hash_file | cut -d ' ' -f 1) $_update_file) >> $ERR_LOG_FILE 2>&1
   error_check "Failed to verify $_name firmware checksum"
-  print_green "Done"
+  print_green "Verified."
   if [ -v PLATFORM_SIGN_KEY ]; then
-    echo -n "Checking $_name firmware signature..."
-    _sig_result="$(cat $_hash_file | gpg --verify $_sign_file - 2>&1)"
+    echo -n "Checking $_name firmware signature... "
+    _sig_result="$(cat $_hash_file | gpg --verify $_sign_file - >> $ERR_LOG_FILE 2>&1)"
     error_check "Failed to verify $_name firmware signature.$'\n'$_sig_result"
+    print_green "Verified."
   fi
-  print_green "Done"
   echo "$_sig_result"
 }
 
@@ -1032,9 +1032,9 @@ handle_fw_switching() {
           BIOS_HASH_LINK="${HEADS_LINK_DES}.sha256"
           BIOS_SIGN_LINK="${HEADS_LINK_DES}.sha256.sig"
           BIOS_LINK=$HEADS_LINK_DES
+          export SWITCHING_TO="heads"
           echo
           echo "Switching to Dasharo heads firmware v$UPDATE_VERSION"
-          echo
           break
           ;;
         n|N)
@@ -1066,6 +1066,7 @@ handle_fw_switching() {
             echo "Switching back to regular Dasharo firmware v$UPDATE_VERSION"
             echo
             FLASHROM_ADD_OPT_UPDATE_OVERRIDE=$HEADS_SWITCH_FLASHROM_OPT_OVERRIDE
+            export SWITCHING_TO="uefi"
             break
             ;;
           n|N)
@@ -1110,6 +1111,7 @@ handle_fw_switching() {
           echo "Switching back to regular Dasharo firmware v$UPDATE_VERSION"
           echo
           FLASHROM_ADD_OPT_UPDATE_OVERRIDE=$HEADS_SWITCH_FLASHROM_OPT_OVERRIDE
+          export SWITCHING_TO="uefi"
           break
           ;;
         n|N)
