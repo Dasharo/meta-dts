@@ -509,13 +509,13 @@ update() {
       # then it means DES is for regualar releases
       curl -sfI -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$HEADS_LINK_DES" -o /dev/null
       if [ $? -ne 0 ]; then
-        print_warning "Dasharo heads firmware version is available but your"
+        print_warning "Dasharo Heads firmware version is available, but your"
         print_warning "subscription does not give you the access to this firmware."
         print_warning "If you are interested, please visit https://shop.3mdeb.com/product-category/dasharo-entry-subscription/"
       else
         # Access to the heads FW is possible, allow to switch to heads
         _can_switch_to_heads="true"
-        print_green "Dasharo heads firmware version is available and your subscription"
+        print_green "Dasharo Heads firmware version is available and your subscription"
         print_green "gives you access to this firmware."
       fi
     elif [ -v HAVE_HEADS_FW ] && [ "$DASHARO_FLAVOR" == "Dasharo (coreboot+heads)" ]; then
@@ -562,7 +562,7 @@ update() {
         break
         ;;
       n|N)
-        error_exit "Aborting udpate process..."
+        error_exit "Aborting update process..."
         ;;
       *)
         ;;
