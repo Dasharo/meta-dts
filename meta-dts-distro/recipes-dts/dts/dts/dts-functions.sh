@@ -1074,12 +1074,15 @@ handle_fw_switching() {
     fi
   elif [ ! -v DES_IS_LOGGED ] && [ "$DASHARO_FLAVOR" == "Dasharo (coreboot+heads)" ]; then
     # Not logged with DES and we are on heads, offer switch back
+    compare_versions $DASHARO_VERSION $HEADS_REL_VER_DES
+    if [ $? -eq 1 ]; then
+      print_warning "You are running heads firmware, but did not provide DES credentials."
+      print_warning "There are updates available if you provide DES credentials in main DTS menu."
+    fi
+    echo
+    echo "Latest available Dasharo version: $HEADS_REL_VER_DES"
+    echo
     while : ; do
-      compare_versions $DASHARO_VERSION $HEADS_REL_VER_DES
-      if [ $? -eq 1 ]; then
-        print_warning "You are running heads firmware, but did not provide DES credentials."
-        print_warning "There are updates available if you provide DES credentials in main DTS menu."
-      fi
       echo
       read -r -p "Would you like to switch back to the regular Dasharo firmware? (Y|n) " OPTION
       echo
@@ -1093,14 +1096,6 @@ handle_fw_switching() {
           break
           ;;
         n|N)
-          compare_versions $DASHARO_VERSION $HEADS_REL_VER_DES
-          if [ $? -eq 1 ]; then
-            print_warning "You are running heads firmware, but did not provide DES credentials."
-            print_warning "There are updates available if you provide DES credentials in main DTS menu."
-            echo
-            echo "Latest available Dasharo version: $HEADS_REL_VER_DES"
-            echo
-          fi
           print_warning "No update currently possible. Aborting update process..."
           exit 0
           break;
