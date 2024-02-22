@@ -262,6 +262,7 @@ board_config() {
           DASHARO_REL_VER="1.7.2"
           HEADS_REL_VER_DES="0.9.0"
           HEADS_LINK_DES="${FW_STORE_URL_DES}/${DASHARO_REL_NAME}/v${HEADS_REL_VER_DES}/${DASHARO_REL_NAME}_v${HEADS_REL_VER_DES}_heads.rom"
+          HEADS_SWITCH_FLASHROM_OPT_OVERRIDE="--ifd -i bios"
           BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
           EC_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_ec_v${DASHARO_REL_VER}.rom"
           HAVE_EC="true"
@@ -312,6 +313,10 @@ board_config() {
               DASHARO_REL_VER_DES="1.1.3"
               BIOS_LINK_COMM="${FW_STORE_URL}/${DASHARO_REL_NAME}/v${DASHARO_REL_VER}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_ddr4.rom"
               BIOS_LINK_DES="${FW_STORE_URL_DES}/MS-7D25/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr4.rom"
+              HAVE_HEADS_FW="true"
+              HEADS_REL_VER_DES="0.9.0"
+              HEADS_LINK_DES="${FW_STORE_URL_DES}/MS-7D25/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr4_heads.rom"
+              HEADS_SWITCH_FLASHROM_OPT_OVERRIDE="" # we have to do full flashing
               HAVE_EC="false"
               NEED_EC_RESET="false"
               BIOS_HASH_LINK_COMM="${BIOS_LINK_COMM}.sha256"
@@ -346,6 +351,10 @@ board_config() {
               DASHARO_REL_VER_DES="1.1.3"
               BIOS_LINK_COMM="${FW_STORE_URL}/${DASHARO_REL_NAME}/v${DASHARO_REL_VER}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_ddr5.rom"
               BIOS_LINK_DES="${FW_STORE_URL_DES}/MS-7D25/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr5.rom"
+              HAVE_HEADS_FW="true"
+              HEADS_REL_VER_DES="0.9.0"
+              HEADS_LINK_DES="${FW_STORE_URL_DES}/MS-7D25/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr5_heads.rom"
+              HEADS_SWITCH_FLASHROM_OPT_OVERRIDE="" # we have to do full flashing
               HAVE_EC="false"
               NEED_EC_RESET="false"
               BIOS_HASH_LINK_COMM="${BIOS_LINK_COMM}.sha256"
@@ -387,6 +396,10 @@ board_config() {
               DASHARO_REL_VER_DES="0.9.1"
               #BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_ddr4.rom"
               BIOS_LINK_DES="${FW_STORE_URL_DES}/MS-7E06/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr4.rom"
+              HAVE_HEADS_FW="true"
+              HEADS_REL_VER_DES="0.9.0"
+              HEADS_LINK_DES="${FW_STORE_URL_DES}/MS-7E06/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr4_heads.rom"
+              HEADS_SWITCH_FLASHROM_OPT_OVERRIDE="" # we have to do full flashing
               HAVE_EC="false"
               NEED_EC_RESET="false"
               #BIOS_HASH_LINK_COMM="${BIOS_LINK_COMM}.sha256"
@@ -421,6 +434,10 @@ board_config() {
               DASHARO_REL_VER_DES="0.9.1"
               #BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}_ddr5.rom"
               BIOS_LINK_DES="${FW_STORE_URL_DES}/MS-7E06/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr5.rom"
+              HAVE_HEADS_FW="true"
+              HEADS_REL_VER_DES="0.9.0"
+              HEADS_LINK_DES="${FW_STORE_URL_DES}/MS-7E06/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr5_heads.rom"
+              HEADS_SWITCH_FLASHROM_OPT_OVERRIDE="" # we have to do full flashing
               HAVE_EC="false"
               NEED_EC_RESET="false"
               #BIOS_HASH_LINK_COMM="${BIOS_LINK_COMM}.sha256"
@@ -1011,7 +1028,7 @@ handle_fw_switching() {
       case ${OPTION} in
         yes|y|Y|Yes|YES)
           UPDATE_VERSION=$HEADS_REL_VER_DES
-          FLASHROM_ADD_OPT_UPDATE_OVERRIDE="--ifd -i bios"
+          FLASHROM_ADD_OPT_UPDATE_OVERRIDE=$HEADS_SWITCH_FLASHROM_OPT_OVERRIDE
           BIOS_HASH_LINK="${HEADS_LINK_DES}.sha256"
           BIOS_SIGN_LINK="${HEADS_LINK_DES}.sha256.sig"
           BIOS_LINK=$HEADS_LINK_DES
@@ -1048,7 +1065,7 @@ handle_fw_switching() {
             echo
             echo "Switching back to regular Dasharo firmware v$UPDATE_VERSION"
             echo
-            FLASHROM_ADD_OPT_UPDATE_OVERRIDE="--ifd -i bios"
+            FLASHROM_ADD_OPT_UPDATE_OVERRIDE=$HEADS_SWITCH_FLASHROM_OPT_OVERRIDE
             break
             ;;
           n|N)
@@ -1092,7 +1109,7 @@ handle_fw_switching() {
           echo
           echo "Switching back to regular Dasharo firmware v$UPDATE_VERSION"
           echo
-          FLASHROM_ADD_OPT_UPDATE_OVERRIDE="--ifd -i bios"
+          FLASHROM_ADD_OPT_UPDATE_OVERRIDE=$HEADS_SWITCH_FLASHROM_OPT_OVERRIDE
           break
           ;;
         n|N)
