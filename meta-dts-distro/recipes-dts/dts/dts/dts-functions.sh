@@ -1024,7 +1024,6 @@ handle_fw_switching() {
       esac
     done
   elif [ -v DES_IS_LOGGED ] && [ -v HEADS_LINK_DES ]; then
-    [ "$DASHARO_FLAVOR" == "Dasharo (coreboot+heads)" ]
     local _heads_des=1
     curl -sfI -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$HEADS_LINK_DES" -o /dev/null
     _heads_des=$?

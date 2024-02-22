@@ -657,7 +657,6 @@ update() {
 
   print_green "Successfully updated Dasharo firmware"
 
-  exit 0
 
   echo -n "Syncing disks... "
   sync
