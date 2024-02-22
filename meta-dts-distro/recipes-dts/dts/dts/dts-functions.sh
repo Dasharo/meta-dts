@@ -598,8 +598,17 @@ check_se_creds() {
   board_config
   TEST_LOGS_URL="https://cloud.3mdeb.com/index.php/s/${CLOUDSEND_LOGS_URL}/authenticate/showShare"
 
+  if [ ! -v BIOS_LINK_DES ] && [ ! -v HEADS_LINK_DES ]; then
+    error_exit "There is no Dasharo Entry Subscription available for your platform!"
+  fi
+
   if check_network_connection; then
-    CHECK_DOWNLOAD_REQUEST_RESPONSE=$(curl -L -I -s -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_LINK_DES" -o /dev/null -w "%{http_code}")
+    if [ -v BIOS_LINK_DES ]; then
+      CHECK_DOWNLOAD_REQUEST_RESPONSE=$(curl -L -I -s -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_LINK_DES" -o /dev/null -w "%{http_code}")
+    elif [ -v HEADS_LINK_DES ]; then
+      CHECK_DOWNLOAD_REQUEST_RESPONSE=$(curl -L -I -s -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$HEADS_LINK_DES" -o /dev/null -w "%{http_code}")
+    fi
+
     CHECK_LOGS_REQUEST_RESPONSE=$(curl -L -I -s -f -H "$CLOUD_REQUEST" "$TEST_LOGS_URL" -o /dev/null -w "%{http_code}")
     if [ ${CHECK_DOWNLOAD_REQUEST_RESPONSE} -eq 200 ] && [ ${CHECK_LOGS_REQUEST_RESPONSE} -eq 200 ]; then
       return 0
