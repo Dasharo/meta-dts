@@ -3,11 +3,21 @@
 This directory contains stub scripts for testing DTS update and deploy logic
 in complex scenarios.
 
-There are some unsolved dependencies like dasharo_ectool, cbfstool, futility.
+## Prerequisities
+
+The unit tests run on host without any isolation or framework for testing.
+Thus the tests require the same tools and utilities to be present as on DTS:
+
+* dasharo_ectool,
+* cbfstool,
+* futility,
+* iotools,
+* etc.
 
 ## Test switching to heads and back with updates
 
 ```bash
+cd unit_tests
 export BOARD_VENDOR="Notebook" SYSTEM_MODEL="NV4xPZ" BOARD_MODEL="NV4xPZ"
 ```
 
@@ -58,6 +68,10 @@ to `v0.9.1` to detect possible heads firmware updates and repeat all test
 cases. The URLs for non-existing versions may fail. Also it may be worth trying
 with MSI board as mocked input and MSI Z690-A v1.1.1 and v1.1.2 versions.
 
-The test binaries for credentials in `dts-boot` are placed in
+The NovaCustom test binaries for credentials in `dts-boot` are placed in
 [/projects/projects/2022/novacustom/dts_test](https://cloud.3mdeb.com/index.php/f/659609)
-on 3mdeb cloud.
+on 3mdeb cloud. These are just public coreboot+UEFI v1.7.2 binaries.
+Analogically with MSI, cloud directory is
+[/projects/projects/2022/msi/dts_test](https://cloud.3mdeb.com/index.php/f/667474)
+and binaries are simply Z690-A public coreboot+UEFI v1.1.1 binaries with
+changed names for both Z690-A and Z790-P (resigned with appropriate keys).

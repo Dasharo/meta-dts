@@ -9,6 +9,8 @@ if [ $TEST_DES == "y" ] && [ ! -f cloud-pass ]; then
     echo "%K5RKof!" >> cloud-pass
   elif [ $BOARD_VENDOR == "Micro-Star International Co., Ltd." ]; then 
     # For MSI testing, put the credentials here
+    echo "MSI credentials missing"
+    exit 1
   fi
 elif [ $TEST_DES != "y" ] && [ -f cloud-pass ]; then
   rm cloud-pass
