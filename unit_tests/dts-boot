@@ -2,12 +2,12 @@
 
 if [ $TEST_DES == "y" ] && [ ! -f cloud-pass ]; then
   rm cloud-pass
-  if [ $BOARD_VENDOR == "Notebook" ]; then 
+  if [ $BOARD_VENDOR == "Notebook" ]; then
     # For NVC testing
     echo "SHY8Lfteq2bCLGD" >> cloud-pass
     echo "diCqE9Q5wL8eLZH" >> cloud-pass
     echo "%K5RKof!" >> cloud-pass
-  elif [ $BOARD_VENDOR == "Micro-Star International Co., Ltd." ]; then 
+  elif [ $BOARD_VENDOR == "Micro-Star International Co., Ltd." ]; then
     # For MSI testing, put the credentials here
     echo "MSI credentials missing"
     echo "SHY8Lfteq2bCLGD" >> cloud-pass
