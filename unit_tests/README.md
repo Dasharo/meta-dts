@@ -27,41 +27,41 @@ export BOARD_VENDOR="Notebook" SYSTEM_MODEL="NV4xPZ" BOARD_MODEL="NV4xPZ"
    regular update:
 
     ```bash
-    export BIOS_VERSION="Dasharo (coreboot+UEFI) v1.7.2" TEST_DES=y && source dts-boot
+    export BIOS_VERSION="Dasharo (coreboot+UEFI) v1.7.2" TEST_DES=y && ./dts-boot
     ```
 
 2. Dasharo v1.7.2 on NV4x_PZ eligible for updates to heads without DES
    (regular update only):
 
     ```bash
-    export BIOS_VERSION="Dasharo (coreboot+UEFI) v1.7.2" TEST_DES=n && source dts-boot
+    export BIOS_VERSION="Dasharo (coreboot+UEFI) v1.7.2" TEST_DES=n && ./dts-boot
     ```
 
 3. Dasharo v1.6.0 on NV4x_PZ not eligible for updates to heads with heads DES
    (regular update only):
 
     ```bash
-    export BIOS_VERSION="Dasharo (coreboot+UEFI) v1.6.0" TEST_DES=y && source dts-boot
+    export BIOS_VERSION="Dasharo (coreboot+UEFI) v1.6.0" TEST_DES=y && ./dts-boot
     ```
 
 4. Dasharo v1.6.0 on NV4x_PZ not eligible for updates to heads without heads
    DES (regular update only):
 
     ```bash
-    export BIOS_VERSION="Dasharo (coreboot+UEFI) v1.6.0" TEST_DES=n && source dts-boot
+    export BIOS_VERSION="Dasharo (coreboot+UEFI) v1.6.0" TEST_DES=n && ./dts-boot
     ```
 
 5. Dasharo heads v0.9.0 on NV4x_PZ eligible for updates to heads with heads
    DES and switch back (heads updates):
 
     ```bash
-    export BIOS_VERSION="Dasharo (coreboot+heads) v0.9.0" TEST_DES=y && source dts-boot
+    export BIOS_VERSION="Dasharo (coreboot+heads) v0.9.0" TEST_DES=y && ./dts-boot
     ```
 
 6. Dasharo heads v0.9.0 on NV4x_PZ without DES switch back, no heads updates:
 
     ```bash
-    export BIOS_VERSION="Dasharo (coreboot+heads) v0.9.0" TEST_DES=n && source dts-boot
+    export BIOS_VERSION="Dasharo (coreboot+heads) v0.9.0" TEST_DES=n && ./dts-boot
     ```
 
 Another case is to edit `dts-functions.sh` and set `DASHARO_REL_VER` to
@@ -88,42 +88,42 @@ export BOARD_VENDOR="Micro-Star International Co., Ltd." SYSTEM_MODEL="MS-7D25" 
    regular update:
 
     ```bash
-    export BIOS_VERSION="Dasharo (coreboot+UEFI) v1.1.1" TEST_DES=y && source dts-boot
+    export BIOS_VERSION="Dasharo (coreboot+UEFI) v1.1.1" TEST_DES=y && ./dts-boot
     ```
 
 2. Dasharo v1.1.1 on MS-7D25 eligible for updates to heads without DES
    (regular update only):
 
     ```bash
-    export BIOS_VERSION="Dasharo (coreboot+UEFI) v1.1.1" TEST_DES=n && source dts-boot
+    export BIOS_VERSION="Dasharo (coreboot+UEFI) v1.1.1" TEST_DES=n && ./dts-boot
     ```
 
 3. Dasharo v1.1.2 on MS-7D25 eligible for updates to heads with heads DES
    (regular update only through regular DES):
 
     ```bash
-    export BIOS_VERSION="Dasharo (coreboot+UEFI) v1.1.2" TEST_DES=y && source dts-boot
+    export BIOS_VERSION="Dasharo (coreboot+UEFI) v1.1.2" TEST_DES=y && ./dts-boot
     ```
 
 4. Dasharo v1.1.2 on MS-7D25 not eligible for updates to heads without heads
    DES (regular update only through regular DES):
 
     ```bash
-    export BIOS_VERSION="Dasharo (coreboot+UEFI) v1.1.2" TEST_DES=n && source dts-boot
+    export BIOS_VERSION="Dasharo (coreboot+UEFI) v1.1.2" TEST_DES=n && ./dts-boot
     ```
 
 5. Dasharo heads v0.9.0 on MS-7D25 eligible for updates to heads with heads
    DES and switch back (regular update and switch-back):
 
     ```bash
-    export BIOS_VERSION="Dasharo (coreboot+heads) v0.9.0" TEST_DES=y && source dts-boot
+    export BIOS_VERSION="Dasharo (coreboot+heads) v0.9.0" TEST_DES=y && ./dts-boot
     ```
 
 6. Dasharo heads v0.9.0 on MS-7D25 without DES switch back, no heads updates
    (regular update and switch-back):
 
     ```bash
-    export BIOS_VERSION="Dasharo (coreboot+heads) v0.9.0" TEST_DES=n && source dts-boot
+    export BIOS_VERSION="Dasharo (coreboot+heads) v0.9.0" TEST_DES=n && ./dts-boot
     ```
 
 ### MSI MS-7E06
@@ -138,7 +138,7 @@ export BOARD_VENDOR="Micro-Star International Co., Ltd." SYSTEM_MODEL="MS-7E06" 
    DES, no community release):
 
     ```bash
-    export BIOS_VERSION="Dasharo (coreboot+heads) v0.9.0" TEST_DES=y && source dts-boot
+    export BIOS_VERSION="Dasharo (coreboot+heads) v0.9.0" TEST_DES=y && ./dts-boot
     ```
 
 2. Dasharo heads v0.9.0 on MS-7E06 without DES switch back, no heads updates
@@ -146,5 +146,5 @@ export BOARD_VENDOR="Micro-Star International Co., Ltd." SYSTEM_MODEL="MS-7E06" 
    release):
 
     ```bash
-    export BIOS_VERSION="Dasharo (coreboot+heads) v0.9.0" TEST_DES=n && source dts-boot
+    export BIOS_VERSION="Dasharo (coreboot+heads) v0.9.0" TEST_DES=n && ./dts-boot
     ```
