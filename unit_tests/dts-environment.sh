@@ -52,8 +52,8 @@ OS_VERSION_FILE="os-release"
 KEYS_DIR="devkeys"
 
 # path to system commands
-CMD_POWEROFF="exit 0"
-CMD_REBOOT="exit 0"
+CMD_POWEROFF="echo poweroff && exit 0"
+CMD_REBOOT="echo reboot && exit 0"
 CMD_SHELL="/bin/bash"
 CMD_DASHARO_HCL_REPORT="$PWD/../meta-dts-distro/recipes-dts/dts/dasharo-hcl-report/dasharo-hcl-report"
 CMD_NCMENU="novacustom_menu"
