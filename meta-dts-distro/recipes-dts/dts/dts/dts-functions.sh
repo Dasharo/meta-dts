@@ -171,7 +171,8 @@ board_config() {
           BIOS_HASH_LINK_COMM="$BIOS_LINK_COMM.sha256"
           EC_SIGN_LINK_COMM="$EC_LINK_COMM.sha256.sig"
           BIOS_SIGN_LINK_COMM="$BIOS_LINK_COMM.sha256.sig"
-          PLATFORM_SIGN_KEY="customer-keys/novacustom/novacustom-open-source-firmware-release-1.x-key.asc"
+          PLATFORM_SIGN_KEY="customer-keys/novacustom/novacustom-open-source-firmware-release-1.x-key.asc \
+             customer-keys/novacustom/dasharo-release-0.9.x-for-novacustom-signing-key.asc"
           NEED_SMBIOS_MIGRATION="false"
           NEED_SMMSTORE_MIGRATION="true"
           NEED_BOOTSPLASH_MIGRATION="false"
@@ -204,7 +205,8 @@ board_config() {
           BIOS_HASH_LINK_COMM="$BIOS_LINK_COMM.sha256"
           EC_SIGN_LINK_COMM="$EC_LINK_COMM.sha256.sig"
           BIOS_SIGN_LINK_COMM="$BIOS_LINK_COMM.sha256.sig"
-          PLATFORM_SIGN_KEY="customer-keys/novacustom/novacustom-open-source-firmware-release-1.x-key.asc"
+          PLATFORM_SIGN_KEY="customer-keys/novacustom/novacustom-open-source-firmware-release-1.x-key.asc \
+             customer-keys/novacustom/dasharo-release-0.9.x-for-novacustom-signing-key.asc"
           NEED_SMBIOS_MIGRATION="false"
           NEED_SMMSTORE_MIGRATION="true"
           NEED_BOOTSPLASH_MIGRATION="false"
@@ -237,7 +239,8 @@ board_config() {
           BIOS_HASH_LINK_COMM="$BIOS_LINK_COMM.sha256"
           EC_SIGN_LINK_COMM="$EC_LINK_COMM.sha256.sig"
           BIOS_SIGN_LINK_COMM="$BIOS_LINK_COMM.sha256.sig"
-          PLATFORM_SIGN_KEY="customer-keys/novacustom/novacustom-open-source-firmware-release-1.x-key.asc"
+          PLATFORM_SIGN_KEY="customer-keys/novacustom/novacustom-open-source-firmware-release-1.x-key.asc \
+             customer-keys/novacustom/dasharo-release-0.9.x-for-novacustom-signing-key.asc"
           NEED_SMBIOS_MIGRATION="false"
           NEED_SMMSTORE_MIGRATION="true"
           NEED_BLOB_TRANSMISSION="false"
@@ -272,7 +275,8 @@ board_config() {
           BIOS_HASH_LINK_COMM="$BIOS_LINK_COMM.sha256"
           EC_SIGN_LINK_COMM="$EC_LINK_COMM.sha256.sig"
           BIOS_SIGN_LINK_COMM="$BIOS_LINK_COMM.sha256.sig"
-          PLATFORM_SIGN_KEY="customer-keys/novacustom/novacustom-open-source-firmware-release-1.x-key.asc"
+          PLATFORM_SIGN_KEY="customer-keys/novacustom/novacustom-open-source-firmware-release-1.x-key.asc \
+             customer-keys/novacustom/dasharo-release-0.9.x-for-novacustom-signing-key.asc"
           NEED_SMBIOS_MIGRATION="false"
           NEED_SMMSTORE_MIGRATION="true"
           NEED_BOOTSPLASH_MIGRATION="false"
@@ -765,9 +769,12 @@ download_keys() {
 }
 
 get_signing_keys() {
+    local platform_keys=$PLATFORM_SIGN_KEY
     echo -n "Getting platform specific GPG key... "
-    wget -q https://raw.githubusercontent.com/3mdeb/3mdeb-secpack/master/$PLATFORM_SIGN_KEY -O - | gpg --import - >> $ERR_LOG_FILE 2>&1
-    error_check "Cannot get platform specific key to verify signatures."
+    for key in $platform_keys; do
+        wget -q https://raw.githubusercontent.com/3mdeb/3mdeb-secpack/master/$PLATFORM_SIGN_KEY -O - | gpg --import - >> $ERR_LOG_FILE 2>&1
+        error_check "Cannot get $key key to verify signatures."
+    done
     print_green "Done"
 }
 
