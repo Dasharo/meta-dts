@@ -2,6 +2,16 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v1.2.19 - 2024-02-28
+
+* Enabled switch between Dasharo (coreboot+UEFI) and Dasharo (coreboot+heads) on
+  NovaCustom NV4X ADL.
+* Added Dasharo (coreboot+heads) v0.9.0 for NovaCustom NV4X ADL.
+* Added missing TPM2 related packages needed to work with TPM2.
+* Enabled IOMMU support in used Linux kernel.
+* Fixed feature to [run commands from iPXE
+  shell](https://docs.dasharo.com/dasharo-tools-suite/documentation/#run-commands-from-ipxe-shell)
+
 ## v1.2.18 - 2024-01-22
 
 * Bumped supported firmware versions of MSI Z690-A to v1.1.3 and MSI Z790-P to
