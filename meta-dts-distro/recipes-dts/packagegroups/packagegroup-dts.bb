@@ -5,6 +5,9 @@ LICENSE = "MIT"
 
 inherit packagegroup
 
+# disable sanity check for allarch packagegroup
+PACKAGE_ARCH = ""
+
 PACKAGES = " \
     ${PN}-python \
     ${PN}-system \
@@ -40,7 +43,11 @@ RDEPENDS:${PN}-tools-base = " \
 "
 
 RDEPENDS:${PN}-tools-dts = " \
-    tpm2-tools \
+    packagegroup-security-tpm2 \
+    libtss2 \
+    libtss2-mu \
+    libtss2-tcti-device \
+    libtss2-tcti-mssim \
     mei-amt-check \
     cloudsend \
     dasharo-deploy \
