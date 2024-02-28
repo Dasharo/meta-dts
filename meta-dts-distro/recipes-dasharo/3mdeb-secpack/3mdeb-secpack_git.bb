@@ -11,7 +11,7 @@ SRC_URI = " \
     git://github.com/3mdeb/3mdeb-secpack.git;protocol=https;branch=master \
     file://3mdeb-secpack.sh \
 "
-SRCREV = "2225894887fc81a1c72b067edbe348b5f3f02a05"
+SRCREV = "c48af6eb2698f255c19a48a602b0e474137b07ef"
 S = "${WORKDIR}/git"
 
 DASHARO_KEYS_HOMEDIR = "${WORKDIR}/dasharo_keys"
