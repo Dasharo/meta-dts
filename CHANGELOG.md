@@ -11,6 +11,7 @@ All notable changes to the DTS project will be documented in this file.
 * Enabled IOMMU support in used Linux kernel.
 * Fixed feature to [run commands from iPXE
   shell](https://docs.dasharo.com/dasharo-tools-suite/documentation/#run-commands-from-ipxe-shell)
+* Updated 3mdeb-secpack to revision c48af6eb2698f255c19a48a602b0e474137b07ef
 
 ## v1.2.18 - 2024-01-22
 
