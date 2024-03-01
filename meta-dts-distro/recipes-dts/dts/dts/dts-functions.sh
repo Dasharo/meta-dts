@@ -178,7 +178,7 @@ board_config() {
           NEED_BOOTSPLASH_MIGRATION="false"
           NEED_BLOB_TRANSMISSION="false"
           PROGRAMMER_BIOS="internal"
-          PROGRAMMER_EC="ite_ec"
+          PROGRAMMER_EC="ite_ec:boardmismatch=force,romsize=128K,autoload=disable"
           if check_if_dasharo; then
           # if v1.5.1 or older, flash the whole bios region
           # TODO: Let DTS determine which parameters are suitable.
@@ -212,7 +212,7 @@ board_config() {
           NEED_BOOTSPLASH_MIGRATION="false"
           NEED_BLOB_TRANSMISSION="false"
           PROGRAMMER_BIOS="internal"
-          PROGRAMMER_EC="ite_ec"
+          PROGRAMMER_EC="ite_ec:boardmismatch=force,romsize=128K,autoload=disable"
           if check_if_dasharo; then
           # if v1.5.1 or older, flash the whole bios region
           # TODO: Let DTS determine which parameters are suitable.
@@ -245,7 +245,7 @@ board_config() {
           NEED_SMMSTORE_MIGRATION="true"
           NEED_BLOB_TRANSMISSION="false"
           PROGRAMMER_BIOS="internal"
-          PROGRAMMER_EC="ite_ec"
+          PROGRAMMER_EC="ite_ec:boardmismatch=force,romsize=128K,autoload=disable"
           if check_if_dasharo; then
           # if v1.7.2 or older, flash the whole bios region
           # TODO: Let DTS determine which parameters are suitable.
@@ -282,7 +282,7 @@ board_config() {
           NEED_BOOTSPLASH_MIGRATION="false"
           NEED_BLOB_TRANSMISSION="false"
           PROGRAMMER_BIOS="internal"
-          PROGRAMMER_EC="ite_ec"
+          PROGRAMMER_EC="ite_ec:boardmismatch=force,romsize=128K,autoload=disable"
           if check_if_dasharo; then
           # if v1.7.2 or older, flash the whole bios region
           # TODO: Let DTS determine which parameters are suitable.
