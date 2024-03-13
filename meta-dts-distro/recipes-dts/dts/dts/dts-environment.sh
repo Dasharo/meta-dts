@@ -81,6 +81,7 @@ CLOUD_REQUEST="X-Requested-With: XMLHttpRequest"
 ## base values
 BASE_CLOUDSEND_LOGS_URL="39d4biH4SkXD8Zm"
 BASE_CLOUDSEND_PASSWORD="1{\[\k6G"
+DEPLOY_REPORT="false"
 
 # set custom localization for PGP keys
 if [ -d /home/root/.dasharo-gnupg ]; then
