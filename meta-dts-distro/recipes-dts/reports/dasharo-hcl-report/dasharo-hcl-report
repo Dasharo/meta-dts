@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 source $DTS_ENV
-source $DTS_FUNC
+source $DTS_FUNCS
 
 update_result() {
   TOOL=$1
