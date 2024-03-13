@@ -297,7 +297,7 @@ fi
 
 # remove MAC address from logs as sensitive data
 MAC_ADDR=`cat /sys/class/net/$(ip route show default | head -1 | awk '/default/ {print $5}')/address`
-grep -rl "${MAC_ADDR}" logs | xargs sed -i 's/'${MAC_ADDR}'/MAC ADDRESS REMOVED/g'
+grep -rl "${MAC_ADDR}" logs && xargs sed -i 's/'${MAC_ADDR}'/MAC ADDRESS REMOVED/g'
 tar -zcf "$filename.tar.gz" logs/*
 rm -rf logs
 
