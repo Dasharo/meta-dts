@@ -9,6 +9,7 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384
 SRC_URI = " \
     file://dts \
     file://dts-boot \
+    file://dts-profile.sh \
     file://ec_transition \
     file://cloud_list \
     file://dts-environment.sh \
@@ -31,4 +32,9 @@ do_install () {
     install -m 0755 ${S}/cloud_list ${D}/${sbindir}
     install -m 0664 ${S}/dts-environment.sh ${D}/${sbindir}
     install -m 0664 ${S}/dts-functions.sh ${D}/${sbindir}
+
+    # install profile dropin so the DTS_ENV and DTS_FUNCS variables are set when
+    # loged via SSH
+    install -d ${D}${sysconfdir}/profile.d/
+    install -m 0755 ${WORKDIR}/dts-profile.sh ${D}${sysconfdir}/profile.d/
 }
