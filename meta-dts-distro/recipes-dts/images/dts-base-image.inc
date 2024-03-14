@@ -12,6 +12,7 @@ IMAGE_INSTALL:append = " \
     packagegroup-dts-tests \
     packagegroup-dts-tools-base \
     packagegroup-dts-tools-dts \
+    libxcrypt-compat \
 "
 
 # Enable local auto-login of the root user (local = serial port and
