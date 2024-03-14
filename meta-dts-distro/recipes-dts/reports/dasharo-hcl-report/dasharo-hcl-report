@@ -333,3 +333,44 @@ if [ "$SEND_LOGS" = "true" ]; then
     echo "Thank you for supporting Dasharo!"
   fi
 fi
+
+echo -e \
+"Would you like to contribute to the \"Hardware for Linux\" project?\r
+it is an open source project that that anonymously collects hardware details\r
+of Linux-powered computers over the world and helps people to collaboratively\r
+debug hardware related issues, check for Linux-compatibility and find drivers.\r
+You can find more about it here:\r
+https://linux-hardware.org/\r
+https://github.com/linuxhw/hw-probe\r
+Do you want to participate in this project?\r
+(if you answer \"yes\", then a binary from:\r
+https://github.com/linuxhw/hw-probe/releases/download/1.6/hw-probe-1.6.5-189-x86_64.AppImage\r
+will be downloaded and ran, in order to participate)\r
+"
+
+read -p "[N/y] "
+case ${REPLY} in
+    yes|y|Y|Yes|YES)
+    echo "Downloading the AppImage..."
+    wget https://github.com/linuxhw/hw-probe/releases/download/1.6/hw-probe-1.6.5-189-x86_64.AppImage /usr/bin/hw-probe
+    if [ $? -eq 0 ]; then
+        echo "AppImage succesfully downloaded..."
+    else
+        echo "couldn't download AppImage. Check your internet connection..."
+        exit 1
+    fi
+    # make sure to add the right linker
+    ln -s /lib /lib64
+    chmod 755 /usr/bin/hw-probe
+    /usr/bin/hw-probe -all -upload
+    if [ $? -eq 0 ]; then
+        echo "Thank you for contributing to the \"Hardware for Linux\" project!"
+    else
+        echo "couldn't probe/upload. Check your internet connection..."
+        exit 1
+    fi
+    ;;
+    *)
+    echo "Please consider supporting the \"Hardware for Linux\" project next time."
+    ;;
+esac
