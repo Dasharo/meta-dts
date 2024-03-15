@@ -320,7 +320,16 @@ board_config() {
               HAVE_HEADS_FW="true"
               HEADS_REL_VER_DES="0.9.0"
               HEADS_LINK_DES="${FW_STORE_URL_DES}/MS-7D25/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr4_heads.rom"
-              HEADS_SWITCH_FLASHROM_OPT_OVERRIDE="" # we have to do full flashing
+              if [ ! -f $SE_credential_file ]; then
+                compare_versions $DASHARO_REL_VER 1.1.1
+                if [ $? -eq 1 ] || [ $DASHARO_REL_VER == "1.1.1" ]; then
+                  # versions 1.1.1 and older does not have FD and ME regions
+                  # so we need to flash only bios region
+                  HEADS_SWITCH_FLASHROM_OPT_OVERRIDE="--ifd -i bios"
+                else
+                  HEADS_SWITCH_FLASHROM_OPT_OVERRIDE="" # we have to do full flashing
+                fi
+              fi
               HAVE_EC="false"
               NEED_EC_RESET="false"
               BIOS_HASH_LINK_COMM="${BIOS_LINK_COMM}.sha256"
@@ -358,7 +367,16 @@ board_config() {
               HAVE_HEADS_FW="true"
               HEADS_REL_VER_DES="0.9.0"
               HEADS_LINK_DES="${FW_STORE_URL_DES}/MS-7D25/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr5_heads.rom"
-              HEADS_SWITCH_FLASHROM_OPT_OVERRIDE="" # we have to do full flashing
+              if [ ! -f $SE_credential_file ]; then
+                compare_versions $DASHARO_REL_VER 1.1.1
+                if [ $? -eq 1 ] || [ $DASHARO_REL_VER == "1.1.1" ]; then
+                  # versions 1.1.1 and older does not have FD and ME regions
+                  # so we need to flash only bios region
+                  HEADS_SWITCH_FLASHROM_OPT_OVERRIDE="--ifd -i bios"
+                else
+                  HEADS_SWITCH_FLASHROM_OPT_OVERRIDE="" # we have to do full flashing
+                fi
+              fi
               HAVE_EC="false"
               NEED_EC_RESET="false"
               BIOS_HASH_LINK_COMM="${BIOS_LINK_COMM}.sha256"
