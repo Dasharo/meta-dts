@@ -792,7 +792,7 @@ get_signing_keys() {
     local platform_keys=$PLATFORM_SIGN_KEY
     echo -n "Getting platform specific GPG key... "
     for key in $platform_keys; do
-        wget -q https://raw.githubusercontent.com/3mdeb/3mdeb-secpack/master/$PLATFORM_SIGN_KEY -O - | gpg --import - >> $ERR_LOG_FILE 2>&1
+        wget -q https://raw.githubusercontent.com/3mdeb/3mdeb-secpack/master/$key -O - | gpg --import - >> $ERR_LOG_FILE 2>&1
         error_check "Cannot get $key key to verify signatures."
     done
     print_green "Done"
