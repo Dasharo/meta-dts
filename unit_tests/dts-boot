@@ -1,22 +1,21 @@
 #!/bin/bash
 
 if [ $TEST_DES == "y" ] && [ ! -f cloud-pass ]; then
-  rm cloud-pass
-  if [ $BOARD_VENDOR == "Notebook" ]; then
+  rm -rf cloud-pass
+  if [ "$BOARD_VENDOR" = "Notebook" ]; then
     # For NVC testing
-    echo "SHY8Lfteq2bCLGD" >> cloud-pass
-    echo "diCqE9Q5wL8eLZH" >> cloud-pass
-    echo "%K5RKof!" >> cloud-pass
-  elif [ $BOARD_VENDOR == "Micro-Star International Co., Ltd." ]; then
+    echo 'SHY8Lfteq2bCLGD' >> cloud-pass
+    echo 'diCqE9Q5wL8eLZH' >> cloud-pass
+    echo '%K5RKof!' >> cloud-pass
+  elif [ "$BOARD_VENDOR" = "Micro-Star International Co., Ltd." ]; then
     # For MSI testing, put the credentials here
     echo "MSI credentials missing"
-    echo "SHY8Lfteq2bCLGD" >> cloud-pass
-    echo "DoNoqBcxbaeD4mS" >> cloud-pass
-    echo "X0?Q0/;y" >> cloud-pass
-    exit 1
+    echo 'SHY8Lfteq2bCLGD' >> cloud-pass
+    echo 'DoNoqBcxbaeD4mS' >> cloud-pass
+    echo 'X0?Q0/;y' >> cloud-pass
   fi
 elif [ $TEST_DES != "y" ] && [ -f cloud-pass ]; then
-  rm cloud-pass
+  rm -rf cloud-pass
 fi
 
 if [ -f /tmp/bios.bin ]; then
