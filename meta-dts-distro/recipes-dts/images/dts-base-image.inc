@@ -13,6 +13,8 @@ IMAGE_INSTALL:append = " \
     packagegroup-dts-tools-base \
     packagegroup-dts-tools-dts \
     libxcrypt-compat \
+    alsa-utils-aplay \
+    hw-probe \
 "
 
 # Enable local auto-login of the root user (local = serial port and
