@@ -319,7 +319,7 @@ board_config() {
               BIOS_LINK_DES="${FW_STORE_URL_DES}/MS-7D25/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr4.rom"
               HAVE_HEADS_FW="true"
               HEADS_REL_VER_DES="0.9.0"
-              HEADS_LINK_DES="${FW_STORE_URL_DES}/MS-7D25/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr4_heads.rom"
+              HEADS_LINK_DES="${FW_STORE_URL_DES}/MS-7D25/v${HEADS_REL_VER_DES}/${DASHARO_REL_NAME}_v${HEADS_REL_VER_DES}_ddr4_heads.rom"
               if [ ! -v DES_IS_LOGGED ]; then
                 compare_versions $DASHARO_REL_VER 1.1.1
                 if [ $? -eq 1 ] || [ $DASHARO_REL_VER == "1.1.1" ]; then
@@ -367,7 +367,7 @@ board_config() {
               BIOS_LINK_DES="${FW_STORE_URL_DES}/MS-7D25/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr5.rom"
               HAVE_HEADS_FW="true"
               HEADS_REL_VER_DES="0.9.0"
-              HEADS_LINK_DES="${FW_STORE_URL_DES}/MS-7D25/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr5_heads.rom"
+              HEADS_LINK_DES="${FW_STORE_URL_DES}/MS-7D25/v${HEADS_REL_VER_DES}/${DASHARO_REL_NAME}_v${HEADS_REL_VER_DES}_ddr5_heads.rom"
               if [ ! -v DES_IS_LOGGED ]; then
                 compare_versions $DASHARO_REL_VER 1.1.1
                 if [ $? -eq 1 ] || [ $DASHARO_REL_VER == "1.1.1" ]; then
@@ -422,7 +422,7 @@ board_config() {
               BIOS_LINK_DES="${FW_STORE_URL_DES}/MS-7E06/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr4.rom"
               HAVE_HEADS_FW="true"
               HEADS_REL_VER_DES="0.9.0"
-              HEADS_LINK_DES="${FW_STORE_URL_DES}/MS-7E06/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr4_heads.rom"
+              HEADS_LINK_DES="${FW_STORE_URL_DES}/MS-7E06/v${HEADS_REL_VER_DES}/${DASHARO_REL_NAME}_v${HEADS_REL_VER_DES}_ddr4_heads.rom"
               HEADS_SWITCH_FLASHROM_OPT_OVERRIDE="" # we have to do full flashing
               HAVE_EC="false"
               NEED_EC_RESET="false"
@@ -460,7 +460,7 @@ board_config() {
               BIOS_LINK_DES="${FW_STORE_URL_DES}/MS-7E06/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr5.rom"
               HAVE_HEADS_FW="true"
               HEADS_REL_VER_DES="0.9.0"
-              HEADS_LINK_DES="${FW_STORE_URL_DES}/MS-7E06/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}_ddr5_heads.rom"
+              HEADS_LINK_DES="${FW_STORE_URL_DES}/MS-7E06/v${HEADS_REL_VER_DES}/${DASHARO_REL_NAME}_v${HEADS_REL_VER_DES}_ddr5_heads.rom"
               HEADS_SWITCH_FLASHROM_OPT_OVERRIDE="" # we have to do full flashing
               HAVE_EC="false"
               NEED_EC_RESET="false"
