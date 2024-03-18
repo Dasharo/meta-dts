@@ -645,14 +645,20 @@ check_se_creds() {
 
   if check_network_connection; then
     if [ -v BIOS_LINK_DES ]; then
-      CHECK_DOWNLOAD_REQUEST_RESPONSE=$(curl -L -I -s -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_LINK_DES" -o /dev/null -w "%{http_code}")
-    elif [ -v HEADS_LINK_DES ]; then
-      CHECK_DOWNLOAD_REQUEST_RESPONSE=$(curl -L -I -s -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$HEADS_LINK_DES" -o /dev/null -w "%{http_code}")
+      CHECK_DOWNLOAD_REQUEST_RESPONSE_UEFI=$(curl -L -I -s -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_LINK_DES" -o /dev/null -w "%{http_code}")
+    fi
+    if [ -v HEADS_LINK_DES ]; then
+      CHECK_DOWNLOAD_REQUEST_RESPONSE_HEADS=$(curl -L -I -s -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$HEADS_LINK_DES" -o /dev/null -w "%{http_code}")
     fi
 
     CHECK_LOGS_REQUEST_RESPONSE=$(curl -L -I -s -f -H "$CLOUD_REQUEST" "$TEST_LOGS_URL" -o /dev/null -w "%{http_code}")
-    if [ ${CHECK_DOWNLOAD_REQUEST_RESPONSE} -eq 200 ] && [ ${CHECK_LOGS_REQUEST_RESPONSE} -eq 200 ]; then
-      return 0
+    if [ ${CHECK_DOWNLOAD_REQUEST_RESPONSE_UEFI} -eq 200 ] || [ ${CHECK_DOWNLOAD_REQUEST_RESPONSE_HEADS} -eq 200 ]; then
+      if [ ${CHECK_LOGS_REQUEST_RESPONSE} -eq 200 ]; then
+        return 0
+      else
+        echo ""
+        return 1
+      fi
     else
       echo ""
       return 1
