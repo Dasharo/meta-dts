@@ -632,6 +632,9 @@ check_flash_chip() {
 }
 
 check_se_creds() {
+  local _check_dwn_req_resp_uefi="0"
+  local _check_dwn_req_resp_heads="0"
+  local _check_logs_req_resp="0"
   CLOUDSEND_LOGS_URL=$(sed -n '1p' < ${SE_credential_file} | tr -d '\n')
   CLOUDSEND_DOWNLOAD_URL=$(sed -n '2p' < ${SE_credential_file} | tr -d '\n')
   CLOUDSEND_PASSWORD=$(sed -n '3p' < ${SE_credential_file} | tr -d '\n')
@@ -645,15 +648,15 @@ check_se_creds() {
 
   if check_network_connection; then
     if [ -v BIOS_LINK_DES ]; then
-      CHECK_DOWNLOAD_REQUEST_RESPONSE_UEFI=$(curl -L -I -s -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_LINK_DES" -o /dev/null -w "%{http_code}")
+      _check_dwn_req_resp_uefi=$(curl -L -I -s -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_LINK_DES" -o /dev/null -w "%{http_code}")
     fi
     if [ -v HEADS_LINK_DES ]; then
-      CHECK_DOWNLOAD_REQUEST_RESPONSE_HEADS=$(curl -L -I -s -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$HEADS_LINK_DES" -o /dev/null -w "%{http_code}")
+      _check_dwn_req_resp_heads=$(curl -L -I -s -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$HEADS_LINK_DES" -o /dev/null -w "%{http_code}")
     fi
 
-    CHECK_LOGS_REQUEST_RESPONSE=$(curl -L -I -s -f -H "$CLOUD_REQUEST" "$TEST_LOGS_URL" -o /dev/null -w "%{http_code}")
-    if [ ${CHECK_DOWNLOAD_REQUEST_RESPONSE_UEFI} -eq 200 ] || [ ${CHECK_DOWNLOAD_REQUEST_RESPONSE_HEADS} -eq 200 ]; then
-      if [ ${CHECK_LOGS_REQUEST_RESPONSE} -eq 200 ]; then
+    _check_logs_req_resp=$(curl -L -I -s -f -H "$CLOUD_REQUEST" "$TEST_LOGS_URL" -o /dev/null -w "%{http_code}")
+    if [ ${_check_dwn_req_resp_uefi} -eq 200 ] || [ ${_check_dwn_req_resp_heads} -eq 200 ]; then
+      if [ ${_check_logs_req_resp} -eq 200 ]; then
         return 0
       else
         echo ""
