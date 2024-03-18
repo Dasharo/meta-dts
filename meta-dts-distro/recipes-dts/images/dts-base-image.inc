@@ -12,6 +12,7 @@ IMAGE_INSTALL:append = " \
     packagegroup-dts-tests \
     packagegroup-dts-tools-base \
     packagegroup-dts-tools-dts \
+    packagegroup-tpm-dts \
 "
 
 # Enable local auto-login of the root user (local = serial port and
