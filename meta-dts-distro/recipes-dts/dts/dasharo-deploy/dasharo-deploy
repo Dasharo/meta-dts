@@ -607,6 +607,12 @@ update() {
   # FLASHROM_ADD_OPT_UPDATE_OVERRIDE takes priority over auto-detected update params.
   # It set only by platform-specific and firmware version-specific conditions
   if [ -v FLASHROM_ADD_OPT_UPDATE_OVERRIDE ]; then
+    # To standardize the operation of the FLASHROM_ADD_OPT_UPDATE_OVERRIDE flag,
+    # by default it contains only the bios section, below we verify the
+    # downloaded binary and add more sections when they were detected after
+    # using the `check_blobs_in_binary` function.
+    set_intel_regions_update_params "$FLASHROM_ADD_OPT_UPDATE_OVERRIDE"
+    FLASHROM_ADD_OPT_UPDATE_OVERRIDE="$FLASHROM_ADD_OPT_REGIONS"
     $FLASHROM -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_UPDATE_OVERRIDE} -w "$BIOS_UPDATE_FILE"  >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
     error_check "Failed to update Dasharo firmware"
   else
