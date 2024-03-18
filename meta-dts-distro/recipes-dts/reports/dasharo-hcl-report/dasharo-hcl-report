@@ -363,7 +363,7 @@ case ${REPLY} in
     ;;
     *)
     echo -e \
-    "Please consider contributing to the \"Hardware for Linux\" project.\r
+    "Please consider contributing to the \"Hardware for Linux\" project in the future.\r
     All you have to do is run this command:\r
     hw-probe --all --upload\r
     "
