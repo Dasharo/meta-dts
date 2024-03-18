@@ -143,11 +143,11 @@ while : ; do
       ;;
     4)
       echo ""
-      read -p "Enter logs key:                " TMP_CLOUDSEND_LOGS_URL
+      read -p "Enter logs key:                " 'TMP_CLOUDSEND_LOGS_URL'
       echo ""
-      read -p "Enter firmware download key:   " TMP_CLOUDSEND_DOWNLOAD_URL
+      read -p "Enter firmware download key:   " 'TMP_CLOUDSEND_DOWNLOAD_URL'
       echo ""
-      read -p "Enter password:                " TMP_CLOUDSEND_PASSWORD
+      read -p "Enter password:                " 'TMP_CLOUDSEND_PASSWORD'
 
       echo ${TMP_CLOUDSEND_LOGS_URL} > ${SE_credential_file}
       echo ${TMP_CLOUDSEND_DOWNLOAD_URL} >> ${SE_credential_file}
