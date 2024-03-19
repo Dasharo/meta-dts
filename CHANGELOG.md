@@ -2,6 +2,25 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v1.2.20 - 2024-03-19
+
+* Enabled switch from Dasharo (coreboot+UEFI) to Dasharo (coreboot+heads) on
+  MSI Z690-A and MSI Z790-P. Switch back is not possible, please see information
+  from release notes for
+  [MSI Z690-A](https://github.com/Dasharo/docs/tree/master/docs/variants/msi_z690/heads.md#transition-from-dasharo-heads-back-to-uefi)
+  and
+  [MSI Z790-P](https://github.com/Dasharo/docs/tree/master/docs/variants/msi_z790/heads.md#transition-from-dasharo-heads-back-to-uefi).
+* Added Dasharo (coreboot+heads) v0.9.0 for MSI Z690-A and MSI Z790-P.
+* Fixed initial deployment for NovaCustom NV4x TGL; issue
+  [699](https://github.com/Dasharo/dasharo-issues/issues/699).
+* Fixed HCL report generation when started from shell; issue
+  [736](https://github.com/Dasharo/dasharo-issues/issues/736).
+* Changed DTS boot partition type to EFI; issue
+  [692](https://github.com/Dasharo/dasharo-issues/issues/692).
+* Removed ISO image from release artifacts until reported usability issues are
+  fixed; issue
+  [288](https://github.com/Dasharo/dasharo-issues/issues/288#issuecomment-1995053693).
+
 ## v1.2.19 - 2024-02-28
 
 * Enabled switch between Dasharo (coreboot+UEFI) and Dasharo (coreboot+heads) on
