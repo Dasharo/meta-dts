@@ -20,6 +20,8 @@ All notable changes to the DTS project will be documented in this file.
 * Removed ISO image from release artifacts until reported usability issues are
   fixed; issue
   [288](https://github.com/Dasharo/dasharo-issues/issues/288#issuecomment-1995053693).
+* Updated flashrom to revision f5a48aa6c67bd30603062bb4265419fd49f83870
+* Updated 3mdeb-secpack to revision c844b4ba536cde4813c8e4088bf069ac90ef9c27
 
 ## v1.2.19 - 2024-02-28
 
