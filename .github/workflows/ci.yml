@@ -78,12 +78,16 @@ jobs:
           cp dts-base-image-genericx86-64.cpio.gz dts-base-image-${DTS_VER}.cpio.gz
           cp dts-base-image-genericx86-64.wic.gz dts-base-image-${DTS_VER}.wic.gz
           cp dts-base-image-genericx86-64.wic.bmap dts-base-image-${DTS_VER}.wic.bmap
-          cp dts-base-image-genericx86-64.iso dts-base-image-${DTS_VER}.iso
+          # do not release iso image until issue is fixed
+          # see: https://github.com/dasharo/dasharo-issues/issues/288
+          # cp dts-base-image-genericx86-64.iso dts-base-image-${DTS_VER}.iso
           scp -i ~/.ssh/dts-ci-key bzImage-${DTS_VER} builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.cpio.gz builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.wic.gz builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.wic.bmap builder@10.1.40.2:boot/dts/${DTS_VER}/
-          scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.iso builder@10.1.40.2:boot/dts/${DTS_VER}/
+          # do not release iso image until issue is fixed
+          # see: https://github.com/dasharo/dasharo-issues/issues/288
+          # scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.iso builder@10.1.40.2:boot/dts/${DTS_VER}/
       - name: Deploy sha256 on boot.dasharo.com
         shell: bash
         run: |
@@ -93,12 +97,16 @@ jobs:
           sha256sum dts-base-image-${DTS_VER}.cpio.gz > dts-base-image-${DTS_VER}.cpio.gz.sha256
           sha256sum dts-base-image-${DTS_VER}.wic.gz > dts-base-image-${DTS_VER}.wic.gz.sha256
           sha256sum dts-base-image-${DTS_VER}.wic.bmap > dts-base-image-${DTS_VER}.wic.bmap.sha256
-          sha256sum dts-base-image-${DTS_VER}.iso > dts-base-image-${DTS_VER}.iso.sha256
+          # do not release iso image until issue is fixed
+          # see: https://github.com/dasharo/dasharo-issues/issues/288
+          # sha256sum dts-base-image-${DTS_VER}.iso > dts-base-image-${DTS_VER}.iso.sha256
           scp -i ~/.ssh/dts-ci-key bzImage-${DTS_VER}.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.cpio.gz.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.wic.gz.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.wic.bmap.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
-          scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.iso.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
+          # do not release iso image until issue is fixed
+          # see: https://github.com/dasharo/dasharo-issues/issues/288
+          # scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.iso.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
       - name: Update iPXE menu
         shell: bash
         run: |
