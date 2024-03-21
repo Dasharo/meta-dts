@@ -566,6 +566,63 @@ board_config() {
           ;;
       esac
       ;;
+    "PC Engines")
+      shopt -s nocasematch
+      case "$SYSTEM_MODEL" in
+        "APU2")
+          DASHARO_REL_NAME="pcengines_apu2"
+          DASHARO_REL_VER="0.9.0"
+          HAVE_EC="false"
+          NEED_EC_RESET="false"
+          BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
+          BIOS_HASH_LINK_COMM="${BIOS_LINK_COMM}.sha256"
+          BIOS_SIGN_LINK_COMM="${BIOS_LINK_COMM}.sha256.sig"
+          PROGRAMMER_BIOS="internal:boardmismatch=force"
+          NEED_SMMSTORE_MIGRATION="false"
+          NEED_BOOTSPLASH_MIGRATION="false"
+          ;;
+        "APU3")
+          DASHARO_REL_NAME="pcengines_apu3"
+          DASHARO_REL_VER="0.9.0"
+          HAVE_EC="false"
+          NEED_EC_RESET="false"
+          BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
+          BIOS_HASH_LINK_COMM="${BIOS_LINK_COMM}.sha256"
+          BIOS_SIGN_LINK_COMM="${BIOS_LINK_COMM}.sha256.sig"
+          PROGRAMMER_BIOS="internal:boardmismatch=force"
+          NEED_SMMSTORE_MIGRATION="false"
+          NEED_BOOTSPLASH_MIGRATION="false"
+          ;;
+        "APU4")
+          DASHARO_REL_NAME="pcengines_apu4"
+          DASHARO_REL_VER="0.9.0"
+          HAVE_EC="false"
+          NEED_EC_RESET="false"
+          BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
+          BIOS_HASH_LINK_COMM="${BIOS_LINK_COMM}.sha256"
+          BIOS_SIGN_LINK_COMM="${BIOS_LINK_COMM}.sha256.sig"
+          PROGRAMMER_BIOS="internal:boardmismatch=force"
+          NEED_SMMSTORE_MIGRATION="false"
+          NEED_BOOTSPLASH_MIGRATION="false"
+          ;;
+        "APU6")
+          DASHARO_REL_NAME="pcengines_apu6"
+          DASHARO_REL_VER="0.9.0"
+          HAVE_EC="false"
+          NEED_EC_RESET="false"
+          BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
+          BIOS_HASH_LINK_COMM="${BIOS_LINK_COMM}.sha256"
+          BIOS_SIGN_LINK_COMM="${BIOS_LINK_COMM}.sha256.sig"
+          PROGRAMMER_BIOS="internal:boardmismatch=force"
+          NEED_SMMSTORE_MIGRATION="false"
+          NEED_BOOTSPLASH_MIGRATION="false"
+          ;;
+        *)
+          error_exit "Board model $SYSTEM_MODEL is currently not supported"
+          ;;
+      esac
+      shopt -u nocasematch
+      ;;
     *)
       error_exit "Board vendor: $BOARD_VENDOR is currently not supported"
       ;;
