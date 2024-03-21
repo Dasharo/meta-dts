@@ -7,6 +7,8 @@ SRC_URI = "https://github.com/linuxhw/hw-probe/releases/download/1.6/hw-probe-1.
 
 S = "${WORKDIR}/${BPN}"
 
+INSANE_SKIP:${PN} += "already-stripped"
+
 FILES:${PN} += "/lib64"
 
 do_install () {
