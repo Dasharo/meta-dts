@@ -552,6 +552,15 @@ update() {
 
   handle_fw_switching $_can_switch_to_heads
 
+  if [ "$UPDATE_VERSION" == "1.1.1" ]; then
+    cpu_gen_check=$(lscpu | grep -F "Model name" | grep -E "(13|14)[0-9]{3}" | wc -l)
+    if [ $cpu_gen_check -ne 0 ]; then
+      echo "You have a 13 gen or above cpu, and are trying to flash Dasharo v1.1.1"
+      echo "That version doesnt support gen 13 and above cpu, therefore we cannot continue with flashing"
+      error_exit "Aborting update process..."
+    fi
+  fi
+
   while : ; do
     echo
     read -r -p "Are you sure you want to proceed with update? (Y|n) " OPTION
