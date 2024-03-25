@@ -561,8 +561,8 @@ update() {
     cpu_gen_check=$(lscpu | grep -F "Model name" | grep -E "(13|14)[0-9]{2}" | wc -l)
 
     if [ $cpu_gen_check -ne 0 ]; then
-      echo "You have a 13 gen or above cpu, and are trying to flash Dasharo v1.1.1 on a MSI PRO Z690-A DDR4 or DDR5 board"
-      echo "That version doesnt support gen 13 and above cpu, therefore we cannot continue with flashing"
+      echo "You have a 13th gen or above CPU and are trying to flash Dasharo v1.1.1 on a MSI PRO Z690-A DDR4 or DDR5 board"
+      echo "That version does not support gen 13 and above CPU. Therefore we cannot continue with flashing."
       error_exit "Aborting update process..."
     fi
 
