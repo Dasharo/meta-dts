@@ -554,9 +554,7 @@ update() {
 
   if [[ "$UPDATE_VERSION" == "1.1.1" && \
     ( "$BOARD_MODEL" == "PRO Z690-A WIFI DDR4(MS-7D25)" || \
-      "$BOARD_MODEL" == "PRO Z690-A DDR4(MS-7D25)" || \
-      "$BOARD_MODEL" == "PRO Z790-P WIFI (MS-7E06)" || \
-      "$BOARD_MODEL" == "PRO Z790-P (MS-7E06)" ) ]]; then
+      "$BOARD_MODEL" == "PRO Z690-A DDR4(MS-7D25)" ) ]]; then
 
     cpu_gen_check=$(lscpu | grep -F "Model name" | grep -E "(13|14)[0-9]{2}" | wc -l)
 
