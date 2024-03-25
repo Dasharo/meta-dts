@@ -578,8 +578,8 @@ board_config() {
           BIOS_HASH_LINK_COMM="${BIOS_LINK_COMM}.sha256"
           BIOS_SIGN_LINK_COMM="${BIOS_LINK_COMM}.sha256.sig"
           PROGRAMMER_BIOS="internal:boardmismatch=force"
-          NEED_SMMSTORE_MIGRATION="false"
-          NEED_BOOTSPLASH_MIGRATION="false"
+          NEED_SMMSTORE_MIGRATION="true"
+          NEED_BOOTSPLASH_MIGRATION="true"
           ;;
         "APU3")
           DASHARO_REL_NAME="pcengines_apu3"
@@ -590,8 +590,8 @@ board_config() {
           BIOS_HASH_LINK_COMM="${BIOS_LINK_COMM}.sha256"
           BIOS_SIGN_LINK_COMM="${BIOS_LINK_COMM}.sha256.sig"
           PROGRAMMER_BIOS="internal:boardmismatch=force"
-          NEED_SMMSTORE_MIGRATION="false"
-          NEED_BOOTSPLASH_MIGRATION="false"
+          NEED_SMMSTORE_MIGRATION="true"
+          NEED_BOOTSPLASH_MIGRATION="true"
           ;;
         "APU4")
           DASHARO_REL_NAME="pcengines_apu4"
@@ -602,8 +602,8 @@ board_config() {
           BIOS_HASH_LINK_COMM="${BIOS_LINK_COMM}.sha256"
           BIOS_SIGN_LINK_COMM="${BIOS_LINK_COMM}.sha256.sig"
           PROGRAMMER_BIOS="internal:boardmismatch=force"
-          NEED_SMMSTORE_MIGRATION="false"
-          NEED_BOOTSPLASH_MIGRATION="false"
+          NEED_SMMSTORE_MIGRATION="true"
+          NEED_BOOTSPLASH_MIGRATION="true"
           ;;
         "APU6")
           DASHARO_REL_NAME="pcengines_apu6"
@@ -614,8 +614,8 @@ board_config() {
           BIOS_HASH_LINK_COMM="${BIOS_LINK_COMM}.sha256"
           BIOS_SIGN_LINK_COMM="${BIOS_LINK_COMM}.sha256.sig"
           PROGRAMMER_BIOS="internal:boardmismatch=force"
-          NEED_SMMSTORE_MIGRATION="false"
-          NEED_BOOTSPLASH_MIGRATION="false"
+          NEED_SMMSTORE_MIGRATION="true"
+          NEED_BOOTSPLASH_MIGRATION="true"
           ;;
         *)
           error_exit "Board model $SYSTEM_MODEL is currently not supported"
