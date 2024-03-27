@@ -567,6 +567,8 @@ board_config() {
       esac
       ;;
     "PC Engines")
+      FLASH_CHIP_LIST="W25Q64JV-.Q"
+      NOT_INTEL="true"
       shopt -s nocasematch
       case "$SYSTEM_MODEL" in
         "APU2")
@@ -913,9 +915,7 @@ check_blobs_in_binary() {
 
   # If there is no descriptor, there is no ME as well, so skip the check
   if [ $BOARD_HAS_FD_REGION -ne 0 ]; then
-    ME_OFFSET=$(ifdtool -d $1 2> /dev/null | grep "Flash Region 2 (Intel ME):" | sed 's/Flash Region 2 (Intel ME)\://' |awk '{print $1;}')
-    # Check for IFD signature at offset 0 (old descriptors)
-    if [ $(tail -c +0 $1|head -c 4|xxd -ps) == "5aa5f00f" ]; then
+    ME_OFFSET=$(ifdtool -d $1 2> /dev/null | grep "Flash Region 2 (Intel ME):" | sed 's/Flash Region 2 (Intel ME)\://' |awk '{print $1;}') # Check for IFD signature at offset 0 (old descriptors) if [ $(tail -c +0 $1|head -c 4|xxd -ps) == "5aa5f00f" ]; then
       BINARY_HAS_FD=1
     fi
     # Check for IFD signature at offset 16 (new descriptors)
