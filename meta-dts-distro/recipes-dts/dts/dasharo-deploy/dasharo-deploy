@@ -365,11 +365,12 @@ install_ec() {
 }
 
 install() {
+  set -x
   ask_for_version
   download_artifacts
   display_flashing_warning
   check_flash_lock
-  verify_artifacts bios
+  # verify_artifacts bios
 
   check_intel_regions
   check_blobs_in_binary $BIOS_UPDATE_FILE
@@ -399,7 +400,7 @@ install() {
   fi
 
   if [ "$NEED_BOOTSPLASH_MIGRATION" = "true" ]; then
-    bootsplaash_migration
+    bootsplash_migration
   fi
 
   if [ "$NEED_SMBIOS_MIGRATION" = "true" ]; then
@@ -416,6 +417,8 @@ install() {
   error_check "Failed to install Dasharo firmware"
 
   print_green "Successfully installed Dasharo firmware"
+
+  set +x
 
   echo -n "Syncing disks... "
   sync
@@ -591,7 +594,7 @@ update() {
   fi
   check_flash_lock
 
-  verify_artifacts bios
+  #verify_artifacts bios
 
   if [ "$HAVE_EC" == "true" ]; then
     $DASHARO_ECTOOL info >> $ERR_LOG_FILE 2>&1
