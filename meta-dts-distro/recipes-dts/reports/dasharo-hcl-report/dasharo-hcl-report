@@ -57,6 +57,9 @@ fi
 
 FULL_UPLOAD_URL="https://cloud.3mdeb.com/index.php/s/"${CLOUDSEND_LOGS_URL}
 
+board_config
+check_flash_chip
+
 mkdir logs
 if [ $DEPLOY_REPORT = "false" ]; then
   echo "Getting hardware information. It will take a few minutes..."
@@ -171,6 +174,9 @@ printf '################################                                   |\r'
 # Some regions may be not available so we need to use specific regions to read
 check_intel_regions
 if [ $BOARD_HAS_FD_REGION -eq 0 ]; then
+  # No descriptor, probably safe to read everything
+  FLASHROM_ADD_OPT_READ=" "
+else
   # Use safe defaults. Descriptor may contain additional regions not detected
   # by flashrom and will return failure when attempted to be read. BIOS and
   # Flash descriptor regions should always be readable. If not, then we have
@@ -184,10 +190,8 @@ if [ $BOARD_HAS_FD_REGION -eq 0 ]; then
     # GBE region is present and not locked, read it as well
     FLASHROM_ADD_OPT_READ+=" -i gbe"
   fi
-else
-    # No descriptor, probably safe to read everything
-    FLASHROM_ADD_OPT_READ=" "
 fi
+
 $FLASHROM -V -p internal:laptop=force_I_want_a_brick ${FLASH_CHIP_SELECT} -r logs/rom.bin ${FLASHROM_ADD_OPT_READ} > logs/flashrom_read.log 2> logs/flashrom_read.err.log
 if [ $? -ne 0 ]; then
   echo "CRITICAL ERROR: cannot dump firmware"
@@ -297,7 +301,8 @@ fi
 
 # remove MAC address from logs as sensitive data
 MAC_ADDR=`cat /sys/class/net/$(ip route show default | head -1 | awk '/default/ {print $5}')/address`
-grep -rl "${MAC_ADDR}" logs && xargs sed -i 's/'${MAC_ADDR}'/MAC ADDRESS REMOVED/g'
+grep -rl "${MAC_ADDR}" logs && grep -rl "${MAC_ADDR}" logs | xargs sed -i 's/'${MAC_ADDR}'/MAC ADDRESS REMOVED/g'
+
 tar -zcf "$filename.tar.gz" logs/*
 rm -rf logs
 

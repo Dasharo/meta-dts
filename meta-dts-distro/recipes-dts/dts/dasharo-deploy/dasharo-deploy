@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# set -x
-
 source $DTS_ENV
 source $DTS_FUNCS
 
@@ -399,7 +397,7 @@ install() {
   fi
 
   if [ "$NEED_BOOTSPLASH_MIGRATION" = "true" ]; then
-    bootsplaash_migration
+    bootsplash_migration
   fi
 
   if [ "$NEED_SMBIOS_MIGRATION" = "true" ]; then
