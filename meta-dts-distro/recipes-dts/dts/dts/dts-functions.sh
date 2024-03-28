@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -x
+
 source $DTS_ENV
 
 ### Color functions
@@ -567,50 +569,51 @@ board_config() {
       esac
       ;;
     "PC Engines")
+      FLASH_CHIP_LIST="W25Q64JV-.Q"
       shopt -s nocasematch
       case "$SYSTEM_MODEL" in
         "APU2")
           DASHARO_REL_NAME="pcengines_apu2"
-          DASHARO_REL_VER="0.9.0"
+          DASHARO_REL_VER_DES="0.9.0"
           HAVE_EC="false"
           NEED_EC_RESET="false"
-          BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
-          BIOS_HASH_LINK_COMM="${BIOS_LINK_COMM}.sha256"
-          BIOS_SIGN_LINK_COMM="${BIOS_LINK_COMM}.sha256.sig"
+          BIOS_LINK_DES="${FW_STORE_URL_DES}/pcengines_apu2/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}.rom"
+          BIOS_HASH_LINK_DES="${BIOS_LINK_COMM}.sha256"
+          BIOS_SIGN_LINK_DES="${BIOS_LINK_COMM}.sha256.sig"
           PROGRAMMER_BIOS="internal:boardmismatch=force"
           NEED_SMMSTORE_MIGRATION="true"
           NEED_BOOTSPLASH_MIGRATION="true"
           ;;
         "APU3")
           DASHARO_REL_NAME="pcengines_apu3"
-          DASHARO_REL_VER="0.9.0"
+          DASHARO_REL_VER_DES="0.9.0"
           HAVE_EC="false"
           NEED_EC_RESET="false"
-          BIOS_LINK_COMM="$FW_STORE_URL/pcengines_apu2/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
-          BIOS_HASH_LINK_COMM="${BIOS_LINK_COMM}.sha256"
-          BIOS_SIGN_LINK_COMM="${BIOS_LINK_COMM}.sha256.sig"
+          BIOS_LINK_DES="${FW_STORE_URL_DES}/pcengines_apu2/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}.rom"
+          BIOS_HASH_LINK_DES="${BIOS_LINK_COMM}.sha256"
+          BIOS_SIGN_LINK_DES="${BIOS_LINK_COMM}.sha256.sig"
           PROGRAMMER_BIOS="internal:boardmismatch=force"
           NEED_SMMSTORE_MIGRATION="true"
           NEED_BOOTSPLASH_MIGRATION="true"
           ;;
         "APU4")
           DASHARO_REL_NAME="pcengines_apu4"
-          DASHARO_REL_VER="0.9.0"
+          DASHARO_REL_VER_DES="0.9.0"
           HAVE_EC="false"
           NEED_EC_RESET="false"
-          BIOS_LINK_COMM="$FW_STORE_URL/pcengines_apu2/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
-          BIOS_HASH_LINK_COMM="${BIOS_LINK_COMM}.sha256"
-          BIOS_SIGN_LINK_COMM="${BIOS_LINK_COMM}.sha256.sig"
+          BIOS_LINK_DES="${FW_STORE_URL_DES}/pcengines_apu2/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}.rom"
+          BIOS_HASH_LINK_DES="${BIOS_LINK_COMM}.sha256"
+          BIOS_SIGN_LINK_DES="${BIOS_LINK_COMM}.sha256.sig"
           PROGRAMMER_BIOS="internal:boardmismatch=force"
           NEED_SMMSTORE_MIGRATION="true"
           NEED_BOOTSPLASH_MIGRATION="true"
           ;;
         "APU6")
           DASHARO_REL_NAME="pcengines_apu6"
-          DASHARO_REL_VER="0.9.0"
+          DASHARO_REL_VER_DES="0.9.0"
           HAVE_EC="false"
           NEED_EC_RESET="false"
-          BIOS_LINK_COMM="$FW_STORE_URL/pcengines_apu2/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
+          BIOS_LINK_DES="${FW_STORE_URL_DES}/pcengines_apu2/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}.rom"
           BIOS_HASH_LINK_COMM="${BIOS_LINK_COMM}.sha256"
           BIOS_SIGN_LINK_COMM="${BIOS_LINK_COMM}.sha256.sig"
           PROGRAMMER_BIOS="internal:boardmismatch=force"
@@ -794,12 +797,12 @@ download_artifacts() {
     curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_LINK" -o $BIOS_UPDATE_FILE
     error_check "Cannot access $FW_STORE_URL_DES while downloading binary.
    Please check your internet connection"
-    curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_HASH_LINK" -o $BIOS_HASH_FILE
-    error_check "Cannot access $FW_STORE_URL_DES while downloading signature.
-   Please check your internet connection"
-    curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_SIGN_LINK" -o $BIOS_SIGN_FILE
-    error_check "Cannot access $FW_STORE_URL_DES while downloading signature.
-   Please check your internet connection"
+    #curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_HASH_LINK" -o $BIOS_HASH_FILE
+    #error_check "Cannot access $FW_STORE_URL_DES while downloading signature.
+   #Please check your internet connection"
+    #curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_SIGN_LINK" -o $BIOS_SIGN_FILE
+    #error_check "Cannot access $FW_STORE_URL_DES while downloading signature.
+   #Please check your internet connection"
     if [ "$HAVE_EC" == "true" ]; then
       if [ -v EC_LINK_COMM ] && [ ${EC_LINK} == ${EC_LINK_COMM} ]; then
         curl -s -L -f "$EC_LINK" -o "$EC_UPDATE_FILE"
