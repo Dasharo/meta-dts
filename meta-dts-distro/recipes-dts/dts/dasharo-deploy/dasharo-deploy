@@ -154,25 +154,29 @@ backup() {
 
   echo "Backing up BIOS firmware and store it locally..."
   echo "Remember that firmware is also backed up in HCL report."
-  check_intel_regions
-  if [ $BOARD_HAS_FD_REGION -ne 0 ]; then
-    # Use safe defaults. Descriptor may contain additional regions not detected
-    # by flashrom and will return failure when attempted to be read. BIOS and
-    # Flash descriptor regions should always be readable. If not, then we have
-    # some ugly case, hard to deal with.
-    FLASHROM_ADD_OPT_READ="--ifd -i fd -i bios"
-    if [ $BOARD_HAS_ME_REGION -ne 0 ] && [ $BOARD_ME_REGION_LOCKED -eq 0 ]; then
-      # ME region is not locked, read it as well
-      FLASHROM_ADD_OPT_READ+=" -i me"
+  if [[ ! $NOT_INTEL == "true" ]]; then
+    check_intel_regions
+    if [ $BOARD_HAS_FD_REGION -ne 0 ]; then
+      # Use safe defaults. Descriptor may contain additional regions not detected
+      # by flashrom and will return failure when attempted to be read. BIOS and
+      # Flash descriptor regions should always be readable. If not, then we have
+      # some ugly case, hard to deal with.
+      FLASHROM_ADD_OPT_READ="--ifd -i fd -i bios"
+      if [ $BOARD_HAS_ME_REGION -ne 0 ] && [ $BOARD_ME_REGION_LOCKED -eq 0 ]; then
+        # ME region is not locked, read it as well
+        FLASHROM_ADD_OPT_READ+=" -i me"
+      fi
+      if [ $BOARD_HAS_GBE_REGION -ne 0 ] && [ $BOARD_GBE_REGION_LOCKED -eq 0 ]; then
+        # GBE region is present and not locked, read it as well
+        FLASHROM_ADD_OPT_READ+=" -i gbe"
+      fi
+    else
+        # No descriptor, probably safe to read everything
+        FLASHROM_ADD_OPT_READ=""
     fi
-    if [ $BOARD_HAS_GBE_REGION -ne 0 ] && [ $BOARD_GBE_REGION_LOCKED -eq 0 ]; then
-      # GBE region is present and not locked, read it as well
-      FLASHROM_ADD_OPT_READ+=" -i gbe"
-    fi
-  else
-      # No descriptor, probably safe to read everything
-      FLASHROM_ADD_OPT_READ=""
   fi
+  FLASHROM_ADD_OPT_READ=""
+
   $FLASHROM -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} -r "${FW_BACKUP_DIR}"/rom.bin ${FLASHROM_ADD_OPT_READ} >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
   error_check "Failed to read BIOS firmware backup"
 
@@ -371,10 +375,15 @@ install() {
   check_flash_lock
   verify_artifacts bios
 
-  check_intel_regions
+  if [[ ! $NOT_INTEL == "true" ]]; then
+    check_intel_regions
+  fi
   check_blobs_in_binary $BIOS_UPDATE_FILE
   check_if_me_disabled
-  set_intel_regions_update_params "-N --ifd -i bios"
+
+  if [[ ! $NOT_INTEL == "true" ]]; then
+    set_intel_regions_update_params "-N --ifd -i bios"
+  fi
 
   if [ "$HAVE_EC" == "true" ]; then
     echo "Checking for Open Source Embedded Controller firmware"
@@ -610,11 +619,15 @@ update() {
   grep -q "CONFIG_VBOOT=y" "$BIOS_UPDATE_CONFIG_FILE"
   HAVE_VBOOT="$?"
 
-  check_intel_regions
+  if [[ ! $NOT_INTEL == "true" ]]; then
+    check_intel_regions
+  fi
   check_blobs_in_binary $BIOS_UPDATE_FILE
   check_if_me_disabled
   set_flashrom_update_params $BIOS_UPDATE_FILE
-  set_intel_regions_update_params "-N --ifd"
+  if [[ ! $NOT_INTEL == "true" ]]; then
+    set_intel_regions_update_params "-N --ifd"
+  fi
   check_vboot_keys
 
   echo "Updating Dasharo firmware..."
@@ -627,7 +640,10 @@ update() {
     # by default it contains only the bios section, below we verify the
     # downloaded binary and add more sections when they were detected after
     # using the `check_blobs_in_binary` function.
-    set_intel_regions_update_params "$FLASHROM_ADD_OPT_UPDATE_OVERRIDE"
+    if [[ !NOT_INTEL == "true" ]]; then
+      set_intel_regions_update_params "$FLASHROM_ADD_OPT_UPDATE_OVERRIDE"
+    fi
+
     FLASHROM_ADD_OPT_UPDATE_OVERRIDE="$FLASHROM_ADD_OPT_REGIONS"
     $FLASHROM -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_UPDATE_OVERRIDE} -w "$BIOS_UPDATE_FILE"  >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
     error_check "Failed to update Dasharo firmware"
@@ -763,10 +779,14 @@ restore() {
                   # To be on the safe side, flash whatever can be flashed by determining
                   # what is writable.
                   check_flash_lock
-                  check_intel_regions
+                  if [[ ! $NOT_INTEL == "true" ]]; then
+                    check_intel_regions
+                  fi
                   check_blobs_in_binary /tmp/logs/rom.bin
                   check_if_me_disabled
-                  set_intel_regions_update_params "-N --ifd -i bios"
+                  if [[ ! $NOT_INTEL == "true" ]]; then
+                    set_intel_regions_update_params "-N --ifd -i bios"
+                  fi
                   $FLASHROM -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_REGIONS} -w "/tmp/logs/rom.bin" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
                   error_check "Failed to restore BIOS firmware! You can try one more time."
                   print_green "Successfully restored firmware"
@@ -803,10 +823,14 @@ restore() {
           # To be on the safe side, flash whatever can be flashed by determining
           # what is writable.
           check_flash_lock
-          check_intel_regions
+          if [[ ! $NOT_INTEL == "true" ]]; then
+            check_intel_regions
+          fi
           check_blobs_in_binary /tmp/logs/rom.bin
           check_if_me_disabled
-          set_intel_regions_update_params "-N --ifd -i bios"
+          if [[ ! $NOT_INTEL == "true" ]]; then
+            set_intel_regions_update_params "-N --ifd -i bios"
+          fi
           flashrom -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_REGIONS} -w "/tmp/logs/rom.bin" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
           error_check "Failed to restore BIOS firmware! You can try one more time."
           print_green "Successfully restored firmware"
