@@ -2,6 +2,16 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v1.2.21 - 2024-03-29
+
+* Added Dasharo zero-touch initial deployment on PCEngines APU2 platforms for
+  [DES](https://docs.dasharo.com/ways-you-can-help-us/#become-a-dasharo-entry-subscription-subscriber)
+  users.
+* Addeded hw-probe utility which is used at the end of HCL report.
+* Blocked possibility to run Dasharo deployment on Z690 platform with 13th gen
+  CPU; issue
+  [440](https://github.com/Dasharo/dasharo-issues/issues/440)
+
 ## v1.2.20 - 2024-03-19
 
 * Enabled switch from Dasharo (coreboot+UEFI) to Dasharo (coreboot+heads) on
