@@ -11,6 +11,7 @@ All notable changes to the DTS project will be documented in this file.
 * Blocked possibility to run Dasharo deployment on Z690 platform with 13th gen
   CPU; issue
   [440](https://github.com/Dasharo/dasharo-issues/issues/440)
+* Updated 3mdeb-secpack to revision f52771d2d001c55b164fae397d060d6e5af9c733
 
 ## v1.2.20 - 2024-03-19
 
