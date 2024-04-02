@@ -103,6 +103,7 @@ while : ; do
           echo "Please consider supporting Dasharo by sending the logs next time."
           ;;
       esac
+      sync_clocks
       if [ "${SEND_LOGS}" == "true" ]; then
           # DEPLOY_REPORT variable is used in dasharo-hcl-report to determine
           # which logs should be printed in the terminal, in the future whole
@@ -132,12 +133,14 @@ while : ; do
         fi
       fi
 
+      sync_clocks
       if [ -n "${logs_sent}" ]; then
           ${CMD_DASHARO_DEPLOY} install
       fi
       ;;
     3)
       if check_if_dasharo; then
+	sync_clocks
         ${CMD_DASHARO_DEPLOY} restore
       fi
       ;;
@@ -194,6 +197,7 @@ while : ; do
             esac
         fi
 
+	sync_clocks
         # Use regular update process for everything else
         ${CMD_DASHARO_DEPLOY} update
       fi

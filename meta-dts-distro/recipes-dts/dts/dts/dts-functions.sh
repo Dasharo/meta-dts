@@ -1206,3 +1206,11 @@ handle_fw_switching() {
     fi
   fi
 }
+
+sync_clocks() {
+  echo "Waiting for system clock to be synced ..."
+  chronyc waitsync 10 0 0 5 &> /dev/null
+  if [[ $? -ne 0 ]]; then
+    print_warning "Failed to sync system clock with NTP server!"
+  fi
+}
