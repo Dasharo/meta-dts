@@ -11,7 +11,7 @@ target:
 
 repos:
   meta-secure-core:
-    url: https://github.com/jiazhang0/meta-secure-core
+    url: https://github.com/Wind-River/meta-secure-core
     refspec: fa438247c3e61d7f746687d85ef3b0dd66dc6b3f
     layers:
       meta-efi-secure-boot:
