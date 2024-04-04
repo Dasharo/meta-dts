@@ -137,7 +137,10 @@ check_network_connection() {
   echo 'Waiting for network connection ...'
   n="10"
   while : ; do
-    ping -c 3 cloud.3mdeb.com > /dev/null 2>&1 && break
+    if wget --spider cloud.3mdeb.com > /dev/null 2>&1; then
+      echo 'Network connection established.'
+      return 0
+    fi
     n=$((n-1))
     if [ "${n}" == "0" ]; then
       echo 'No network connection to 3mdeb cloud, please recheck Ethernet connection'
@@ -145,7 +148,6 @@ check_network_connection() {
     fi
     sleep 1
   done
-  return 0
 }
 
 ## Supported boards configuration
