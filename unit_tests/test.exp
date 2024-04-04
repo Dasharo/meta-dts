@@ -1,5 +1,9 @@
 #!/usr/bin/expect -f
 
+proc lookfor {pat} {
+    expect timeout { send_user "timeout looking for '$pat'\r\n" ; exit } $pat
+}
+
 # export the right variables, then run the script
 set env(BOARD_VENDOR) "Notebook"
 set env(SYSTEM_MODEL) "NV4xPZ"
@@ -11,30 +15,30 @@ set env(TEST_DES) "y"
 set DTSPID [spawn bash dts-boot]
 
 # enter "Check and apply Dasharo firmware updates" option
-expect "Enter an option: "
+lookfor "Enter an option: "
 send "5\r"
 
 # agree to switch to Dasharo heads firmware
-expect "Would you like to switch to Dasharo heads firmware? (Y|n) "
+lookfor "Would you like to switch to Dasharo heads firmware? (Y|n) "
 send "Y\r"
 
 # update
-expect "Are you sure you want to proceed with update? (Y|n) "
+lookfor "Are you sure you want to proceed with update? (Y|n) "
 send "Y\r"
 
 # verify specification
-expect "Does it match your actual specification? (Y|n) "
+lookfor "Does it match your actual specification? (Y|n) "
 send "Y\r"
 
 # final agreement to update
-expect "Do you want to update Dasharo firmware on your hardware? (Y|n) "
+lookfor "Do you want to update Dasharo firmware on your hardware? (Y|n) "
 send "Y\r"
 
-expect "Press any key to continue"
+lookfor "Press any key to continue"
 send "\r"
 
 # since we are done we can kill the script
-expect "Enter an option: "
+lookfor "Enter an option: "
 exec kill -9 $DTSPID
 
-expect eof
+lookfor eof
