@@ -42,13 +42,11 @@ RDEPENDS:${PN}-tools-base = " \
 RDEPENDS:${PN}-tools-dts = " \
     mei-amt-check \
     cloudsend \
-    dasharo-deploy \
-    dasharo-hcl-report \
-    dts \
     dasharo-ectool \
     txt-suite \
     bg-suite \
     dasharo-configuration-utility \
+    dts-scripts \
 "
 
 RDEPENDS:${PN}-python = " \
