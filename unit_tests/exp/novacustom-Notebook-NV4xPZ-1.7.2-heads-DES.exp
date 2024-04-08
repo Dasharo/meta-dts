@@ -1,17 +1,10 @@
 #!/usr/bin/expect -f
 
 proc lookfor {pat} {
-    expect timeout { send_user "timeout looking for '$pat'\r\n" ; exit } $pat
+    expect timeout { send_user "expect timeout looking for '$pat'\r\n" ; exit } $pat
 }
 
-# export the right variables, then run the script
-set env(BOARD_VENDOR) "Notebook"
-set env(SYSTEM_MODEL) "NV4xPZ"
-set env(BOARD_MODEL) "NV4xPZ"
-set env(BIOS_VERSION) "Dasharo (coreboot+UEFI) v1.7.2"
-set env(TEST_DES) "y"
-
-# remember the PID so we can kill it when we are done
+# run the script, remember the PID so we can kill it when we are done
 set DTSPID [spawn bash dts-boot]
 
 # enter "Check and apply Dasharo firmware updates" option
