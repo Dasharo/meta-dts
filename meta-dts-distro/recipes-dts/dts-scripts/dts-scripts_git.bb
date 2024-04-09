@@ -5,7 +5,7 @@ HOMEPAGE = "https://github.com/Dasharo/dts-v2"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=575ab8837c52eafc7b9eb8b244072bc7"
 
-SRCREV = "13dad8ea6901cf921de0dd45d464bea3535892e0"
+SRCREV = "c57dc8c60d73ccd0f540148e46be73221ecc67bb"
 SRC_URI = "git://github.com/Dasharo/dts-v2;protocol=https;branch=main"
 
 PV = "0.1+git${SRCPV}"
@@ -25,20 +25,9 @@ RDEPENDS:${PN} = " \
     iotools \
 "
 
-do_install () {
-    install -d ${D}/${sbindir}
-    install -m 0755 ${S}/scripts/dts ${D}/${sbindir}
-    install -m 0755 ${S}/scripts/dts-boot ${D}/${sbindir}
-    install -m 0755 ${S}/scripts/ec_transition ${D}/${sbindir}
-    install -m 0755 ${S}/scripts/cloud_list ${D}/${sbindir}
-    install -m 0755 ${S}/scripts/dasharo-deploy ${D}/${sbindir}
-    install -m 0755 ${S}/reports/dasharo-hcl-report ${D}/${sbindir}
-    install -m 0755 ${S}/reports/touchpad-info ${D}/${sbindir}
-    install -m 0664 ${S}/include/dts-environment.sh ${D}/${sbindir}
-    install -m 0664 ${S}/include/dts-functions.sh ${D}/${sbindir}
+do_configure[noexec] = "1"
+do_compile[noexec] = "1"
 
-    # install profile dropin so the DTS_ENV and DTS_FUNCS variables are set when
-    # loged via SSH
-    install -d ${D}${sysconfdir}/profile.d/
-    install -m 0755 ${S}/scripts/dts-profile.sh ${D}${sysconfdir}/profile.d/
+do_install () {
+    oe_runmake install DESTDIR="${D}"
 }
