@@ -1,12 +1,12 @@
 SUMMARY = "Dasharo Tools Suite scripts."
 SECTION = "tools"
-HOMEPAGE = "https://github.com/Dasharo/dts-v2"
+HOMEPAGE = "https://github.com/Dasharo/dts-scripts"
 
-LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=575ab8837c52eafc7b9eb8b244072bc7"
+LICENSE = "Apache-2.0"
+LIC_FILES_CHKSUM = "file://LICENSES/Apache-2.0.txt;md5=c846ebb396f8b174b10ded4771514fcc  "
 
-SRCREV = "c57dc8c60d73ccd0f540148e46be73221ecc67bb"
-SRC_URI = "git://github.com/Dasharo/dts-v2;protocol=https;branch=main"
+SRCREV = "3870e7b944d88d68821d7cdd83d70d6959348ed8"
+SRC_URI = "git://github.com/Dasharo/dts-scripts;protocol=https;branch=main"
 
 PV = "0.1+git${SRCPV}"
 
