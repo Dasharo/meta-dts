@@ -120,7 +120,7 @@ do_update "fwupd" \
 do_update "coreboot-utils" \
     "meta-dts-distro/recipes-bsp/coreboot-utils/coreboot-utils.inc" \
     "Dasharo/coreboot" \
-    "coreboot-utils-v2"
+    "dasharo"
 
 do_update "3mdeb-secpack" \
     "meta-dts-distro/recipes-dasharo/3mdeb-secpack/3mdeb-secpack_git.bb" \
