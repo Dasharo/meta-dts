@@ -1,0 +1,26 @@
+From c64770eaa13ccc82181d07b97547a0c1cfb419ab Mon Sep 17 00:00:00 2001
+From: Maciej Pijanowski <maciej.pijanowski@3mdeb.com>
+Date: Mon, 13 May 2024 12:35:57 +0200
+Subject: [PATCH] Makefile: allow overriding CC
+
+Signed-off-by: Maciej Pijanowski <maciej.pijanowski@3mdeb.com>
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index 4cd2f4f142c6..fb3dd41d5dfe 100644
+--- a/Makefile
++++ b/Makefile
+@@ -17,7 +17,7 @@
+ VER_MAJOR = 1
+ VER_MINOR = 6
+ 
+-CC=$(CROSS_COMPILE)gcc
++CC ?= $(CROSS_COMPILE)gcc
+ 
+ # build options
+ DEBUG ?= 1
+-- 
+2.45.0
+
