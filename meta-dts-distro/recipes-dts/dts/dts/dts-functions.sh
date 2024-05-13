@@ -779,7 +779,7 @@ download_artifacts() {
     curl -s -L -f "$BIOS_SIGN_LINK" -o $BIOS_SIGN_FILE
     error_check "Cannot access $FW_STORE_URL while downloading signature. Please
    check your internet connection"
-    if [ "$HAVE_EC" == "true" ]; then
+    if [ "$HAVE_EC" == "true" ] && [ -v EC_LINK ]; then
       curl -s -L -f "$EC_LINK" -o "$EC_UPDATE_FILE"
       error_check "Cannot access $FW_STORE_URL while downloading binary. Please
      check your internet connection"
@@ -801,7 +801,7 @@ download_artifacts() {
     curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_SIGN_LINK" -o $BIOS_SIGN_FILE
     error_check "Cannot access $FW_STORE_URL_DES while downloading signature.
    Please check your internet connection"
-    if [ "$HAVE_EC" == "true" ]; then
+    if [ "$HAVE_EC" == "true" ] && [ -v EC_LINK ]; then
       if [ -v EC_LINK_COMM ] && [ ${EC_LINK} == ${EC_LINK_COMM} ]; then
         curl -s -L -f "$EC_LINK" -o "$EC_UPDATE_FILE"
         error_check "Cannot access $FW_STORE_URL while downloading binary. Please

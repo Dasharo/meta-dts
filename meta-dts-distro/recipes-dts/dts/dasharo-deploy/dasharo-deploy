@@ -444,13 +444,6 @@ install() {
   fi
 }
 
-update_ec() {
-  verify_artifacts ec
-  echo "Updating EC..."
-  $DASHARO_ECTOOL flash "$EC_UPDATE_FILE" &>> $ERR_LOG_FILE
-  error_check "Failed to update EC firmware"
-}
-
 update() {
   local _can_switch_to_heads="false"
 
@@ -471,21 +464,11 @@ update() {
         BIOS_HASH_LINK=$BIOS_HASH_LINK_COMM
         BIOS_SIGN_LINK=$BIOS_SIGN_LINK_COMM
         BIOS_LINK=$BIOS_LINK_COMM
-        if [ "$HAVE_EC" == "true" ]; then
-          EC_HASH_LINK=$EC_HASH_LINK_COMM
-          EC_SIGN_LINK=$EC_SIGN_LINK_COMM
-          EC_LINK=$EC_LINK_COMM
-        fi
         UPDATE_VERSION=$DASHARO_REL_VER
       else
         BIOS_HASH_LINK=$BIOS_HASH_LINK_DES
         BIOS_SIGN_LINK=$BIOS_SIGN_LINK_DES
         BIOS_LINK=$BIOS_LINK_DES
-        if [ "$HAVE_EC" == "true" ]; then
-          EC_HASH_LINK=$EC_HASH_LINK_DES
-          EC_SIGN_LINK=$EC_SIGN_LINK_DES
-          EC_LINK=$EC_LINK_DES
-        fi
         UPDATE_VERSION=$DASHARO_REL_VER_DES
       fi
     else
@@ -495,11 +478,6 @@ update() {
       BIOS_HASH_LINK=$BIOS_HASH_LINK_COMM
       BIOS_SIGN_LINK=$BIOS_SIGN_LINK_COMM
       BIOS_LINK=$BIOS_LINK_COMM
-      if [ "$HAVE_EC" == "true" ]; then
-        EC_HASH_LINK=$EC_HASH_LINK_COMM
-        EC_SIGN_LINK=$EC_SIGN_LINK_COMM
-        EC_LINK=$EC_LINK_COMM
-      fi
       UPDATE_VERSION=$DASHARO_REL_VER
     fi
     if [ -v HAVE_HEADS_FW ] && [ "$DASHARO_FLAVOR" != "Dasharo (coreboot+heads)" ]; then
@@ -532,11 +510,6 @@ update() {
     BIOS_HASH_LINK=$BIOS_HASH_LINK_COMM
     BIOS_SIGN_LINK=$BIOS_SIGN_LINK_COMM
     BIOS_LINK=$BIOS_LINK_COMM
-    if [ "$HAVE_EC" == "true" ]; then
-      EC_HASH_LINK=$EC_HASH_LINK_COMM
-      EC_SIGN_LINK=$EC_SIGN_LINK_COMM
-      EC_LINK=$EC_LINK_COMM
-    fi
     UPDATE_VERSION=$DASHARO_REL_VER
     if [ -v HAVE_HEADS_FW ] && [ "$DASHARO_FLAVOR" != "Dasharo (coreboot+heads)" ]; then
       print_green "Dasharo heads firmware version is available. If you are interested,"
@@ -685,32 +658,25 @@ update() {
     print_green "Successfully updated Dasharo firmware."
   fi
 
-  if [ "$HAVE_EC" == "true" ]; then
-    echo "Updating Embedded Controller firmware. Your computer will power off automatically when done."
-    update_ec # Ends in a reset, does not exit
-  else
-    echo -n "Syncing disks... "
-    sync
-    echo "Done."
-    echo "The computer will reboot automatically in 5 seconds"
-    sleep 0.5
-    echo "Rebooting in 5s:"
-    echo "5..."
-    sleep 1
-    echo "4..."
-    sleep 1
-    echo "3..."
-    sleep 1
-    echo "2..."
-    sleep 1
-    echo "1..."
-    sleep 0.5
-    echo "Rebooting"
-    sleep 1
-    ${CMD_REBOOT}
-  fi
-
-
+  echo -n "Syncing disks... "
+  sync
+  echo "Done."
+  echo "The computer will reboot automatically in 5 seconds"
+  sleep 0.5
+  echo "Rebooting in 5s:"
+  echo "5..."
+  sleep 1
+  echo "4..."
+  sleep 1
+  echo "3..."
+  sleep 1
+  echo "2..."
+  sleep 1
+  echo "1..."
+  sleep 0.5
+  echo "Rebooting"
+  sleep 1
+  ${CMD_REBOOT}
 }
 
 restore() {
