@@ -15,14 +15,11 @@ SRCREV = "fe9dc95a83a95e4826c1a7c809d41c2f16de40a6"
 
 S = "${WORKDIR}/git"
 
-# The inherit of module.bbclass will automatically name module packages with
-# "kernel-module-" prefix as required by the oe-core build environment.
+# On scarthgap, the kernel-module prefix was not added automatically anymore.
+# The module was not packaged at all by default.
+# PACKAGES += "kernel-module-acpi-call"
+# FILES:kernel-module-acpi-call = "/${nonarch_base_libdir}/modules"
 
-RPROVIDES:${PN} += "acpi_call"
-
+RPROVIDES:${PN} += "kernel-module-mdio-netlink"
+MODULES_INSTALL_TARGET = "install"
 KERNEL_MODULE_AUTOLOAD += "acpi_call"
-
-do_install() {
-    install -d ${D}/lib/modules/${KERNEL_VERSION}
-    install ${S}/acpi_call.ko ${D}/lib/modules/${KERNEL_VERSION}
-}
