@@ -33,7 +33,7 @@ RDEPENDS:${PN}-tests = " \
 RDEPENDS:${PN}-tools-base = " \
     packagegroup-coreboot-utils \
     packagegroup-core-tools-debug \
-    bmap-tools \
+    bmaptool \
     flashrom \
     fwupd \
     me-cleaner \
