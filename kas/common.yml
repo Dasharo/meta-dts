@@ -50,3 +50,5 @@ local_conf_header:
         HALT,/tmp,10M,1K"
   skip_linux_firmware: |
     MACHINE_EXTRA_RRECOMMENDS:remove ="linux-firmware"
+  build_stats: |
+    USER_CLASSES += "buildstats"
