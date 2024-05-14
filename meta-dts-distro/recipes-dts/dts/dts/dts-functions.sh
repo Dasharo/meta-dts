@@ -1025,7 +1025,7 @@ set_flashrom_update_params() {
   else
     FLASHROM_ADD_OPT_UPDATE="-N --ifd -i bios"
   fi
-  BINARY_HAS_RW_B=0
+  BINARY_HAS_RW_B=1
   # We need to read whole binary (or BIOS region), otherwise cbfstool will
   # return different attributes for CBFS regions
   echo "Checking flash layout."
@@ -1045,7 +1045,7 @@ set_flashrom_update_params() {
         FLASHROM_ADD_OPT_UPDATE="-N --fmap -i COREBOOT"
       fi
       # If RW_B present, use this variable later to perform 2-step update
-      grep -q "RW_SECTION_B" <<< $BINARY_FMAP_LAYOUT && BINARY_HAS_RW_B=1
+      grep -q "RW_SECTION_B" <<< $BINARY_FMAP_LAYOUT && BINARY_HAS_RW_B=0
     fi
   else
     print_warning "Could not read the FMAP region"
