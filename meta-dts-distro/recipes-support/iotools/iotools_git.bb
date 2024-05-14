@@ -14,6 +14,8 @@ SRCREV = "18949fdc4dedb1da3f51ee83a582b112fb9f2c71"
 S = "${WORKDIR}/git"
 
 do_compile () {
+    # By default, iotolls is build with DEBUG=1 (-O0 breaks _FORTIFY_SOURCE)
+    export DEBUG=0
     oe_runmake
 }
 
