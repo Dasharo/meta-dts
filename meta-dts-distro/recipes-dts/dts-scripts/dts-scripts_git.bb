@@ -5,7 +5,7 @@ HOMEPAGE = "https://github.com/Dasharo/dts-scripts"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSES/Apache-2.0.txt;md5=c846ebb396f8b174b10ded4771514fcc  "
 
-SRCREV = "e59da61c2d8f1da39f5cb4138dddb0277b95a614"
+SRCREV = "019212bf44a5fade576e4d02c9f093cffda6af8e"
 SRC_URI = "git://github.com/Dasharo/dts-scripts;protocol=https;branch=main"
 
 PV = "0.1+git${SRCPV}"
