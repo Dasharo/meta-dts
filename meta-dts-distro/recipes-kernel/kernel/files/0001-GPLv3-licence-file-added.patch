@@ -1,0 +1,28 @@
+Author: Daniil Klimuk <daniil.klimuk@3mdeb.com>
+Date:   Wed May 22 14:35:18 2024 +0200
+
+    LICENSE: add GPLv3 license
+
+    This repo specifies license in README.md file, but Yocto needs license
+    to be provided as a separate file. This statement was exctracted
+    from the README file.
+
+    Signed-off-by: Daniil Klimuk <daniil.klimuk@3mdeb.com>
+
+diff --git a/LICENSE b/LICENSE
+new file mode 100644
+index 000000000000..6e4fe59cdcba
+--- /dev/null
++++ b/LICENSE
+@@ -0,0 +1,11 @@
++Copyright (c) 2010: Michal Kottman
++
++This program is free software: you can redistribute it and/or modify
++it under the terms of the GNU General Public License as published by
++the Free Software Foundation, either version 3 of the License, or
++(at your option) any later version.
++
++This program is distributed in the hope that it will be useful,
++but WITHOUT ANY WARRANTY; without even the implied warranty of
++MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++GNU General Public License for more details.
