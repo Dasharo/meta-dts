@@ -37,6 +37,7 @@ RDEPENDS:${PN}-tools-base = " \
     flashrom \
     fwupd \
     me-cleaner \
+    txesbmantool \
 "
 
 RDEPENDS:${PN}-tools-dts = " \
