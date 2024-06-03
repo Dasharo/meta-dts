@@ -38,6 +38,7 @@ RDEPENDS:${PN}-tools-base = " \
     fwupd \
     me-cleaner \
     iperf3 \
+    txesbmantool \
 "
 
 RDEPENDS:${PN}-tools-dts = " \
