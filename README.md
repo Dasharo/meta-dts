@@ -100,6 +100,32 @@ Actions. Whole pipeline of creating `DTS` release consists of two steps.
   [dts-rc.ipxe](http://boot.dasharo.com/dts/dts-rc.ipxe) is created so the
   newest rc release is available over iPXE.
 
+## Cukinia tests
+
+`DTS` utilizes the [cukinia](https://github.com/savoirfairelinux/cukinia)
+framework to test various features and tools integrated into the system. You can
+execute the tests using the following command in the `DTS` shell:
+
+```bash
+cukinia
+```
+
+It is recommended that you run the tests when developing `DTS` to make sure that
+the features are still working after your changes.
+
+### Developing cukinia tests
+
+When integrating new features into `DTS`, one should add tests to check whether
+the changes work. The test cases are located in
+[meta-dts-distro/recipes-tests/dts-tests/dts-tests/cukinia.conf](./meta-dts-distro/recipes-tests/dts-tests/dts-tests/cukinia.conf).
+The following example shows test cases that could be added after adding a new
+binary/script to `DTS`.
+
+```conf
+as "Check if script X exists" cukinia_test -x $(which <script_name>)
+as "Check if script X can be executed" cukinia_cmd <script_name> --help
+```
+
 ## Testing Dasharo firmware updates from local sources
 
 <!--
