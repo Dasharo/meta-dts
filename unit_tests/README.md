@@ -3,7 +3,7 @@
 This directory contains stub scripts for testing DTS update and deploy logic
 in complex scenarios.
 
-##  Running on host
+## Prerequisites
 
 Running test on the host may result in unpredictable results because of the
 missing programs and different version of certain tools. It is advised to run
