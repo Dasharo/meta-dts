@@ -17,7 +17,7 @@ fi
 
 # imgverify can be enabled as a next step on top of the HTTPS. The imgtrust
 # should already be executed in the embedded script on the device. Also, we
-# should gracefuly handle older firmware versions, where imgtrust and imgverify
+# should gracefully handle older firmware versions, where imgtrust and imgverify
 # command could not be yet available.
 # imgtrust --permanent
 #

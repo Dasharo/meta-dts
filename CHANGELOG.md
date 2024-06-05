@@ -88,10 +88,10 @@ All notable changes to the DTS project will be documented in this file.
   a tool designed to configure Dasharo firmware binary images. It includes task
   such as customizing the boot logo, and setting unique UUIDs or Serial Numbers
   in SMBIOS tables.
-* Added support fot exFAT and NTFS file systems.
+* Added support for exFAT and NTFS file systems.
 * Added ACPI BGRT support in kernel.
 * Added signature verification of Dasharo firmware binaries.
-* Added posibility to run updates from [local server](./README.md#testing-dasharo-firmware-updates-from-local-sources).
+* Added possibility to run updates from [local server](./README.md#testing-dasharo-firmware-updates-from-local-sources).
 * Added check if charger is connected before update on laptops.
 * Added bootsplash migration to preserve logo while updating Dasharo firmware.
 * Fixed network failure errors and added waiting for network to be up before
@@ -173,7 +173,7 @@ All notable changes to the DTS project will be documented in this file.
   option for [supported
   platforms](https://docs.dasharo.com/dasharo-tools-suite/documentation/#supported-hardware).
 * Disabled SSH server by default and added menu option to start/stop SSH server.
-* Improved versions comparision so update from any `rc` or `dev` version of
+* Improved versions comparison so update from any `rc` or `dev` version of
   Dasharo firmware is possible.
 * Improved UX a little by saving flashrom logs to file.
 * Fixed CI workflows.
@@ -226,7 +226,7 @@ All notable changes to the DTS project will be documented in this file.
 * Added new vendor specific menu entry which is displayed only on supported
   platforms, for now NovaCustom menu was added for NV4x and NS50 70MU laptops.
 * DTS version is now printed in the main menu.
-* `ec_transition` script now supports NV4XMB,ME,MZ laptops and automaticaly
+* `ec_transition` script now supports NV4XMB,ME,MZ laptops and automatically
   download firmware used for transition both for NV4x and NS5x laptopts,
   [firmware transition](https://docs.dasharo.com/common-coreboot-docs/dasharo_tools_suite/#dasharo-ec-transition)
   documentation is updated.
