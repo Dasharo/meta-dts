@@ -1,4 +1,4 @@
-DESCRIPTION = "iPXE commands autostart on boot"
+SUMMARY = "iPXE commands autostart on boot"
 HOMEPAGE = "https://github.com/Dasharo/meta-dts"
 
 LICENSE = "MIT"

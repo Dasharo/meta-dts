@@ -1,13 +1,21 @@
 inherit cargo
 inherit pkgconfig
 
-SRC_URI += "gitsm://github.com/Dasharo/ec.git;protocol=https;nobranch=1"
-SRCREV = "2b2c17ac6e61f45e0fc1bcf6b907a8289f37bcc4"
-S = "${WORKDIR}/git"
-CARGO_SRC_DIR = "/tool/"
-PV:append = ".AUTOINC+411fab9b7c"
+SUMMARY = "System76 Open Source Embedded Controller"
+HOMEPAGE = "https://github.com/Dasharo/ec"
 
-SRC_URI += " \
+LICENSE = "MIT"
+LIC_FILES_CHKSUM = " \
+    file://tool/LICENSE;md5=af209eac18ec76ed06fb2839a906b1ad \
+"
+
+DEPENDS += "hidapi"
+PV:append = ".AUTOINC+411fab9b7c"
+SRC_URI = "gitsm://github.com/Dasharo/ec.git;protocol=https;nobranch=1"
+
+CARGO_SRC_DIR = "/tool/"
+
+SRC_URI:append = " \
     crate://crates.io/atty/0.2.14 \
     crate://crates.io/autocfg/1.1.0 \
     crate://crates.io/bitflags/1.3.2 \
@@ -32,6 +40,8 @@ SRC_URI += " \
     crate://crates.io/winapi/0.3.9 \
 "
 
+SRCREV = "2b2c17ac6e61f45e0fc1bcf6b907a8289f37bcc4"
+
 SRC_URI[atty-0.2.14.sha256sum] = "d9b39be18770d11421cdb1b9947a45dd3f37e93092cbf377614828a319d5fee8"
 SRC_URI[autocfg-1.1.0.sha256sum] = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
 SRC_URI[bitflags-1.3.2.sha256sum] = "bef38d45163c2f1dde094a7dfd33ccf595c92905c8f8f4fdc18d06fb1037718a"
@@ -55,10 +65,4 @@ SRC_URI[winapi-util-0.1.5.sha256sum] = "70ec6ce85bb158151cae5e5c87f95a8e97d2c0c4
 SRC_URI[winapi-x86_64-pc-windows-gnu-0.4.0.sha256sum] = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
 SRC_URI[winapi-0.3.9.sha256sum] = "5c839a674fcd7a98952e593242ea400abe93992746761e38641405d28b00f419"
 
-DEPENDS += "hidapi"
-LIC_FILES_CHKSUM = " \
-    file://tool/LICENSE;md5=af209eac18ec76ed06fb2839a906b1ad \
-"
-SUMMARY = "Dasharo EC tool"
-HOMEPAGE = "https://github.com/Dasharo/ec"
-LICENSE = "MIT"
+S = "${WORKDIR}/git"

@@ -1,11 +1,13 @@
 require coreboot-utils.inc
 
+SUMMARY = "Dump interesting things about Management Engine even if hidden"
+
 DEPENDS += "pciutils zlib"
 
 EXTRA_OEMAKE = ' \
-  DESTDIR="${D}" \
-  PREFIX="${prefix}" \
-'
+                DESTDIR="${D}" \
+                PREFIX="${prefix}" \
+                '
 
 TARGET_CFLAGS += "-I../../src/commonlib/bsd/include"
 

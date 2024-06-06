@@ -1,5 +1,7 @@
 require dts-base-image.inc
 
+SUMMARY = "DTS base Secure Boot image"
+
 IMAGE_INSTALL:append = " \
     util-linux \
     packagegroup-efi-secure-boot \

@@ -1,0 +1,71 @@
+---
+default_stages: [pre-commit]
+
+default_install_hook_types: [pre-commit, commit-msg]
+exclude: .*\.patch$
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: mixed-line-ending
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.32.0
+    hooks:
+      - id: yamllint
+        args: [-c=.yamllint]
+
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.36.0
+    hooks:
+      - id: markdownlint
+      - id: markdownlint-fix
+
+  - repo: https://github.com/talos-systems/conform
+    rev: v0.1.0-alpha.27
+    hooks:
+      - id: conform
+        stages:
+          - commit-msg
+
+  - repo: https://github.com/koalaman/shellcheck-precommit
+    rev: v0.10.0
+    hooks:
+      - id: shellcheck
+        args: ["--severity=warning"]
+
+  - repo: https://github.com/zarhus/oelint-adv
+    rev: 949111ff4d256af759aa5d94db9d0fb444679b2c
+    hooks:
+      - id: oelint-adv
+        args: [--rulefile=.oelint-ruleset.json, --hide=info, --quiet, --fix]
+        name: Advanced oelint
+        description: Based on the OpenEmbedded Styleguide and work done by oe-stylize-tool this module offers a (nearly) complete linter for bitbake-recipes.
+        entry: oelint-adv
+        language: python
+        language_version: python3
+        files: .*\.(bb)|(bbappend)|(bbclass)$
+
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.2.5
+    hooks:
+      - id: codespell
+
+  - repo: https://github.com/3mdeb/pre-commit-hook-branding
+    rev: 57bba1549352401e8a1c3617384a22458973fa7b
+    hooks:
+      - id: namespell
+        args: [--fix]
+
+ci:
+  autoupdate_commit_msg: 'pre-commit: autoupdate hooks'
+  autofix_prs: false
+  # docker is not supported on pre-commit.ci
+  skip: [shellcheck]

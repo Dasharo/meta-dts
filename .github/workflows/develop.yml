@@ -1,3 +1,4 @@
+---
 name: CI on push to develop
 on:
   push:

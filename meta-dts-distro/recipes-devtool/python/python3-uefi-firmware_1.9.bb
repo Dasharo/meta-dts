@@ -1,7 +1,7 @@
 
 SUMMARY = "Various data structures and parsing tools for UEFI firmware."
-HOMEPAGE = "https://github.com/theopolis/uefi-firmware-parser"
 AUTHOR = "Teddy Reed <teddy@prosauce.org>"
+HOMEPAGE = "https://github.com/theopolis/uefi-firmware-parser"
 LICENSE = "BSD-2-Clause & BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://setup.py;md5=90fa5bae1547550f1c1993f651eda955"
 
