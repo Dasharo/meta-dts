@@ -240,9 +240,9 @@ All notable changes to the DTS project will be documented in this file.
 * Added system76_ectool to enable Embedded Controller [firmware
   updating](https://docs.dasharo.com/common-coreboot-docs/dasharo_tools_suite/#dasharo-ec-update).
 * Added ec_transition script which helps with full Dasharo/Embedded Controller
-  [firmware transition](https://docs.dasharo.com/common-coreboot-docs/dasharo_tools_suite/#dasharo-ec-transition) for
-  NS50 70MU and NS70 laptops.
-* First public release: https://github.com/Dasharo/meta-dts.
+  [firmware transition](https://docs.dasharo.com/common-coreboot-docs/dasharo_tools_suite/#dasharo-ec-transition)
+  for NS50 70MU and NS70 laptops.
+* First public release: <https://github.com/Dasharo/meta-dts>.
 
 ## v1.0.0 2022-08-09
 
@@ -250,8 +250,8 @@ All notable changes to the DTS project will be documented in this file.
 * Auto-login functionality.
 * User menu.
 * [Dasharo HCL
-  Report](https://docs.dasharo.com/common-coreboot-docs/dasharo_tools_suite/#dasharo-hcl-report) -
-  the ability to automatically dump device information and send it to 3mdeb
+  Report](https://docs.dasharo.com/common-coreboot-docs/dasharo_tools_suite/#dasharo-hcl-report)
+  \- the ability to automatically dump device information and send it to 3mdeb
   servers.
 * Possibility to manually [update the Dasharo
   firmware](https://docs.dasharo.com/common-coreboot-docs/dasharo_tools_suite/#dasharo-firmware-update).

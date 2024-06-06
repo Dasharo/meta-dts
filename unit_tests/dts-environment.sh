@@ -90,7 +90,7 @@ DASHARO_ECTOOL="dasharo_ectool_cmd"
 flashrom_cmd() {
     local _params="$*"
 
-    grep -q "flash-name" <<< "$_params" && echo "vendor="Macronix" name="MX25L25635F/MX25L25645G"" && return 0
+    grep -q "flash-name" <<< "$_params" && echo "vendor=\"Macronix\" name=\"MX25L25635F/MX25L25645G\"" && return 0
     grep -q "flash-size" <<< "$_params" && echo "$((32*1024*1024))" && return 0
 
     return 0

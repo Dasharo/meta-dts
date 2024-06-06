@@ -1,28 +1,32 @@
-LICENSE = "MIT"
+SUMMARY = "\
+          Firmware utility tool, used to create, sign, and validate Chrome \
+          OS images."
 
-SRC_URI += " \
-    git://github.com/Dasharo/vboot.git;protocol=https;branch=dasharo \
-    file://0001-Makefile-disable-deprecated-warnigs-as-errors.patch \
-"
-
-S = "${WORKDIR}/git"
+HOMEPAGE = "https://github.com/Dasharo/vboot"
 
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=562c740877935f40b262db8af30bca36"
-
-SRCREV = "dc68f9f1b56d92f76026dca490e79493599ff4cf"
-TARGET_CC_ARCH += "${LDFLAGS}"
 
 DEPENDS += " \
     openssl \
     flashrom \
 "
 
+SRC_URI = " \
+          git://github.com/Dasharo/vboot.git;protocol=https;branch=dasharo \
+          file://0001-Makefile-disable-deprecated-warnigs-as-errors.patch \
+          "
+SRCREV = "dc68f9f1b56d92f76026dca490e79493599ff4cf"
+
+S = "${WORKDIR}/git"
+
+inherit pkgconfig
+
+TARGET_CC_ARCH += "${LDFLAGS}"
+
 RDEPENDS:${PN} += " \
     bash \
 "
-
-inherit pkgconfig
 
 EXTRA_OEMAKE = " \
     DESTDIR="${D}" \

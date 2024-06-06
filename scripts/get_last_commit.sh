@@ -8,6 +8,9 @@ while getopts "r:b:" arg; do
         b)
             branch="${OPTARG}"
             ;;
+        *)
+          exit 1
+          ;;
     esac
 done
 
