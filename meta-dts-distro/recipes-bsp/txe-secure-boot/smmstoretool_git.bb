@@ -16,10 +16,15 @@ inherit pkgconfig
 
 S = "${WORKDIR}/git/util/smmstoretool"
 
+EXTRA_OEMAKE = ' \
+  DESTDIR="${D}" \
+  PREFIX="${prefix}" \
+'
+
 do_install() {
-    oe_runmake 'DESTDIR=${D}' install
+    oe_runmake install
 }
 
 FILES:${PN} = " \
-   /usr/local/bin/smmstoretool \
+   ${bindir}/smmstoretool \
 "
