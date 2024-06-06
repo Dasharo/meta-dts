@@ -24,6 +24,9 @@ do_install() {
 
 INSANE_SKIP:${PN} += "ldflags"
 
+prefix = "/usr/local"
+bindir = "${prefix}/bin"
+
 FILES:${PN} += " \
-   /usr/local/bin/txesbmantool \
+   ${bindir}/txesbmantool \
 "
