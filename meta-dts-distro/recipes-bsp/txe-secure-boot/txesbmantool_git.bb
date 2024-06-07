@@ -15,8 +15,15 @@ S = "${WORKDIR}/git/util/txesbmantool"
 
 inherit pkgconfig
 
-DEPENDS = "wolfssl"
+DEPENDS += "wolfssl"
 
+do_configure:prepend(){
+    export PKG_CONFIG_PATH="${STAGING_LIBDIR}/pkgconfig:${STAGING_DIR_HOST}/usr/lib/pkgconfig"
+}
+
+do_compile:prepend() {
+    export PKG_CONFIG_PATH="${STAGING_LIBDIR}/pkgconfig:${STAGING_DIR_HOST}/usr/lib/pkgconfig"
+}
 
 do_install() {
     oe_runmake 'DESTDIR=${D}' install
