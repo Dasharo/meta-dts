@@ -6,11 +6,14 @@ LICENSE = "MIT"
 
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
-# we need to use local version of cloudsend.sh script as original does not
-# properly check if the curl command ends with error (missing -f flag)
-SRC_URI = "file://cloudsend.sh"
+SRC_URI ="\
+    git://github.com/tavinus/cloudsend.sh.git;protocol=https;branch=master \
+    file://0001-cloudsend.sh-Add-fail-with-body-flag.patch \
+    "
 
-S = "${WORKDIR}"
+SRCREV = "65abbc6d809bcce13870dc5ea07937d324283173"
+
+S = "${WORKDIR}/git"
 
 RDEPENDS:${PN} = " \
   bash \
