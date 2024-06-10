@@ -1,0 +1,31 @@
+From 43d010459e8266daaf868a27a63799b3d09ea9d7 Mon Sep 17 00:00:00 2001
+From: Pawel Langowski <pawel.langowski@3mdeb.com>
+Date: Tue, 11 Jun 2024 11:53:42 +0200
+Subject: [PATCH] cloudsend.sh: Add --fail-with-body flag
+
+From curl man page:
+In normal cases when an HTTP server fails to deliver a document, it returns an
+HTML document stating so (which often also describes why and more). This flag
+will still allow curl to output and save that  content but also to return error
+22.
+
+Signed-off-by: Pawel Langowski <pawel.langowski@3mdeb.com>
+---
+ cloudsend.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cloudsend.sh b/cloudsend.sh
+index 71892acd1cbb..644b2114a460 100755
+--- a/cloudsend.sh
++++ b/cloudsend.sh
+@@ -658,7 +658,7 @@ sendFile() {
+         # Send file
+         #echo "$CURLBIN"$INSECURE$VERBOSE -T \""$1"\" -u \""$FOLDERTOKEN":"$PASSWORD"\" -H \""$HEADER"\" \""$CLOUDURL/$PUBSUFFIX$INNERPATH/$eout"\"
+         #"$CURLBIN"$LIMITCMD$INSECURE$VERBOSE$GLOBCMD -T "$1" -u "$FOLDERTOKEN":"$PASSWORD" -H "$HEADER" "$CLOUDURL/$PUBSUFFIX$INNERPATH/$eout" | cat ; test ${PIPESTATUS[0]} -eq 0
+-        resp="$("$CURLBIN"$LIMITCMD$INSECURE$VERBOSE$GLOBCMD -T "$1" -u "$FOLDERTOKEN":"$PASSWORD" -H "$HEADER" "$CLOUDURL/$PUBSUFFIX$INNERPATH/$eout")"
++        resp="$("$CURLBIN"$LIMITCMD$INSECURE$VERBOSE$GLOBCMD --fail-with-body -T "$1" -u "$FOLDERTOKEN":"$PASSWORD" -H "$HEADER" "$CLOUDURL/$PUBSUFFIX$INNERPATH/$eout")"
+         stat=$?
+         curlAddResponse "$resp" "Send File: \"$eout\""
+         curlAddExitCode $stat
+--
+2.45.0
