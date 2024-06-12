@@ -7,7 +7,7 @@ GO_IMPORT = "github.com/dasharo/coreboot/"
 # we need to override SRC_URI from coreboot-utils.inc so it's unpacked in the
 # directory as expected by the go bbclass
 SRC_URI = " \
-    git://github.com/dasharo/coreboot.git;protocol=https;branch=dasharo;destsuffix=${GO_IMPORT} \
+    git://github.com/dasharo/coreboot.git;protocol=https;branch=dasharo-4.21;destsuffix=${GO_IMPORT} \
     "
 
 S = "${WORKDIR}/${GO_IMPORT}/util/intelp2m"
