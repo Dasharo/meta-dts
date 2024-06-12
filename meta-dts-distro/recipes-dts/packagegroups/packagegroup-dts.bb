@@ -38,6 +38,7 @@ RDEPENDS:${PN}-tools-base = " \
     fwupd \
     me-cleaner \
     txesbmantool \
+    smmstoretool \
 "
 
 RDEPENDS:${PN}-tools-dts = " \
