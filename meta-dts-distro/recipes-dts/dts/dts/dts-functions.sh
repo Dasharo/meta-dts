@@ -780,7 +780,7 @@ download_artifacts() {
     curl -s -L -f "$BIOS_SIGN_LINK" -o $BIOS_SIGN_FILE
     error_check "Cannot access $FW_STORE_URL while downloading signature. Please
    check your internet connection"
-    if [ "$HAVE_EC" == "true" ]; then
+    if [ "$HAVE_EC" == "true" ] && [ -v EC_LINK ]; then
       curl -s -L -f "$EC_LINK" -o "$EC_UPDATE_FILE"
       error_check "Cannot access $FW_STORE_URL while downloading binary. Please
      check your internet connection"
@@ -802,7 +802,7 @@ download_artifacts() {
     curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_SIGN_LINK" -o $BIOS_SIGN_FILE
     error_check "Cannot access $FW_STORE_URL_DES while downloading signature.
    Please check your internet connection"
-    if [ "$HAVE_EC" == "true" ]; then
+    if [ "$HAVE_EC" == "true" ] && [ -v EC_LINK ]; then
       if [ -v EC_LINK_COMM ] && [ ${EC_LINK} == ${EC_LINK_COMM} ]; then
         curl -s -L -f "$EC_LINK" -o "$EC_UPDATE_FILE"
         error_check "Cannot access $FW_STORE_URL while downloading binary. Please
@@ -1026,7 +1026,7 @@ set_flashrom_update_params() {
   else
     FLASHROM_ADD_OPT_UPDATE="-N --ifd -i bios"
   fi
-  BINARY_HAS_RW_B=0
+  BINARY_HAS_RW_B=1
   # We need to read whole binary (or BIOS region), otherwise cbfstool will
   # return different attributes for CBFS regions
   echo "Checking flash layout."
@@ -1046,7 +1046,7 @@ set_flashrom_update_params() {
         FLASHROM_ADD_OPT_UPDATE="-N --fmap -i COREBOOT"
       fi
       # If RW_B present, use this variable later to perform 2-step update
-      grep -q "RW_SECTION_B" <<< $BINARY_FMAP_LAYOUT && BINARY_HAS_RW_B=1
+      grep -q "RW_SECTION_B" <<< $BINARY_FMAP_LAYOUT && BINARY_HAS_RW_B=0
     fi
   else
     print_warning "Could not read the FMAP region"
