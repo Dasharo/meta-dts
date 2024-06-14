@@ -1,0 +1,37 @@
+#!/usr/bin/expect -f
+
+proc lookfor {pat} {
+    expect timeout { send_user "expect timeout looking for '$pat'\r\n" ; exit } $pat
+}
+
+# run the script, remember the PID so we can kill it when we are done
+set DTSPID [spawn bash dts-boot]
+
+# enter "Check and apply Dasharo firmware updates" option
+lookfor "Enter an option: "
+send "5\r"
+
+# agree to switch to Dasharo heads firmware
+lookfor "Would you like to switch to Dasharo heads firmware? (Y|n) "
+send "Y\r"
+
+# update
+lookfor "Are you sure you want to proceed with update? (Y|n) "
+send "Y\r"
+
+# verify specification
+lookfor "Does it match your actual specification? (Y|n) "
+send "Y\r"
+
+# final agreement to update
+lookfor "Do you want to update Dasharo firmware on your hardware? (Y|n) "
+send "Y\r"
+
+lookfor "Press any key to continue"
+send "\r"
+
+# since we are done we can kill the script
+lookfor "Enter an option: "
+exec kill -9 $DTSPID
+
+lookfor eof
