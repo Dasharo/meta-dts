@@ -1,4 +1,4 @@
-DESCRIPTION = "dts image"
+SUMMARY = "DTS image"
 
 IMAGE_FEATURES += "ssh-server-openssh debug-tweaks"
 

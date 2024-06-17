@@ -3,7 +3,7 @@
 This directory contains stub scripts for testing DTS update and deploy logic
 in complex scenarios.
 
-## Prerequisities
+## Prerequisites
 
 The unit tests run on host without any isolation or framework for testing.
 Thus the tests require the same tools and utilities to be present as on DTS:

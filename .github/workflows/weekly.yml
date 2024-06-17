@@ -1,3 +1,4 @@
+---
 name: Weekly clean & rebuild
 on:
   schedule:
