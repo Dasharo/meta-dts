@@ -5,7 +5,7 @@ SRC_URI = " \
     git://github.com/Dasharo/coreboot.git;branch=txe_sb_tool;protocol=https \
 "
 
-SRCREV = "295c158e577400025d01e7ca8ad3beb64e1614a0"
+SRCREV = "235c946838dc8c619ff821c9791386d63f5cbd6a"
 
 LIC_FILES_CHKSUM = " \
     file://${WORKDIR}/git/LICENSES/GPL-2.0-only.txt;md5=5430828348d2cf7d4b5e8395f774a68e \
