@@ -37,6 +37,7 @@ RDEPENDS:${PN}-tools-base = " \
     flashrom \
     fwupd \
     me-cleaner \
+    iperf3 \
 "
 
 RDEPENDS:${PN}-tools-dts = " \
