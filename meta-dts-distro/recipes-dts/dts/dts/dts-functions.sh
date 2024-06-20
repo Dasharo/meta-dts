@@ -263,7 +263,7 @@ board_config() {
         "NV4xPZ")
           DASHARO_REL_NAME="novacustom_nv4x_adl"
           DASHARO_REL_VER="1.7.2"
-          HEADS_REL_VER_DES="0.9.0"
+          HEADS_REL_VER_DES="0.9.1"
           HEADS_LINK_DES="${FW_STORE_URL_DES}/${DASHARO_REL_NAME}/v${HEADS_REL_VER_DES}/${DASHARO_REL_NAME}_v${HEADS_REL_VER_DES}_heads.rom"
           HEADS_SWITCH_FLASHROM_OPT_OVERRIDE="--ifd -i bios"
           BIOS_LINK_COMM="$FW_STORE_URL/$DASHARO_REL_NAME/v$DASHARO_REL_VER/${DASHARO_REL_NAME}_v${DASHARO_REL_VER}.rom"
