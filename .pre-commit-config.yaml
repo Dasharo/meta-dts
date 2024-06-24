@@ -2,7 +2,7 @@
 default_stages: [pre-commit]
 
 default_install_hook_types: [pre-commit, commit-msg]
-exclude: .*\.patch$
+exclude: .*\.(patch)|(diff)$
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -42,7 +42,7 @@ repos:
         args: ["--severity=warning"]
 
   - repo: https://github.com/zarhus/oelint-adv
-    rev: 949111ff4d256af759aa5d94db9d0fb444679b2c
+    rev: 5.5.2-zarhus
     hooks:
       - id: oelint-adv
         args: [--rulefile=.oelint-ruleset.json, --hide=info, --quiet, --fix]
@@ -58,12 +58,12 @@ repos:
     hooks:
       - id: codespell
 
-  - repo: https://github.com/3mdeb/pre-commit-hook-branding
-    rev: 57bba1549352401e8a1c3617384a22458973fa7b
+  - repo: https://github.com/3mdeb/hooks
+    rev: v0.1.2
     hooks:
       - id: namespell
         args: [--fix]
-
+        exclude: meta-dts-distro/recipes-tests/converged-security-suite/bg-suite/bg-suite
 ci:
   autoupdate_commit_msg: 'pre-commit: autoupdate hooks'
   autofix_prs: false
