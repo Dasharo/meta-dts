@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSES/Apache-2.0.txt;md5=c846ebb396f8b174b10ded477
 PV = "0.1+git${SRCPV}"
 
 SRC_URI = "git://github.com/Dasharo/dts-scripts;protocol=https;branch=main"
-SRCREV = "3477ab69b7658a383f32e5dc3520416a409243dd"
+SRCREV = "db23885453000db1f5f6f7a26249c768c87353cb"
 
 S = "${WORKDIR}/git"
 
@@ -24,6 +24,10 @@ RDEPENDS:${PN} = " \
     acpi-call-dkms \
     iotools \
     python3-semver \
+    rpm \
+    jq \
+    minio-cli \
+    dnf \
 "
 
 do_configure[noexec] = "1"
