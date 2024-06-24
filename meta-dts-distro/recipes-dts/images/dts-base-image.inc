@@ -16,6 +16,7 @@ IMAGE_INSTALL:append = " \
     libxcrypt-compat \
     alsa-utils-aplay \
     hw-probe \
+    lshw \
 "
 
 # Enable local auto-login of the root user (local = serial port and
