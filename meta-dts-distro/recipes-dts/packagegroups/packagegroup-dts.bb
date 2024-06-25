@@ -55,4 +55,5 @@ RDEPENDS:${PN}-tools-dts = " \
 RDEPENDS:${PN}-python = " \
     python3-binwalk \
     python3-uefi-firmware \
+    python3-roca-detect \
 "
