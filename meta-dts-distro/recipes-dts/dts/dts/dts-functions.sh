@@ -578,6 +578,10 @@ board_config() {
           BIOS_LINK_DES="${FW_STORE_URL_DES}/pcengines_apu2/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}.rom"
           BIOS_HASH_LINK_DES="${BIOS_LINK_DES}.sha256"
           BIOS_SIGN_LINK_DES="${BIOS_LINK_DES}.sha256.sig"
+          SEABIOS_REL_VER_DES="24.05.00.01"
+          SEABIOS_LINK_DES="${FW_STORE_URL_DES}/pcengines_apu2/v${SEABIOS_REL_VER_DES}/${DASHARO_REL_NAME}_v${SEABIOS_REL_VER_DES}.rom"
+          SEABIOS_HASH_LINK_DES="${SEABIOS_LINK_DES}.sha256"
+          SEABIOS_SIGN_LINK_DES="${SEABIOS_LINK_DES}.sha256.sig"
           PROGRAMMER_BIOS="internal:boardmismatch=force"
           NEED_SMMSTORE_MIGRATION="true"
           NEED_BOOTSPLASH_MIGRATION="true"
@@ -682,7 +686,7 @@ check_se_creds() {
   board_config
   TEST_LOGS_URL="https://cloud.3mdeb.com/index.php/s/${CLOUDSEND_LOGS_URL}/authenticate/showShare"
 
-  if [ ! -v BIOS_LINK_DES ] && [ ! -v HEADS_LINK_DES ]; then
+  if [ ! -v BIOS_LINK_DES ] && [ ! -v HEADS_LINK_DES ] && [ ! -v SEABIOS_LINK_DES ]; then
     error_exit "There is no Dasharo Entry Subscription available for your platform!"
   fi
 
@@ -692,6 +696,9 @@ check_se_creds() {
     fi
     if [ -v HEADS_LINK_DES ]; then
       _check_dwn_req_resp_heads=$(curl -L -I -s -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$HEADS_LINK_DES" -o /dev/null -w "%{http_code}")
+    fi
+    if [ -v SEABIOS_LINK_DES ]; then
+      _check_dwn_req_resp_heads=$(curl -L -I -s -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$SEABIOS_LINK_DES" -o /dev/null -w "%{http_code}")
     fi
 
     _check_logs_req_resp=$(curl -L -I -s -f -H "$CLOUD_REQUEST" "$TEST_LOGS_URL" -o /dev/null -w "%{http_code}")
