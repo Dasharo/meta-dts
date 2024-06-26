@@ -6,12 +6,12 @@ RED='\033[0;31m'
 YELLOW='\033[0;33m'
 GREEN='\033[0;32m'
 
-BOARD_VENDOR="$(dmidecode -s system-manufacturer)"
-SYSTEM_MODEL="$(dmidecode -s system-product-name)"
-BOARD_MODEL="$(dmidecode -s baseboard-product-name)"
+BOARD_VENDOR="${BOARD_VENDOR:-$(dmidecode -s system-manufacturer)}"
+SYSTEM_MODEL="${SYSTEM_MODEL:-$(dmidecode -s system-product-name)}"
+BOARD_MODEL="${BOARD_MODEL:-$(dmidecode -s baseboard-product-name)}"
 
-BIOS_VENDOR="$(dmidecode -s bios-vendor)"
-BIOS_VERSION="$(dmidecode -s bios-version)"
+BIOS_VENDOR="${BIOS_VENDOR:-$(dmidecode -s bios-vendor)}"
+BIOS_VERSION="${BIOS_VERSION:-$(dmidecode -s bios-version)}"
 DASHARO_VERSION="$(echo $BIOS_VERSION | cut -d ' ' -f 3 | tr -d 'v')"
 DASHARO_FLAVOR="$(echo $BIOS_VERSION | cut -d ' ' -f 1,2)"
 
@@ -57,11 +57,11 @@ CMD_CLOUD_LIST="/usr/sbin/cloud_list"
 CMD_EC_TRANSITION="/usr/sbin/ec_transition"
 
 # default values for flashrom programmer
-FLASHROM="flashrom"
+FLASHROM="${FLASHROM:-flashrom}"
 PROGRAMMER_BIOS="internal"
 PROGRAMMER_EC="ite_ec"
 
-DASHARO_ECTOOL="dasharo_ectool"
+DASHARO_ECTOOL="${DASHARO_ECTOOL:-dasharo_ectool}"
 
 # variables defining Dasharo specific entries in DMI tables, used to check if
 # Dasharo FW is already installed
