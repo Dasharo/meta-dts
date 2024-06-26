@@ -644,7 +644,7 @@ The computer will reboot automatically in 5 seconds
 3. Initial deployment from legacy firmware (seabios DES credentials)
 
     ```bash
-    export BIOS_VERSION="v4.19.0.1" TEST_DES=y && dts-boot
+    export BIOS_VERSION="v4.19.0.1" TEST_DES=y DTS_TYPE="seabios" && dts-boot
     ```
 
 Expected output:

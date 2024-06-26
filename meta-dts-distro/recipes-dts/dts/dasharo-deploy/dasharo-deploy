@@ -20,9 +20,16 @@ ask_for_version() {
     fi
     if [ -v BIOS_HASH_LINK_DES ]; then
       if [ -v DES_IS_LOGGED ]; then
-        echo "  d) DES version"
+        echo "  d) DES version (coreboot + UEFI)"
       else
-        echo "  DES version available, if you are interested, please visit https://shop.3mdeb.com/product-category/dasharo-entry-subscription/"
+        echo "  DES version (coreboot + UEFI) available, if you are interested, please visit https://shop.3mdeb.com/product-category/dasharo-entry-subscription/"
+      fi
+    fi
+    if [ -v BIOS_HASH_LINK_DES_SEABIOS ]; then
+      if [ -v DES_IS_LOGGED ]; then
+        echo "  s) DES version (coreboot + SeaBIOS)"
+      else
+        echo "  DES version (coreboot + SeaBIOS) available, if you are interested, please visit https://shop.3mdeb.com/product-category/dasharo-entry-subscription/"
       fi
     fi
     echo "  b) Back to main menu"
@@ -57,7 +64,18 @@ ask_for_version() {
             EC_HASH_LINK=$EC_HASH_LINK_DES
             EC_SIGN_LINK=$EC_SIGN_LINK_DES
           fi
-          echo "Dasharo Entry Subscription version selected"
+          echo "Dasharo Entry Subscription (coreboot + edk2) version selected"
+          break
+        else
+          error_exit "Bad option. Returning to main menu..."
+        fi
+        ;;
+      s|S|sea|seabios|SeaBIOS)
+        if [ -v BIOS_HASH_LINK_DES_SEABIOS ]; then
+          BIOS_LINK=$BIOS_LINK_DES_SEABIOS
+          BIOS_HASH_LINK=$BIOS_HASH_LINK_DES_SEABIOS
+          BIOS_SIGN_LINK=$BIOS_SIGN_LINK_DES_SEABIOS
+          echo "Dasharo Entry Subscription (coreboot + SeaBIOS) version selected"
           break
         else
           error_exit "Bad option. Returning to main menu..."
@@ -501,7 +519,7 @@ update() {
     fi
   else
     if [ -v DASHARO_REL_VER_DES ]; then
-      print_green "DES version available, if you are interested"
+      print_green "DES version (coreboot + UEFI) available, if you are interested"
       print_green "please visit https://shop.3mdeb.com/product-category/dasharo-entry-subscription/"
     fi
     if [ "$DASHARO_FLAVOR" != "Dasharo (coreboot+heads)" ]; then

@@ -579,6 +579,10 @@ board_config() {
           BIOS_LINK_DES="${FW_STORE_URL_DES}/pcengines_apu2/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}.rom"
           BIOS_HASH_LINK_DES="${BIOS_LINK_DES}.sha256"
           BIOS_SIGN_LINK_DES="${BIOS_LINK_DES}.sha256.sig"
+          DASHARO_REL_VER_DES_SEABIOS="24.05.00.01"
+          BIOS_LINK_DES_SEABIOS="${FW_STORE_URL_DES}/pcengines_apu2/v${DASHARO_REL_VER_DES_SEABIOS}/${DASHARO_REL_NAME}_seabios_v${DASHARO_REL_VER_DES_SEABIOS}.rom"
+          BIOS_HASH_LINK_DES_SEABIOS="${BIOS_LINK_DES_SEABIOS}.sha256"
+          BIOS_SIGN_LINK_DES_SEABIOS="${BIOS_LINK_DES_SEABIOS}.sha256.sig"
           PROGRAMMER_BIOS="internal:boardmismatch=force"
           NEED_SMMSTORE_MIGRATION="true"
           NEED_BOOTSPLASH_MIGRATION="true"
@@ -591,6 +595,10 @@ board_config() {
           BIOS_LINK_DES="${FW_STORE_URL_DES}/pcengines_apu2/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}.rom"
           BIOS_HASH_LINK_DES="${BIOS_LINK_DES}.sha256"
           BIOS_SIGN_LINK_DES="${BIOS_LINK_DES}.sha256.sig"
+          DASHARO_REL_VER_DES_SEABIOS="24.05.00.01"
+          BIOS_LINK_DES_SEABIOS="${FW_STORE_URL_DES}/pcengines_apu2/v${DASHARO_REL_VER_DES_SEABIOS}/${DASHARO_REL_NAME}_seabios_v${DASHARO_REL_VER_DES_SEABIOS}.rom"
+          BIOS_HASH_LINK_DES_SEABIOS="${BIOS_LINK_DES_SEABIOS}.sha256"
+          BIOS_SIGN_LINK_DES_SEABIOS="${BIOS_LINK_DES_SEABIOS}.sha256.sig"
           PROGRAMMER_BIOS="internal:boardmismatch=force"
           NEED_SMMSTORE_MIGRATION="true"
           NEED_BOOTSPLASH_MIGRATION="true"
@@ -603,6 +611,10 @@ board_config() {
           BIOS_LINK_DES="${FW_STORE_URL_DES}/pcengines_apu2/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}.rom"
           BIOS_HASH_LINK_DES="${BIOS_LINK_DES}.sha256"
           BIOS_SIGN_LINK_DES="${BIOS_LINK_DES}.sha256.sig"
+          DASHARO_REL_VER_DES_SEABIOS="24.05.00.01"
+          BIOS_LINK_DES_SEABIOS="${FW_STORE_URL_DES}/pcengines_apu2/v${DASHARO_REL_VER_DES_SEABIOS}/${DASHARO_REL_NAME}_seabios_v${DASHARO_REL_VER_DES_SEABIOS}.rom"
+          BIOS_HASH_LINK_DES_SEABIOS="${BIOS_LINK_DES_SEABIOS}.sha256"
+          BIOS_SIGN_LINK_DES_SEABIOS="${BIOS_LINK_DES_SEABIOS}.sha256.sig"
           PROGRAMMER_BIOS="internal:boardmismatch=force"
           NEED_SMMSTORE_MIGRATION="true"
           NEED_BOOTSPLASH_MIGRATION="true"
@@ -615,6 +627,10 @@ board_config() {
           BIOS_LINK_DES="${FW_STORE_URL_DES}/pcengines_apu2/v${DASHARO_REL_VER_DES}/${DASHARO_REL_NAME}_v${DASHARO_REL_VER_DES}.rom"
           BIOS_HASH_LINK_DES="${BIOS_LINK_DES}.sha256"
           BIOS_SIGN_LINK_DES="${BIOS_LINK_DES}.sha256.sig"
+          DASHARO_REL_VER_DES_SEABIOS="24.05.00.01"
+          BIOS_LINK_DES_SEABIOS="${FW_STORE_URL_DES}/pcengines_apu2/v${DASHARO_REL_VER_DES_SEABIOS}/${DASHARO_REL_NAME}_seabios_v${DASHARO_REL_VER_DES_SEABIOS}.rom"
+          BIOS_HASH_LINK_DES_SEABIOS="${BIOS_LINK_DES_SEABIOS}.sha256"
+          BIOS_SIGN_LINK_DES_SEABIOS="${BIOS_LINK_DES_SEABIOS}.sha256.sig"
           PROGRAMMER_BIOS="internal:boardmismatch=force"
           NEED_SMMSTORE_MIGRATION="true"
           NEED_BOOTSPLASH_MIGRATION="true"
@@ -795,13 +811,13 @@ download_artifacts() {
     USER_DETAILS="$CLOUDSEND_DOWNLOAD_URL:$CLOUDSEND_PASSWORD"
     curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_LINK" -o $BIOS_UPDATE_FILE
     error_check "Cannot access $FW_STORE_URL_DES while downloading binary.
-   Please check your internet connection"
+   Please check your internet connection and credentials"
     curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_HASH_LINK" -o $BIOS_HASH_FILE
     error_check "Cannot access $FW_STORE_URL_DES while downloading signature.
-   Please check your internet connection"
+   Please check your internet connection and credentials"
     curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_SIGN_LINK" -o $BIOS_SIGN_FILE
     error_check "Cannot access $FW_STORE_URL_DES while downloading signature.
-   Please check your internet connection"
+   Please check your internet connection and credentials"
     if [ "$HAVE_EC" == "true" ] && [ -v EC_LINK ]; then
       if [ -v EC_LINK_COMM ] && [ ${EC_LINK} == ${EC_LINK_COMM} ]; then
         curl -s -L -f "$EC_LINK" -o "$EC_UPDATE_FILE"
@@ -816,13 +832,13 @@ download_artifacts() {
       else
         curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$EC_LINK" -o $EC_UPDATE_FILE
         error_check "Cannot access $FW_STORE_URL while downloading binary. Please
-          check your internet connection"
+          check your internet connection and credentials"
         curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$EC_HASH_LINK" -o $EC_HASH_FILE
         error_check "Cannot access $FW_STORE_URL while downloading signature. Please
-          check your internet connection"
+          check your internet connection and credentials"
         curl -s -L -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$EC_SIGN_LINK" -o $EC_SIGN_FILE
         error_check "Cannot access $FW_STORE_URL while downloading signature. Please
-          check your internet connection"
+          check your internet connection and credentials"
      fi
     fi
   fi

@@ -10,8 +10,8 @@ export LOGS_SENT="1"
 
 CLOUD_PASS_FILE="/etc/cloud-pass"
 
-if [ $TEST_DES == "y" ] && [ ! -f "${CLOUD_PASS_FILE}" ]; then
-  rm -rf "${CLOUD_PASS_FILE}"
+if [ $TEST_DES == "y" ]; then
+  rm -f "${CLOUD_PASS_FILE}"
   if [ "$BOARD_VENDOR" = "Notebook" ] && [ "$DES_TYPE" = "heads" ]; then
     echo "$NCM_HEADS_LOGS_KEY" >> "${CLOUD_PASS_FILE}"
     echo "$NCM_HEADS_DL_KEY" >> "${CLOUD_PASS_FILE}"
