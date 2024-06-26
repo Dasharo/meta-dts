@@ -293,6 +293,7 @@ uuid=`uuidgen -n @x500 -N $uuid_string -s`
 filename+="_$uuid"
 filename+="_$(date +'%Y_%m_%d_%H_%M_%S_%N')"
 filename="${filename// /_}"
+filename="${filename//\//_}"
 
 if [ $DEPLOY_REPORT = "false" ]; then
   echo "Creating archive with logs..."
