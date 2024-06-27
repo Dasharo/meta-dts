@@ -2,6 +2,17 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v1.2.22 - 2024-06-27
+
+* Extended Dasharo zero-touch initial deployment on PCEngines APU2 platforms for
+  [DES](https://docs.dasharo.com/ways-you-can-help-us/#become-a-dasharo-entry-subscription-subscriber)
+  users with SeaBIOS firmware variant, in addition to UEFI variant.
+* Increase supported Dasharo (coreboot + heads) version from  v0.9.0 to v0.9.1
+  for NovaCustom NV4x 12th Gen series
+* Include new tools into the image: `python3-roca-detect`, `iperf3`, `lshw`
+* Fix [Dell Optiplex 7010 initial deployment](https://github.com/Dasharo/dasharo-issues/issues/706)
+* Update versions of coreboot-utils
+
 ## v1.2.21 - 2024-03-29
 
 * Added Dasharo zero-touch initial deployment on PCEngines APU2 platforms for
