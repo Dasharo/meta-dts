@@ -432,9 +432,9 @@ install() {
   # globally for specific platform and variant
   local _flashrom_extra_args=""
   if [ "${BIOS_LINK}" = "${BIOS_LINK_DES_SEABIOS}" ]; then
-    _flashrom_extra_args = "--fmap -i COREBOOT"
+    _flashrom_extra_args="--fmap -i COREBOOT"
   fi
-  $FLASHROM -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_REGIONS} -w "$BIOS_UPDATE_FILE" "${_flashrom_extra_args}" >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
+  $FLASHROM -p "$PROGRAMMER_BIOS" ${FLASH_CHIP_SELECT} ${FLASHROM_ADD_OPT_REGIONS} -w "$BIOS_UPDATE_FILE" ${_flashrom_extra_args} >> $FLASHROM_LOG_FILE 2>> $ERR_LOG_FILE
   error_check "Failed to install Dasharo firmware"
 
   print_green "Successfully installed Dasharo firmware"
