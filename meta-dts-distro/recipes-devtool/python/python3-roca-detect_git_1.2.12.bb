@@ -22,7 +22,7 @@ inherit setuptools3
 
 # WARNING: the following rdepends are determined through basic analysis of the
 # python sources, and might not be 100% accurate.
-RDEPENDS:${PN} += "python3-compression python3-core python3-crypt python3-datetime python3-io python3-json python3-logging python3-math python3-netclient python3-unittest"
+RDEPENDS:${PN} += "python3-compression python3-core python3-crypt python3-datetime python3-io python3-json python3-logging python3-math python3-netclient python3-unittest python3-future python3-coloredlogs"
 
 # WARNING: We were unable to map the following python package/module
 # dependencies to the bitbake packages which include them:
