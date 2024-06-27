@@ -691,6 +691,7 @@ check_flash_chip() {
 check_se_creds() {
   local _check_dwn_req_resp_uefi="0"
   local _check_dwn_req_resp_heads="0"
+  local _check_dwn_req_resp_seabios="0"
   local _check_logs_req_resp="0"
   CLOUDSEND_LOGS_URL=$(sed -n '1p' < ${SE_credential_file} | tr -d '\n')
   CLOUDSEND_DOWNLOAD_URL=$(sed -n '2p' < ${SE_credential_file} | tr -d '\n')
@@ -699,7 +700,7 @@ check_se_creds() {
   board_config
   TEST_LOGS_URL="https://cloud.3mdeb.com/index.php/s/${CLOUDSEND_LOGS_URL}/authenticate/showShare"
 
-  if [ ! -v BIOS_LINK_DES ] && [ ! -v HEADS_LINK_DES ]; then
+  if [ ! -v BIOS_LINK_DES ] && [ ! -v HEADS_LINK_DES ] && [ ! -v BIOS_LINK_DES_SEABIOS ]; then
     error_exit "There is no Dasharo Entry Subscription available for your platform!"
   fi
 
@@ -710,9 +711,12 @@ check_se_creds() {
     if [ -v HEADS_LINK_DES ]; then
       _check_dwn_req_resp_heads=$(curl -L -I -s -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$HEADS_LINK_DES" -o /dev/null -w "%{http_code}")
     fi
+    if [ -v BIOS_LINK_DES_SEABIOS ]; then
+      _check_dwn_req_resp_seabios=$(curl -L -I -s -f -u "$USER_DETAILS" -H "$CLOUD_REQUEST" "$BIOS_LINK_DES_SEABIOS" -o /dev/null -w "%{http_code}")
+    fi
 
     _check_logs_req_resp=$(curl -L -I -s -f -H "$CLOUD_REQUEST" "$TEST_LOGS_URL" -o /dev/null -w "%{http_code}")
-    if [ ${_check_dwn_req_resp_uefi} -eq 200 ] || [ ${_check_dwn_req_resp_heads} -eq 200 ]; then
+    if [ ${_check_dwn_req_resp_uefi} -eq 200 ] || [ ${_check_dwn_req_resp_heads} -eq 200 ] || [ ${_check_dwn_req_resp_seabios} -eq 200 ]; then
       if [ ${_check_logs_req_resp} -eq 200 ]; then
         return 0
       else
