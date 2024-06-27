@@ -2,6 +2,10 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v1.2.23 - 2024-06-27
+
+* Hotfix for PC Engines SeaBIOS firmware variant deployment
+
 ## v1.2.22 - 2024-06-27
 
 * Extended Dasharo zero-touch initial deployment on PCEngines APU2 platforms for
