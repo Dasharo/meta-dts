@@ -1,0 +1,38 @@
+#!/bin/bash
+
+file_path="/sys/class/mei/mei0/fw_status"
+
+if [[ ! -f $file_path ]]; then
+    echo "File not found: $file_path"
+    exit 1
+fi
+
+hfsts6_value=""
+line_number=1
+while IFS= read -r line; do
+    if [[ $line_number -eq 6 ]]; then
+        hfsts6_value=$line
+        break
+    fi
+    ((line_number++))
+done < "$file_path"
+
+if [[ -z $hfsts6_value ]]; then
+    echo "Failed to read HFSTS6 value"
+    exit 1
+fi
+
+hfsts6_binary=$(echo "ibase=16; obase=2; $hfsts6_value" | bc)
+
+binary_length=${#hfsts6_binary}
+
+# Add leading zeros
+if [ $binary_length -lt 32 ]; then
+  padding=$((32 - binary_length))
+  zeros=$(printf "%${padding}s" | tr ' ' "0")
+  hfsts6_binary=$zeros$hfsts6_binary
+fi
+
+bit_30_value=${hfsts6_binary:1:1}
+
+echo "$bit_30_value"
