@@ -39,6 +39,8 @@ RDEPENDS:${PN}-tools-base = " \
     me-cleaner \
     txesbmantool \
     smmstoretool \
+    msr-tools \
+    bc \
 "
 
 RDEPENDS:${PN}-tools-dts = " \
