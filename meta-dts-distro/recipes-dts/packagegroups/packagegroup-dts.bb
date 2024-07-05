@@ -40,6 +40,7 @@ RDEPENDS:${PN}-tools-base = " \
     iperf3 \
     txesbmantool \
     smmstoretool \
+    cpuid \
 "
 
 RDEPENDS:${PN}-tools-dts = " \
