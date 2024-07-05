@@ -39,6 +39,7 @@ RDEPENDS:${PN}-tools-base = " \
     me-cleaner \
     txesbmantool \
     smmstoretool \
+    cpuid \
 "
 
 RDEPENDS:${PN}-tools-dts = " \
