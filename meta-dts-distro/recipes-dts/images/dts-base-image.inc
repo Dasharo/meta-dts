@@ -6,6 +6,8 @@ LICENSE = "MIT"
 
 inherit core-image
 
+IMAGE_NAME_SUFFIX = ""
+
 IMAGE_INSTALL:append = " \
     packagegroup-dts-python \
     packagegroup-dts-system \
