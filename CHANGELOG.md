@@ -2,20 +2,22 @@
 
 All notable changes to the DTS project will be documented in this file.
 
-## v1.2.23 - 2024-06-27
+## v2.0.0-rc2 - 2024-07-09
 
-* Hotfix for PC Engines SeaBIOS firmware variant deployment
-
-## v1.2.22 - 2024-06-27
-
-* Extended Dasharo zero-touch initial deployment on PCEngines APU2 platforms for
-  [DES](https://docs.dasharo.com/ways-you-can-help-us/#become-a-dasharo-entry-subscription-subscriber)
-  users with SeaBIOS firmware variant, in addition to UEFI variant.
-* Increase supported Dasharo (coreboot + heads) version from  v0.9.0 to v0.9.1
-  for NovaCustom NV4x 12th Gen series
-* Include new tools into the image: `python3-roca-detect`, `iperf3`, `lshw`
-* Fix [Dell Optiplex 7010 initial deployment](https://github.com/Dasharo/dasharo-issues/issues/706)
-* Update versions of coreboot-utils
+* Add support for MTL
+* Remove separate EC update
+* Updated Linux kernel to version 6.6.23
+* Update most of system libraries and applications to newer version
+* Don't use ICMP for network connection verification
+* Update coreboot tools to revision d08d5eaa98b1204b5e665d3ae4f63fb6f84a0d77
+* Update dasharo_ectool to revision 4ae73b9d2cc2ec34c760c7774a7859d240c4c8dd
+* Fixed scp not working without `-O` option
+* Add txesbmantool, revision 235c946838dc8c619ff821c9791386d63f5cbd6a
+* Add smmstoretool, revision 602653abed391ae1b1445ad86d0f05b8b5b678cb
+* Add cpuid tool
+* Add more cukinia tests
+* Add and use python semver module to compare versions
+* Use sshd.service instead of sshd.socket
 
 ## v1.2.21 - 2024-03-29
 
