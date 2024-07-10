@@ -1,3 +1,4 @@
+PACKAGECONFIG += "systemd-sshd-service-mode"
 SYSTEMD_AUTO_ENABLE:${PN}-sshd = "disable"
 
 do_install:append() {
