@@ -23,6 +23,7 @@ RDEPENDS:${PN} = " \
     dmidecode \
     acpi-call-dkms \
     iotools \
+    python3-semver \
 "
 
 do_configure[noexec] = "1"
