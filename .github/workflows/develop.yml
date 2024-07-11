@@ -1,5 +1,5 @@
 ---
-name: CI on push to develop
+name: CI on push develop tag
 on:
   push:
     tags:
@@ -40,7 +40,7 @@ jobs:
             echo "At least one build attempt succeeded."
           fi
   deploy-images:
-    name: Deploy DTS artifacts on GitHub Releases tab
+    name: Deploy DTS artifacts on boot.dasharo.com
     if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
     needs: build
     runs-on:

@@ -1,5 +1,5 @@
 ---
-name: CI on push tag
+name: CI on push release tag
 on:
   push:
     tags:
@@ -41,7 +41,7 @@ jobs:
             echo "At least one build attempt succeeded."
           fi
   deploy-images:
-    name: Deploy DTS artifacts on boot.dasharo.com
+    name: Deploy DTS artifacts on boot.dasharo.com and GitHub Release
     if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
     needs: build
     runs-on:
@@ -113,7 +113,7 @@ jobs:
         run: |
           ./meta-dts/scripts/generate-ipxe-menu.sh ${{steps.dts-ver.outputs.DTS_VER}}
           scp -i ~/.ssh/dts-ci-key dts.ipxe builder@10.1.40.2:boot/dts/
-      - name: Trigger signing
+      - name: Trigger signing and deploy to GitHub Release tab
         shell: bash
         run: |
           DTS_VER="${{steps.dts-ver.outputs.DTS_VER}}"
