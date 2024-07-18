@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = " \
 "
 
 DEPENDS += "hidapi"
-PV:append = ".AUTOINC+411fab9b7c"
+PV:append = ".AUTOINC+${@d.getVar('SRCREV')[:10]}"
 SRC_URI = "gitsm://github.com/Dasharo/ec.git;protocol=https;nobranch=1"
 
 CARGO_SRC_DIR = "/tool/"
