@@ -5,7 +5,6 @@ All notable changes to the DTS project will be documented in this file.
 ## v2.0.0-rc2 - 2024-07-09
 
 * Add support for MTL
-* Remove separate EC update
 * Updated Linux kernel to version 6.6.23
 * Update most of system libraries and applications to newer version
 * Don't use ICMP for network connection verification
