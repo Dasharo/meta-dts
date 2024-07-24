@@ -51,18 +51,17 @@ jobs:
         shell: bash
         env:
           SSH_KEY: ${{secrets.SSH_KEY}}
-          SSH_KEY_GITEA: ${{secrets.SSH_KEY_GITEA}}
+          SSH_KEY_CI_CD: ${{secrets.SSH_KEY_CI_CD}}
         run: |
           echo -e ${SSH_KEY} > ~/.ssh/dts-ci-key
           chmod 600 ~/.ssh/dts-ci-key
-          echo -e ${SSH_KEY_GITEA} > ~/.ssh/gitea-key
-          chmod 600 ~/.ssh/gitea-key
-          cp ~/.ssh/config ~/.ssh/config-old
+          echo -e ${SSH_KEY_CI_CD} > ~/.ssh/gitea_dts_release_cicd
+          chmod 600 ~/.ssh/gitea_dts_release_cicd
           echo -e "\n
           Host git.3mdeb.com\n
           HostName       git.3mdeb.com\n
-          IdentityFile   ~/.ssh/gitea-key\n
-          IdentitiesOnly yes" >> ~/.ssh/config
+          IdentityFile   ~/.ssh/gitea_dts_release_cicd\n
+          IdentitiesOnly yes" > ~/.ssh/config_deploy
       - name: Get DTS version
         id: dts-ver
         shell: bash
@@ -117,7 +116,7 @@ jobs:
         shell: bash
         run: |
           DTS_VER="${{steps.dts-ver.outputs.DTS_VER}}"
-          git clone ssh://git@git.3mdeb.com:2222/3mdeb/dts-release-cicd-pipeline.git
+          GIT_SSH_COMMAND='ssh -F ~/.ssh/config_deploy' git clone ssh://git@git.3mdeb.com:2222/3mdeb/dts-release-cicd-pipeline.git
           cd dts-release-cicd-pipeline
           echo ${DTS_VER} > LATEST_RELEASE
           git add LATEST_RELEASE
@@ -138,7 +137,5 @@ jobs:
         run: |
           rm -rf ~/.ssh/dts-ci-key
           rm -rf dts-release-cicd-pipeline
-          rm -f ~/.ssh/gitea-key
+          rm -f ~/.ssh/gitea_dts_release_cicd
           rm -rf build
-          rm -f ~/.ssh/config
-          mv ~/.ssh/config-old ~/.ssh/config
