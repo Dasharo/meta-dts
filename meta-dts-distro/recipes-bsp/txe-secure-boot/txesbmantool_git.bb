@@ -12,7 +12,7 @@ SRC_URI = " \
     git://github.com/Dasharo/coreboot.git;branch=txe_sb_tool;protocol=https \
 "
 
-SRCREV = "235c946838dc8c619ff821c9791386d63f5cbd6a"
+SRCREV = "d6a30f4fd3a7fca9551eefa9730f5c0f09328043"
 
 S = "${WORKDIR}/git/util/txesbmantool"
 
