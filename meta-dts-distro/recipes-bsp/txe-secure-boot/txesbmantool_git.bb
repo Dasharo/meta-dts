@@ -9,10 +9,10 @@ LIC_FILES_CHKSUM = " \
 DEPENDS += "wolfssl"
 
 SRC_URI = " \
-    git://github.com/Dasharo/coreboot.git;branch=txe_sb_tool;protocol=https \
+    git://github.com/Dasharo/coreboot.git;branch=dasharo;protocol=https \
 "
 
-SRCREV = "d6a30f4fd3a7fca9551eefa9730f5c0f09328043"
+SRCREV = "4706227e009b758a1bebace99f5bfba431874d7a"
 
 S = "${WORKDIR}/git/util/txesbmantool"
 
