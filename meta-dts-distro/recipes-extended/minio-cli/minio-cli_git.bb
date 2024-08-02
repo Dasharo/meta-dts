@@ -6,7 +6,7 @@ GO_IMPORT = "github.com/minio/mc"
 
 inherit go-mod
 
-LICENSE = "AGPL-3.0"
+LICENSE = "AGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://src/${GO_IMPORT}/LICENSE;md5=eb1e647870add0502f8f010b19de32af"
 
 SRC_URI = "git://${GO_IMPORT};protocol=https;branch=master"
