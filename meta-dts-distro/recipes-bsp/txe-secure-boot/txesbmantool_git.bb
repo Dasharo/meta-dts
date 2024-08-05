@@ -8,6 +8,8 @@ LIC_FILES_CHKSUM = " \
 
 DEPENDS += "wolfssl"
 
+PV = "1.0+git${SRCPV}"
+
 SRC_URI = " \
     git://github.com/Dasharo/coreboot.git;branch=dasharo;protocol=https \
 "
