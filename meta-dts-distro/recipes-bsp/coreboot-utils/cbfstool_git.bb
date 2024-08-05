@@ -2,6 +2,8 @@ require coreboot-utils.inc
 
 SUMMARY = "Tool for manipulating CBFS file"
 
+PV = "1.0+git${SRCPV}"
+
 TARGET_CC_ARCH += "${LDFLAGS}"
 
 EXTRA_OEMAKE = " \
