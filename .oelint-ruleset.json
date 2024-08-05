@@ -134,7 +134,7 @@
   "oelint.vars.fileextrapathsop": "error",
   "oelint.var.filesoverride": "warning",
   "oelint.vars.homepageprefix": "warning",
-  "oelint.vars.homepageping": "warning",
+  "oelint.vars.homepageping": "info",
   "oelint.vars.insaneskip": "info",
   "oelint.var.licenseremotefile": "info",
   "oelint.vars.licensesdpx": "warning",
