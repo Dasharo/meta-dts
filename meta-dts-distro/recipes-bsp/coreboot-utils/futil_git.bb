@@ -12,6 +12,8 @@ DEPENDS += " \
     flashrom \
 "
 
+PV = "1.0+git${SRCPV}"
+
 SRC_URI = " \
           git://github.com/Dasharo/vboot.git;protocol=https;branch=dasharo \
           file://0001-Makefile-disable-deprecated-warnigs-as-errors.patch \
