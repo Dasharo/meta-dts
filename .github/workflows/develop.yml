@@ -116,6 +116,7 @@ jobs:
           DTS_VER="${{steps.dts-ver.outputs.DTS_VER}}"
           GIT_SSH_COMMAND='ssh -F ~/.ssh/config_deploy' git clone ssh://git@git.3mdeb.com:2222/3mdeb/dts-release-cicd-pipeline.git
           cd dts-release-cicd-pipeline
+          git checkout deploy-manifest
           echo ${DTS_VER} > LATEST_RELEASE
           git add LATEST_RELEASE
           git commit -m "Signing release ${DTS_VER}"
