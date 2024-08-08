@@ -13,6 +13,7 @@ SRC_URI:append = " \
     file://silence-terminal-logs.cfg \
     file://touchpad.cfg \
     file://tpm.cfg \
+    file://capsule-update.cfg \
 "
 
 # Enable support for additional file systems:
