@@ -2,7 +2,7 @@
 default_stages: [pre-commit]
 
 default_install_hook_types: [pre-commit, commit-msg]
-exclude: .*\.(patch)|(diff)$
+exclude: .*\.(patch)|(diff)$|CHANGELOG.md
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
