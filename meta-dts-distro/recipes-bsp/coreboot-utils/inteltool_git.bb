@@ -7,8 +7,6 @@ SUMMARY = "\
 
 DEPENDS += "pciutils zlib"
 
-PV = "1.0+git${SRCPV}"
-
 EXTRA_OEMAKE = ' \
                 DESTDIR="${D}" \
                 PREFIX="${prefix}" \
