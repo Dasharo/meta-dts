@@ -1,357 +1,849 @@
-# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+
+## [Unreleased]
+
+### Added
+- workflows: add 'v' to DTS_VER
+
+
+### Changed
+- workflows: get DTS_VER from tag not dts-distro.conf
+- Rename python3-roca-detect_git_1.2.12.bb
+- CHANGELOG: Reintroduce notes for v1.2.22 and v1.2.23
+- CHANGELOG: Fix kernel version for 2.0.0-rc1
+- kas-uefi-sb.yml: update to scarthgap
+- Add generate-changed-recipes script + specify PV for git recipes
+- .github/workflows: Deploy manifest to boot.dasharo.com
+- Use git-cliff to generate changelog
+- recipes-bsp/coreboot-utils: Use 4.21 as base version for coreboot-utils packages
+
+
+### Fixed
+- python3-roca-detect: fix missing dependencies
+
+
+## [1.2.23] - 2024-06-27
+
+### Added
+- dts-functions: support seabios in check_se_creds()
+
+
+### Changed
+- dts-distro.conf: bump to v1.2.23
+- CHANGELOG.md: v1.2.23
+
+
+### Fixed
+- dasharo-deploy: fix flashrom_extra_args
+
+
+## [1.2.22] - 2024-06-27
+
+### Added
+- packagegroup-dts.bb: add iperf3 to tools
+- dts-base-image: add lshw
+- meta-dts-distro: add python3-roca-detect
+- meta-dts-distro: add rdepends for python3-roca-detect
+- CHANGELOG.md: add v1.2.22
+- dts-functions: support seabios in check_se_creds()
+- distro: support: hidapi: delete
+- dts-distro.conf: add usrmerge to DISTRO_FEATURES
+- dasharo-ectoo: add sha256sums for cargo deps
+- distro: recipes-extended: minio-cli: add
+- distro: recipes-dts: dts-scripts: add DES packaging support
+- CHANGELOG: add changelog for v2.0.0-rc6
+- CHANGELOG: add changelog for v2.0.0-rc7
+- distro: dts-scripts: add support for NovaCustom V5x0TNx
+- CHANGELOG: add changelog for v2.0.0
+- dts-base-image: add lshw
+- meta-dts-distro: add python3-roca-detect
+- meta-dts-distro: add rdepends for python3-roca-detect
+- CHANGELOG.md: add v1.2.22
+
+
+### Changed
+- dts-distro: coreboot-utils: Update branch and commit
+- Fix Dell Optiplex variables to enable firmware download
+- Remove unneeded line that is commented out
+- dts: Remove separate EC update when updating Dasharo
+- dts/dts-functions.sh: bump ncm adl heads to v0.9.1
+- conf/distro/dts-distro.conf: bump to v1.2.22
+- dts-functions.sh: clarify on heads update path
+- dts: allow overriding some variables from env
+- unit_tests: basic support for running in QEMU and OSFV
+- dts: initial deployment for PC Engines SeaBIOS
+- Revert "dts: Remove separate EC update when updating Dasharo"
+- dasharo-deploy: preserve settings for seabios initial deploy
+- dts-distro.conf: bump to v1.2.23
+- CHANGELOG.md: v1.2.23
+- workflows: get DTS_VER from tag not dts-distro.conf
+- kas-uefi-sb: change meta-secure-core origin
+- dts: dts-functions: make dts not use ICMP for network connection check
+- distro: recipes-dts: move DTS scripts to another repo
+- distro: recipes-dts: dts-scripts: do_install via Makefile
+- dts-scripts_git.bb: relicense to Apache-2.0
+- distro: dts-scripts: bump revision
+- distro: kernel: acpi-call-dkms: change license to GPLv3
+- update layers to scarthgap
+- packagegroup-dts.bb: s/bmap-tools/bmaptool
+- iotools: allow overriding CC
+- kas/common.yml: enable buildstats class
+- iotools: disable DEBUG by default
+- dts-scripts: update SRCREV
+- dts-scripts: update SRCREV
+- README: Add section about cukinia tests
+- meta-dts-distro: Add txesbmantool
+- meta-dts-distro/recipes-tests/dts-tests: cukinia.conf: Add txesbmantool check
+- recipes-bsp/txe-secure-boot/txe-secure-boot_git.bb: Use bindir in FILES
+- recipes-bsp/txe-secure-boot/txesbmantool_git: Adjust PKG_CONFIG_PATH
+- recipes-bsp/txe-secure-boot/txesbmantool_git: Specify EXTRA_OEMAKE + fix style
+- meta-dts-distro/recipes Add smmstore tool
+- meta-dts-distro/recipes-bsp/txe-secure-boot/smmstoretool_git: Refactor file
+- meta-dts-distro/recipes-tests/dts-tests: cukinia.conf: Add smmstoretool test
+- recipes-bsp/txe-secure-boot/smmstoretool_git.bb: Specify EXTRA_OEMAKE
+- Add basic pre-commit configuration
+- recipes-dts: Remove dts-functions.sh
+- recipes-support/cloudsend: Fetch script from git and add `--fail-with-body` flag
+- Fix files so that pre-commit passes
+- recipes-bsp/txe-secure-boot/txesbmantool_git: Update revision
+- Change pre-commit hook revisions
+- Add cpuid tool + cukinia test
+- dts-distro.conf: bump to v2.0.0-rc1
+- openssh_%.bbappend: use sshd.service instead of sshd.socket
+- workflow: Change action and jobs names
+- dts-base-image.inc: Remove 'rootfs' suffix from image
+- dts-scripts: Update revision
+- dts-scripts: Add python3-semver dependency
+- meta-dts-distro/recipes-support/dasharo-ectool: bump rev for Dasharo ACPI ID
+- CHANGELOG.md: Add v2.0.0-rc2
+- dts-distro.conf: bump version to 2.0.0-rc2
+- dts-scripts: Change to rev removing separate EC update
+- dasharo-ectool: automatically get PV hash from SRCCREV
+- Revert "dts-scripts: Change to rev removing separate EC update"
+- dts-scripts: Change to rev removing separate EC update
+- dts-distro.conf: bump to 2.0.0-rc3
+- dts-scripts: update SRCREV
+- recipes-bsp/txe-secure-boot/txesbmantool_git.bb: Bump SRCREV
+- .github/workflows: Use separate SSH config for deploy job
+- recipes-bsp: txesbmantool: Change branch and SRCREV
+- distro: extended: minio-cli: amend absolete-license
+- .oelint-ruleset.json: Set homepageping to info so pre-commit ci can run
+- conf/distro/dts-distro.conf: Bump DISTRO_VERSION to 2.0.0-rc5
+- CHANGELOG: Add change notes v2.0.0-rc5
+- meta-dts/meta-dts-distro/recipes-dts/dts-scripts/dts-scripts_git.bb: SRCREV update
+- python/python3-binwalk_2.3.3.bb: changed src to updated fork
+- meta-dts-distro/conf/layer.conf: bump layer priority
+- meta-dts-distro/recipes-dts: dts-scripts: Bump revision to support Optiplex
+- meta-dts-distro/recipes-dts: dts-scripts: Bump SRCREV to support Optiplex DPP
+- dts-distro.conf: bump to 2.0.0-rc6
+- pre-commit: use upstream oelint
+- recipes-dts: dts-scripts: Bump SRCREV (verbose mode and sending logs)
+- dts-distro.conf: bump to 2.0.0-rc7
+- dts-scripts: update to version with ODROID-H4+ support
+- dts-scripts: update srcrev, fixes optiplex dpp link
+- Clean up changelog
+- dts-distro.conf: bump to 2.0.0
+- Remove unit_tests and scripts/local-deploy
+- coreboot-utils: update SRCREV
+- Revert "dts: Remove separate EC update when updating Dasharo"
+- dasharo-deploy: preserve settings for seabios initial deploy
+
+
+### Fixed
+- dts: dts-functions.sh: fix BINARY_HAS_RW_B value
+- dasharo-hcl-report: fix generation on qemu (coreboot + edk2)
+- dasharo-deploy: fix flashrom_extra_args
+- acpi-call-dkms: fix kernel module installation on scarthgap
+- openssh: fix scp not working (Dasharo/dasharo-issues#840)
+- tests: cukinia: Add semver module check
+- workflows: fix dts-release-cicd-pipeline ssh errors
+
+
+### Removed
+- reports: dasharo-hcl-report: remove board_config call
+- distro: kernel: linux-yocto: remove efi-ext.scc from KERNEL_FEATURES
+- scripts: generate-ipxe-menu: delete root=/dev/nfs
+- meta-dts-distro/recipes-devtool: remove outdated python3-uefi-firmware
+
+
+## [1.2.21] - 2024-03-29
+
+### Added
+- deploy: add exit when trying to flash v1.1.1 on 13th gen and above
+- deploy: add two missing DDR5 boards
+
+
+### Changed
+- deploy: make it exit only on specific boards
+- Update meta-dts-distro/recipes-dts/dts/dasharo-deploy/dasharo-deploy
+- Update meta-dts-distro/recipes-dts/dts/dasharo-deploy/dasharo-deploy
+- meta-dts-distro/recipes-dts: dts-functions: Add config for PC Engines APU boards
+- recipes-dts: dts-functions.sh: Modify config for APU platforms
+- recipes-dts: dts-functions.sh: Change PC Engines binary paths
+- meta-dts-distro/recipes-dts: Changes to support PC Engines firmware deployment
+- add support for hw-probe.AppImage
+- add hw-probe section to the end of dasharo-hcl-report script
+- add hw-probe tool
+- make the wording in the prompt better
+- move INSANE_SKIP to .bb
+- distro: dts-distro: v1.2.21 bump
+- CHANGELOG: v1.2.21
+- 3mdeb-secpack: update to f52771d2d001c55b164fae397d060d6e5af9c733
+- CHANGELOG.md: fill up after automatic update of components
+
+
+### Fixed
+- fix hcl report freezing, update script for hw-probe
+- fix removing the mac adress from logs
+>>>>>>> 17c474b669c2 (Use git-cliff to generate changelog)
 
-All notable changes to the DTS project will be documented in this file.
+
+### Removed
+- deploy: remove extra boards
+
+
+## [1.2.20] - 2024-03-19
+
+### Added
+- CHANGELOG: add v1.2.20
+
+
+### Changed
+- workflows: ci.yml: comment out releasing iso image
+- flashrom: update to f5a48aa6c67bd30603062bb4265419fd49f83870
+- 3mdeb-secpack: update to c844b4ba536cde4813c8e4088bf069ac90ef9c27
+- CHANGELOG.md: fill up after automatic update of components
+- distro: dts-distro: bump v1.2.20
 
-## v2.0.1-rc2 - 2024-11-04
 
-* kernel/linux-yocto: Add CONFIG_SERIAL_8250_DW
-* recipes-extended: sbctl: add RDEPENDS to recipe
-* flashrom: Add TGL chipset detection based on SPI PCI ID
-
-## v2.0.1-rc1 - 2024-10-23
+## [1.2.20-rc7] - 2024-03-18
+
+### Changed
+- distro: wic: change boot partition to efi type
+- dts: dts-functions: use local vars in check_se_creds
+- dts: packagegroups: create packagegroup-tpm-dts
+- distro: dts-base-image: install packagegroup-tpm-dts
+- dts: dts-functions: standarize HEADS_SWITCH_FLASHROM_OPT_OVERRIDE variable
+- dts: dasharo-deploy: change logic to set FLASHROM_ADD_OPT_UPDATE_OVERRIDE
+- distro: dts-distro: bump v1.2.20-rc7
+
+
+## [1.2.20-rc6] - 2024-03-18
+
+### Changed
+- distro: dts-distro: bump v1.2.20-rc6
+
+
+### Fixed
+- unit_tests: dts-boot: fixes after testing with MSI heads creds
+- dts: dts-functions: fix links for MSI heads release
+- dts: dts-functions: fix check_se_creds func for heads check
+- dts: dts: fix providing DES creds, allow to use $ character
 
-* recipes-extended: sbctl: update sbctl to v0.15.4
-* dts-scripts: Print warning when creds don't support DPP packages
 
-## v2.0.0 - 2024-09-30
+## [1.2.20-rc5] - 2024-03-15
 
-* Fix workflow errors
-* Add support for ODROID-H4
-* Add support for NovaCustom V5x0TNx
-* Add support for Dell Optiplex 7010/9010
-* Clean up changelog
-
-## v2.0.0-rc7 - 2024-09-23
-
-* pre-commit: use upstream oelint
-* recipes-dts: dts-scripts: Bump SRCREV (verbose mode and sending logs)
-
-## v2.0.0-rc6 - 2024-09-12
-
-* scripts: generate-ipxe-menu: delete root=/dev/nfs
-* python/python3-binwalk_2.3.3.bb: Change src to updated fork
-* meta-dts-distro/conf/layer.conf: Bump layer priority to 9
-* Add support for Dell Optiplex including DPP support
-
-## v2.0.0-rc5 - 2024-08-28
-
-* .github/workflows: Use separate SSH config for deploy job
-* distro: extended: minio-cli: amend absolete-license
-* .oelint-ruleset.json: Set homepageping to info so pre-commit ci can run
-
-## v2.0.0-rc4 - 2024-07-26
-
-* Add minio-cli
-* dts-scripts: add DES(DPP) packaging support
-
-## v2.0.0-rc3 - 2024-07-18
-
-* dts-scripts: Change to rev removing separate EC update
-
-## v2.0.0-rc2 - 2024-07-09
-
-* Use sshd.service instead of sshd.socket
-* dts-base-image.inc: Remove 'rootfs' suffix from image
-* dts-scripts: Add more model checks for V54x_6xTU
-* Add and use python semver module to compare versions
-* Add lshw
-* dasharo-ectool: bump rev for Dasharo ACPI ID
-
-## v2.0.0-rc1
-
-* Change meta-secure-core origin
-* Update most of system libraries and applications to newer version
-* linux-yocto: remove efi-ext.scc from KERNEL_FEATURES
-* move DTS scripts to another repo
-* dts-scripts: do_install via Makefile
-* dts-scripts: relicense to Apache-2.0
-* support: hidapi: delete
-* kernel: acpi-call-dkms: change license to GPLv3
-* update layers to scarthgap
-* dts-distro.conf: add usrmerge to DISTRO_FEATURES
-* dasharo-ectool: add sha256sums for cargo deps
-* iotools: allow overriding CC
-* iotools: disable DEBUG by default
-* dts-scripts: fix Intel regions backup
-* Add support for MTL
-* Updated Linux kernel to version 6.6.21
-* Don't use ICMP for network connection verification
-* Fixed scp not working without `-O` option
-* Add txesbmantool, revision 235c946838dc8c619ff821c9791386d63f5cbd6a
-* Add smmstoretool, revision 602653abed391ae1b1445ad86d0f05b8b5b678cb
-* Add cpuid tool
-* Add pre-commit configuration
-* Add cukinia documentation
-
-## v1.2.23 - 2024-06-27
-
-* Hotfix for PC Engines SeaBIOS firmware variant deployment
-
-## v1.2.22 - 2024-06-27
-
-* Extended Dasharo zero-touch initial deployment on PCEngines APU2 platforms for
-  [DES](https://docs.dasharo.com/ways-you-can-help-us/#become-a-dasharo-entry-subscription-subscriber)
-  users with SeaBIOS firmware variant, in addition to UEFI variant.
-* Increase supported Dasharo (coreboot + heads) version from  v0.9.0 to v0.9.1
-  for NovaCustom NV4x 12th Gen series
-* Include new tools into the image: `python3-roca-detect`, `iperf3`, `lshw`
-* Fix [Dell Optiplex 7010 initial deployment](https://github.com/Dasharo/dasharo-issues/issues/706)
-* Update versions of coreboot-utils
-
-## v1.2.21 - 2024-03-29
-
-* Added Dasharo zero-touch initial deployment on PCEngines APU2 platforms for
-  [DES](https://docs.dasharo.com/ways-you-can-help-us/#become-a-dasharo-entry-subscription-subscriber)
-  users.
-* Addeded hw-probe utility which is used at the end of HCL report.
-* Blocked possibility to run Dasharo deployment on Z690 platform with 13th gen
-  CPU; issue
-  [440](https://github.com/Dasharo/dasharo-issues/issues/440)
-* Updated 3mdeb-secpack to revision f52771d2d001c55b164fae397d060d6e5af9c733
-
-## v1.2.20 - 2024-03-19
-
-* Enabled switch from Dasharo (coreboot+UEFI) to Dasharo (coreboot+heads) on
-  MSI Z690-A and MSI Z790-P. Switch back is not possible, please see information
-  from release notes for
-  [MSI Z690-A](https://github.com/Dasharo/docs/tree/master/docs/variants/msi_z690/heads.md#transition-from-dasharo-heads-back-to-uefi)
-  and
-  [MSI Z790-P](https://github.com/Dasharo/docs/tree/master/docs/variants/msi_z790/heads.md#transition-from-dasharo-heads-back-to-uefi).
-* Added Dasharo (coreboot+heads) v0.9.0 for MSI Z690-A and MSI Z790-P.
-* Fixed initial deployment for NovaCustom NV4x TGL; issue
-  [699](https://github.com/Dasharo/dasharo-issues/issues/699).
-* Fixed HCL report generation when started from shell; issue
-  [736](https://github.com/Dasharo/dasharo-issues/issues/736).
-* Changed DTS boot partition type to EFI; issue
-  [692](https://github.com/Dasharo/dasharo-issues/issues/692).
-* Removed ISO image from release artifacts until reported usability issues are
-  fixed; issue
-  [288](https://github.com/Dasharo/dasharo-issues/issues/288#issuecomment-1995053693).
-* Updated flashrom to revision f5a48aa6c67bd30603062bb4265419fd49f83870
-* Updated 3mdeb-secpack to revision c844b4ba536cde4813c8e4088bf069ac90ef9c27
-
-## v1.2.19 - 2024-02-28
-
-* Enabled switch between Dasharo (coreboot+UEFI) and Dasharo (coreboot+heads) on
-  NovaCustom NV4X ADL.
-* Added Dasharo (coreboot+heads) v0.9.0 for NovaCustom NV4X ADL.
-* Added missing TPM2 related packages needed to work with TPM2.
-* Enabled IOMMU support in used Linux kernel.
-* Fixed feature to [run commands from iPXE
-  shell](https://docs.dasharo.com/dasharo-tools-suite/documentation/#run-commands-from-ipxe-shell)
-* Updated 3mdeb-secpack to revision c48af6eb2698f255c19a48a602b0e474137b07ef
-
-## v1.2.18 - 2024-01-22
-
-* Bumped supported firmware versions of MSI Z690-A to v1.1.3 and MSI Z790-P to
-  v0.9.1.
-* Improved logic for determining flashrom update parameters.
-
-## v1.2.17 - 2024-01-17
-
-* Bumped supported firmware versions of NovaCustom NS5X TGL to v1.5.2.
-* Fixed DTS build with UEFI Secure Boot enabled.
-* Fixed minor typos in scripts.
-* Updated 3mdeb-secpack to revision 2225894887fc81a1c72b067edbe348b5f3f02a05
-
-## v1.2.16 - 2024-01-11
-
-* Bumped supported firmware versions of NovaCustom NV4X TGL to v1.5.2.
-* Improved release process of DTS images in release-candidate versions.
+### Added
+- dts: dts-functions: add PLATFORM_SIGN_KEY for heads binary
 
-## v1.2.15 - 2024-01-11
 
-* Fixed GPG signature verification on MSI and Dell OptiPlex platforms.
-* Updated ACM checksums used when deploying Dasharo firmware on Dell OptiPlex.
-* Enhanced the user experience (UX) when running deployment or update
-  procedures. Fewer logs are displayed on the terminal, while all of them are
-  still stored under the `/var/local` path.
-* Improved the CI/CD pipelines.
+### Changed
+- dts-functions: set HEADS_SWITCH_FLASHROM_OPT_OVERRIDE based on msi ver
+- dts: dts-functions: use DES_IS_LOGGED var while checking HEADS flashing flags
+- distro: dts-distro: bump v1.2.20-rc5
 
-## v1.2.14 - 2024-01-03
 
-* Added 3mdeb Master Key and 3mdeb Dasharo Master Key from
-  [3mdeb-secpack](https://github.com/3mdeb/3mdeb-secpack/) with trust set to
-  ultimate.
-* Added wic.bmap files to release artifacts; issue
-  [70](https://github.com/Dasharo/meta-dts/issues/70).
-
-## v1.2.13 - 2023-12-22
+### Fixed
+- dts: dts-functions: fix get_signing_keys function
 
-* Added [dasharo_ectool](https://github.com/Dasharo/ec) for updating EC.
-* Added [bg-suite](https://github.com/9elements/converged-security-suite/tree/main/cmd/bg-suite).
-* Added [Dasharo configuration utility](https://github.com/Dasharo/dcu) that is
-  a tool designed to configure Dasharo firmware binary images. It includes task
-  such as customizing the boot logo, and setting unique UUIDs or Serial Numbers
-  in SMBIOS tables.
-* Added support for exFAT and NTFS file systems.
-* Added ACPI BGRT support in kernel.
-* Added signature verification of Dasharo firmware binaries.
-* Added possibility to run updates from [local server](./README.md#testing-dasharo-firmware-updates-from-local-sources).
-* Added check if charger is connected before update on laptops.
-* Added bootsplash migration to preserve logo while updating Dasharo firmware.
-* Fixed network failure errors and added waiting for network to be up before
-  calling update; issue
-  [588](https://github.com/Dasharo/dasharo-issues/issues/588).
-
-## v1.2.12 - 2023-11-03
-
-* Fixed updating boards without Vboot slot B.
-
-## v1.2.11 - 2023-10-31
-
-* Bumped supported firmware versions of NovaCustom to 1.5.1/1.7.1.
-
-## v1.2.10 - 2023-10-27
-
-* Added
-  [coreboot_customizer](https://docs.dasharo.com/guides/image-customization/#usage)
-  which allow to change logo displayed on boot.
-* Added SMMSTORE migration for NovaCustom laptops, so the Dasharo Setup settings
-  are preserved after firmware update.
-* Added CI/CD pipeline to generate signatures.
-
-## v1.2.9 - 2023-09-29
-
-* Added [Firmware Update
-  Mode](https://docs.dasharo.com/guides/firmware-update/#firmware-update-mode)
-  integration, which speed up the process of Dasharo firmware update.
-* Added efivars support and efivar utility.
-* Fixed problem with EC firmware links and hashes.
-* Improved logging of DTS menu options.
-
-## v1.2.8 - 2023-09-06
-
-* Check for SMM protection before trying to flash.
-
-## v1.2.7 - 2023-09-05
-
-* Added Dasharo zero-touch initial deployment on MSI PRO Z790-P for
-  [DES](https://docs.dasharo.com/ways-you-can-help-us/#become-a-dasharo-entry-subscription-subscriber)
-  users.
-* Added Dasharo firmware update to version v1.1.2 on MSI PRO Z690-A for
-  [DES](https://docs.dasharo.com/ways-you-can-help-us/#become-a-dasharo-entry-subscription-subscriber)
-  users.
-* Updated coreboot-utils to support Raptor Lake.
-* Added couple UX improvements for DTS scripts, specially in the context of
-  [DES](https://docs.dasharo.com/ways-you-can-help-us/#become-a-dasharo-entry-subscription-subscriber)
-  users.
-* Correctly fixed downloading Dell BIOS Update packages.
-
-## v1.2.6 - 2023-08-31
-
-* Added [txt-suite](https://github.com/9elements/converged-security-suite/releases/download/v2.6.0/txt-suite).
-
-## v1.2.5 - 2023-08-07
-
-* Fixed downloading Dell BIOS Update packages.
-
-## v1.2.4 - 2023-07-12
-
-* Added [me_cleaner](https://github.com/corna/me_cleaner).
-
-## v1.2.3 - 2023-06-16
-
-* Enabled devmem applet for buxybox.
-
-## v1.2.2 - 2023-06-16
-
-* Updated coreboot-utils to support Alder Lake.
-
-## v1.2.1 - 2023-06-16
-
-* Updated coreboot-utils to support Jasper Lake.
-
-## v1.2.0 - 2023-05-10
-
-* Added Dasharo [firmware
-  update](https://docs.dasharo.com/dasharo-tools-suite/documentation/#firmware-update)
-  option for [supported
-  platforms](https://docs.dasharo.com/dasharo-tools-suite/documentation/#supported-hardware).
-* Disabled SSH server by default and added menu option to start/stop SSH server.
-* Improved versions comparison so update from any `rc` or `dev` version of
-  Dasharo firmware is possible.
-* Improved UX a little by saving flashrom logs to file.
-* Fixed CI workflows.
-* Added IXGBE driver as a module.
-
-## v1.1.1 - 2023-02-20
-
-* Fixed Dasharo zero-touch initial deployment on MSI PRO Z690-A, added DDR5
-  target with dedicated firmware.
-* Blocked Dasharo zero-touch initial deployment on platforms where Dasharo
-  firmware was detected.
-* Added couple UX improvements for Dasharo zero-touch initial deployment:
-    - added platform verification step (show detected device information),
-    - added firmware verification step (show hash of using binary),
-    - added progress bar on first instructions,
-    - used reboot as default behavior after successful flashing.
-* Added improvements for HCL report.
-* Added DTS ISO format image, and documentation about
-  [VentoyOS](./documentation.md#run-dts-using-ventoyos) usage.
-* Improved `README` of the `meta-dts` repository.
-* Added service to run shell [commands from
-  iPXE](./documentation.md#run-commands-from-ipxe-shell).
-* Added instructions for building PoC image with [enabled UEFI Secure
-  Boot](./documentation.md#build-image-with-uefi-secure-boot-support) support.
-
-## v1.1.0 - 2022-11-02
-
-* Added [Dasharo zero-touch initial
-  deployment](https://docs.dasharo.com/dasharo-tools-suite/documentation.md#dasharo-zero-touch-initial-deployment)
-  for couple of supported platform.
-* Added multiple HCL report improvements, e.g. dump information about TPM, ME.
-* Refactored Dasharo Tools Suite [documentation](https://docs.dasharo.com/dasharo-tools-suite/overview.md).
-* Added possibility to rollback using firmware dumped in HCL report.
-* Added documentation about [building Dasharo Tools Suite
-  image](./documentation.md#building).
-* Added Github Actions to automate new version building.
-* Added new tools: cbfstool, cbmem, futil, intelmetool (all from [Dasharo
-  coreboot fork](https://github.com/Dasharo/coreboot/tree/coreboot-utils)),
-  [binwalk](https://github.com/ReFirmLabs/binwalk),
-  [uefi-firmware-parser](github.com/theopolis/uefi-firmware-parser),
-  [mei-amt-check](github.com/mjg59/mei-amt-check).
-* Updated flashrom to version
-  [dasharo-v1.2.2](https://github.com/Dasharo/flashrom/tree/dasharo-v1.2.2).
-* Deploying iPXE boot artifacts on
-  [boot.dasharo.com](https://boot.dasharo.com/dts/).
-* Sharing build cache on [cache.dasharo.com](https://cache.dasharo.com/yocto/dts/).
-
-## v1.0.2 - 2022-10-19
-
-* Added new vendor specific menu entry which is displayed only on supported
-  platforms, for now NovaCustom menu was added for NV4x and NS50 70MU laptops.
-* DTS version is now printed in the main menu.
-* `ec_transition` script now supports NV4XMB,ME,MZ laptops and automatically
-  download firmware used for transition both for NV4x and NS5x laptopts,
-  [firmware transition](https://docs.dasharo.com/common-coreboot-docs/dasharo_tools_suite/#dasharo-ec-transition)
-  documentation is updated.
-* Add kernel configuration to silence terminal logs by default (change loglevel
-  to 1).
-* Enable GOOGLE_MEMCONSOLE_COREBOOT kernel configuration to ease getting
-  firmware logs.
-
-## v1.0.1 - 2022-09-02
-
-* Added system76_ectool to enable Embedded Controller [firmware
-  updating](https://docs.dasharo.com/common-coreboot-docs/dasharo_tools_suite/#dasharo-ec-update).
-* Added ec_transition script which helps with full Dasharo/Embedded Controller
-  [firmware transition](https://docs.dasharo.com/common-coreboot-docs/dasharo_tools_suite/#dasharo-ec-transition)
-  for NS50 70MU and NS70 laptops.
-* First public release: <https://github.com/Dasharo/meta-dts>.
-
-## v1.0.0 2022-08-09
-
-* Initial release v1.0.0.
-* Auto-login functionality.
-* User menu.
-* [Dasharo HCL
-  Report](https://docs.dasharo.com/common-coreboot-docs/dasharo_tools_suite/#dasharo-hcl-report)
-  \- the ability to automatically dump device information and send it to 3mdeb
-  servers.
-* Possibility to manually [update the Dasharo
-  firmware](https://docs.dasharo.com/common-coreboot-docs/dasharo_tools_suite/#dasharo-firmware-update).
-* [Bootable via
-  iPXE](https://docs.dasharo.com/common-coreboot-docs/dasharo_tools_suite/#bootable-over-network).
-* [Bootable via
-  USB](https://docs.dasharo.com/common-coreboot-docs/dasharo_tools_suite/#bootable-usb-stick).
+
+## [1.2.20-rc4] - 2024-03-13
+
+### Added
+- distro: dts: add dropin to set DTS_ENV, DTS_FUNCS vars on ssh connection
+
+
+### Changed
+- dts: dts-environment: set default value for DEPLOY_REPORT variable
+- distro: dts-distro: bump v1.2.20-rc2
+- distro: dts-distro: bump v1.2.20-rc3
+- distro: dts-distro: bump v1.2.20-rc4
+
+
+### Fixed
+- dts: dasharo-hcl-report: fix typo while sourcing dts-functions script
+- distro: dasharo-hcl-report: fix sed command to remove MAC address info
+
+
+## [1.2.20-rc1] - 2024-03-13
+
+### Added
+- distro: dts: dts-functions: add flags for NovaCustom EC flashing
+
+
+### Changed
+- sbctl: fetch tarball from github
+- distro: dts-functions: enable HEADS support for MSI targets
+- distro: dts-distro: bump v1.2.20-rc1
+
+
+## [1.2.19] - 2024-02-28
+
+### Added
+- distro: packagegroup-dts: add missing packages for TPM2 support
+- CHANGELOG: add changelog for v1.2.19
+
+
+### Changed
+- distro: dts: iterate over gpg keys while importing them
+- distro: bump v1.2.19-rc2
+- Update dts - reorder where to thow DES keys
+- Update dts - remove unneeded empty line
+- Update dts - removed not needed fi
+- distro: bump v1.2.19
+- distro: dts-functions: comment out HEADS support for MSI targets
+- 3mdeb-secpack: update to c48af6eb2698f255c19a48a602b0e474137b07ef
+- CHANGELOG.md: fill up after automatic update of components
+
+
+## [1.2.19-rc1] - 2024-02-27
+
+### Added
+- local-ipxe-server.sh: added
+- dts: add warnings after switching FW branches
+
+
+### Changed
+- linux-yocto: enable IOMMU
+- meta-dts-distro/recipes-dts/dts/dts/dts-functions.sh: Fix MSI Z790-P DDR4 board matching
+- meta-dts-distro/recipes-dts/dts: Add switching to heads
+- unit_tests: Add stubs and unit tests for Dasharo updates
+- Apply suggestions from code review
+- Apply suggestions from code review
+- meta-dts-distro/recipes-dts/dts/dts/dts-functions.sh: Fix DES logged checks
+- meta-dts-distro/recipes-dts/dts/dts/dts-functions.sh: Reduce version checks in switching
+- unit_tests: Fix running unit tests
+- Add support for heads switching for MSI
+- unit_tests: make dts-boot executable, add replacements for reboot/poweroff cmd
+- unit_tests: README: change command for test execution
+- distro: bump v1.2.19-rc1
+
+
+### Fixed
+- unit_tests: dts-environment: fixes in CMD_POWEROFF/REBOOT after review
+
+
+## [1.2.18] - 2024-01-22
+
+### Changed
+- distro: bump v1.2.18
+- Release v1.2.18
+
+
+## [1.2.18-rc1] - 2024-01-17
+
+### Changed
+- Bring back changes reverted in d72852e76e9f
+- meta-dts-distro/recipes-dts/dts: Add flashrom update params override for MSI boards
+- distro: bump v1.2.18-rc1
+
+
+## [1.2.17] - 2024-01-17
+
+### Added
+- CHANGELOG: add changelog for v1.2.17
+
+
+### Changed
+- distro: bump v1.2.17
+- 3mdeb-secpack: update to 2225894887fc81a1c72b067edbe348b5f3f02a05
+- CHANGELOG.md: fill up after automatic update of components
+
+
+## [1.2.17-rc4] - 2024-01-17
+
+### Changed
+- Revert changes introduced by commits d5054bc2f8b7 through b240c2484981
+- distro: dts-functions: bump update version for NCM NS5x
+- distro: bump v1.2.17-rc4
+
+
+## [1.2.17-rc3] - 2024-01-16
+
+### Changed
+- distro: bump v1.2.17-rc3
+
+
+### Fixed
+- distro: dasharo-deploy: fix typo in if statement
+
+
+## [1.2.17-rc2] - 2024-01-16
+
+### Changed
+- meta-dts-distro/recipes-dts/dts/dts/dts-functions.sh: Add missing fi
+- distro: bump v1.2.17-rc2
+
+
+## [1.2.17-rc1] - 2024-01-16
+
+### Added
+- distr: dts-sb-distro: adds working distro configuration
+- CHANGELOG: add info about changes in SB enabled image
+
+
+### Changed
+- distro: sbctl: provide recipe to install sbctl
+- distro: dts-base-sb-image: install sbctl
+- distro: grub-efi-efi-custom: provide UEFI SB enabled bootfiles to deploydir
+- Update dts - wording
+- meta-dts-distro/recipes-dts: Add checks for readable and flashable regions
+- meta-dts-distro/recipes-dts/dts: Add logic for determining flashrom update params
+- meta-dts-distro/recipes-dts/dts: Fix bugs and syntax
+- meta-dts-distro/recipes-dts/dts: Check if vboot keys need to be updated
+- meta-dts-distro/recipes-dts/dts: Add prints in section which may take a while
+- meta-dts-distro/recipes-dts/dts: Add option to override flashrom update parameters
+- meta-dts-distro/recipes-dts/dts: Handle all migration and update operations automatically
+- meta-dts-distro/recipes-dts/dts: Address review discussions
+- distro: dasharo-deploy: small syntax fixes
+- distro: dts-functions: bump update versions for MSI and NCM NS5x
+- distro: bump v1.2.17-rc1
+
+
+## [1.2.16] - 2024-01-11
+
+### Changed
+- dts: dts-functions: reset ns5x tgl to v1.5.1
+- dts-distro: bump v1.2.16
+- CHANGELOG: fill up list of changes for v1.2.16
+
+
+## [1.2.16-rc5] - 2024-01-11
+
+### Changed
+- dasharo-deploy: use dcu for patching bootlogo
+- dts-distro: bump v1.2.16-rc5
+
+
+## [1.2.16-rc4] - 2024-01-11
+
+### Added
+- README: add info about rc rel available over iPXE on boot.dasharo.com
+
+
+### Changed
+- dts-distro: bump v1.2.16-rc4
+
+
+## [1.2.16-rc3] - 2024-01-11
+
+### Added
+- scripts: get_last_commit: add script to get latest commit from given branch
+- scripts: update_components: add script to update 3mdeb/Dasharo-based recipes
+- README: add info about automatic update of some revisions in prod release
+- scripts: update_components: add automatic CHNGLG update, move tag after commiting release
+
+
+### Changed
+- workflows: run jobs on tags creation instead of pushing
+- workflows: another try to run jobs dependencies
+- distro: dts: dts-functions.sh: Fix missing space
+- scripts: update_components: does not use force while creating tag
+- dts: dts-functions: set DASHARO_REL_VER to 1.5.2 for NCM tgl
+- dts-distro: bump v1.2.16-rc1
+- dts-distro: bump v1.2.16-rc2
+- scripts: generate-ipxe-menu: generate different ipxe menu file for rc releases
+- dts-distro: bump v1.2.16-rc3
+
+
+### Fixed
+- workflows: ci.yml: fix re in tags section
+- workflows: fix pipeline triggers
+- workflows: fix jobs execution
+- workflows: fix typo
+- README: fix release process section
+- workflows: develop: fix tag re, push rc iPXE menu to boot.dasharo.com
+
+
+## [1.2.15] - 2024-01-11
+
+### Added
+- CHANGELOG: add v1.2.15
+- workflows: weekly: add on workflow_dispatch to run job manually
+
+
+### Changed
+- Update dts-functions.sh
+- dts-distro: bump v1.2.15
+- workflows: rerun build step in case of error
+- dts/dts-functions.sh: update checksum for ACM relese file v003
+- meta-dts-distro/recipes-dts/dts/dts/dts-functions.sh: Update SINIT ACM ZIP name
+- dts: do not check signatures if PLATFORM_SIGN_KEY not set
+- dasharo-deploy: update smmstore and bootsplash migration console output
+- dasharo-deploy: use common error handling functions
+- dts-functions: avoid printing empty line in error_check
+- dts: dts-functions: improve UX
+- dts: dasharo-deploy: improve logging in migration functions
+- distro: dts: improve UX of update process
+- CHANGELOG: update for v1.2.15
+
+
+### Fixed
+- distro: dts-functions: fix PLATFORM_SIGN_KEY variable for msi cases
+- dts: dts-functions: fix bash execution error
+
+
+### Removed
+- workflows: remove not needed comments
+
+
+## [1.2.14] - 2024-01-03
+
+### Added
+- README: add information how to publish develop release
+- distro: 3mdeb-secpack: add recipe to include 3mdeb keys in the image
+- distro: 3mdeb-secpack: add script to profile to set GNUPGHOME env
+- CHANGELOG: add rest changes for v1.2.14
+
+
+### Changed
+- workflows: develop.yml: publish develop releases only on GitHub Rel tab
+- distro: dts: set GNUPGHOME env when dts script is executed
+- distro: packagegroup-dts: install 3mdeb-secpack
+- dts-functions: do not fetch 3mdeb Master keys in get_signing_keys func
+- distro: 3mdeb-secpack: correctly set dir permissions
+- dts-distro: rel v1.2.14
+- CHANGELOG: fill up list of changes for v1.2.14
+- workflows: include wic.bmap files in prod and dev releases
+- workflows: set tags pattern
+- workflows: save gitea key in correct format
+
+
+### Fixed
+- workflows: fix usage of SSH_KEY_GITEA secret
+
+
+## [1.2.13] - 2023-12-22
+
+### Added
+- meta-dts-distro: add dasharo_ectool
+- distro: converged-security-suite: add bg-suite recipe and binary
+- distro: recipes-dts: packagegroups: add bg-suite to image
+- distro: converged-security-suite: add statically linked bg-suite
+- CHANGELOG.md: add bg-suite note
+- dts: kernel: add support for exFAT and NTFS
+- CHANGELOG.md: add exFAT and NTFS note
+- dts: add check_if_ac() before fw update
+- dts: add bootsplash_migration()
+- recipes-dasharo/dasharo-coreboot-customizer: add recipe
+- distro: dts: add signature verification of Dasharo firmware binaries
+- README: add section about testing updates from local sources
+- README: add release process section
+- CHANGELOG: add missing points
+
+
+### Changed
+- dts: print list of IPs when starting SSH
+- system76_ectool: rename to dasharo_ectool
+- dasharo-ectool_0.3.8.bb: update to fix build
+- CHANGELOG.md: Fix Z790-P board typo
+- Release v1.2.13
+- distro: converged-security-suite: change path to bg-suite binary
+- linux-yocto: enable ACPI_BGRT
+- dts: check for network in board_config(), improve err msgs
+- dasharo-configuration-utility/: bump SRCREV
+- Release v1.2.13-rc2
+- generate-ipxe-menu.sh: more readable script, prepare for imgverify
+- distro: dts: cleanup environment and functions
+- distro: dts-functions: bump ncm adl to v1.7.2
+- distro: dts-functions: flash whole bios for ncm adl update
+- distro: dts-environment: set default value for FW_STORE_URL variable
+- distro: dts-functions: silence logs from pub key fetching
+- distro: dts-functions: run curl in silent mode when fetching artifacts
+- Release v1.2.13-rc3
+- README: update section about testing updates from local sources
+- distro: update revisions of Dasharo related utilities
+- CHANGELOG: fillup changelog for release v1.2.13
+- distro: dts-distro: Release v1.2.13
+
+
+### Fixed
+- distro: dasharo-configuration-utility: fix whitespace
+
+
+### Removed
+- distro: dts-environment: remove unused variable
+
+
+## [1.2.12] - 2023-11-03
+
+### Changed
+- bump to 1.2.12
+- CHANGELOG.md: update for v1.2.12
+- github: workflows: use dts-builder label for runner
+
+
+### Fixed
+- dts/dts-functions.sh: fix updating boards without Vboot slot B
+- github: workflows: fix typos
+
+
+## [1.2.11] - 2023-10-31
+
+### Changed
+- dts/dts-functions.sh: set NovaCustom versions to 1.5.1/1.7.1
+
+
+## [1.2.10] - 2023-10-27
+
+### Added
+- meta-dts-distro/recipes-dts/dts: add coreboot_customizer
+- workflows: ci.yml: add final version
+
+
+### Changed
+- meta-dts-distro/recipes-dts/dts/dts/coreboot_customizer: Fix UUID param case
+- meta-dts-distro/recipes-dts/dts/coreboot_customizer: Use cbfstool from variable
+- CHANGELOG: init v1.2.10 notes
+- dts/dts-functions.sh: enable SMMSTORE migration for NovaCustom
+- bump to 1.2.10
+- workflows: ci.yml: verification commit
+- .github: ci.yml: prepare final CI for signing tests
+- .github: ci.yml: commit changes to release singning repo
+- CHAGELOG: finish v1.2.10 changelog
+
+
+### Fixed
+- CHANGELOG.md: fix typos for rel v1.2.10
+
+
+## [1.2.9] - 2023-09-29
+
+### Added
+- dts: dts-functions: add fum_exit
+
+
+### Changed
+- kernel: linux-yocto: set CONFIG_EFI_VARS
+- dts: dts-functions: improve check_flash_chip func
+- dts: install dts-boot script to help in detecting FUM
+- dts: dts-base-image: use dts-boot as login-program
+- dts: packagegroup-dts: install efivar utility
+- dts: dasharo-deploy: integrate FUM support
+- dts: dts-functions: modify flashrom update flags for NC targets
+- distro: dts-distro: bump 1.2.9-rc1
+- distro: dts-functions: improve links to EC according to latest changes
+- dts: dasharo-deploy: minor fix in EC_HASH check and add network check in FUM
+- dts: dasharo-deploy: improve logging visibility
+- distro: dts-distro: bump 1.2.9
+- CHANGELOG: v1.2.9
+
+
+### Fixed
+- dts: dasharo-deploy: fix log typos
+
+
+## [1.2.8] - 2023-09-05
+
+### Added
+- recipes-devtool/me-cleaner: add recipe
+- dts: dasharo-deploy: add ROM hole and SMMSTORE migration
+- dts: dts-functions: add board_config for Z790
+- CHANGELOG.md: add placeholder for v1.2.6
+- recipes-tests/converged-security-suite/txt-suite_2.6.0.bb: add recipe
+- CHANGELOG.md: add txt-suite
+- distro: dts: add check_flash_lock function
+
+
+### Changed
+- recipes-bsp/coreboot-utils: update revision for Jasper Lake support
+- release v1.2.1
+- recipes-bsp/coreboot-utils: update to support Raptor Lake
+- release v1.2.2
+- recipes-core/busybox: enable devmem applet
+- release v1.2.3
+- release v1.2.4
+- release v1.2.5
+- Update CHANGELOG.md
+- distro: flashrom: update flashrom revision
+- scripts: local-deploy: improve development scripts
+- dts: dasharo-hcl-report: move variables and functions to common files
+- dts: dasharo-hcl-report: improve reading firmware image on Z790
+- dts: dasharo-deploy: move variables and functions to common files
+- dts: dasharo-deploy: introduce split into DES and community releases
+- dts: dasharo-deploy: improve reading firmware image on Z790
+- dts: use DES instead of SE in variables
+- dts: dts-environment: move more variables to common file
+- dts: dts-functions: source dts-environment, add new common functions
+- distro: dts-distro: use IMAGE_EFI_BOOT_FILES to install EFI/DTS/grubx64.efi
+- distro: dts-distro: bump v1.2.6
+- recipes-bsp/flashrom/flashrom_git.bb: use dashar-release branch
+- recipes-dts/packagegroups/packagegroup-dts.bb: install txt-suite
+- meta-dts-distro/recipes-dts: use consistent keys nomenclature
+- distro: dts: improve logging, add link for Dasharo Security Options
+- distro: dts-distro: bump v1.2.7
+- distro: dasharo-hcl-report: correct checking log/error files
+- distro: dts: export creds for logs if DES not logged
+- CHANGELOG: v1.2.7
+- recipes-dts/dts/dts/dts-functions.sh: check for SMM protection before flashing
+- bump to v1.2.8
+
+
+### Fixed
+- meta-dts-distro/recipes-dts/dts/dasharo-deploy: fix downloading Dell BIOS Update packages
+- distro: dasharo-deploy: fix SMMSTORE migration
+- meta-dts-distro/recipes-dts/dts/dts/dts-functions.sh: fix DES binary URL
+- distro: dts: fix downloading blobs for Dell OptiPlex
+- distro: dts: fix nomenclature for DES
+- CHANGELOG: fixed typo
+
+
+## [1.2.0] - 2023-05-10
+
+### Added
+- linux-yocto/dts.cfg: add IXGBE driver as module
+- scripts: add script for local development
+
+
+### Changed
+- distro: dts: store flashrom logs in /var/local/flashrom.log file
+- distro: openssh: disable ssh server by default
+- dts: cloud_list: use curl with redirection
+- dts: major changes in scripts for release 1.2.0
+- dts-distro: v1.2.0 bump
+- CHANGELOG.md: release v1.2.0
+
+
+### Fixed
+- workflows: fix existing ones, add develop
+
+
+### Removed
+- README.md: remove content and provide links to docs.dasharo.com
+- recipes-dts: dts: removed client's specific scripts
+
+
+## [1.1.1] - 2023-02-17
+
+### Added
+- ipxe-commands: added service able to run scripts (#21)
+- dts-distro.conf: add support for iso building
+- distro: initramfs: setup-live: add fix for VentoyOS UEFI mode use
+- dasharo-deploy: add DDR5 option, add prototype of display_flashing_warning
+- distro: dasharo-deploy: add error_check on using flashrom when restoring
+- distro: dts: add progress bar for hcl report when init deploy
+- distro: dts-distro: add wic.bmap generation to speed up dev flashing
+
+
+### Changed
+- Enable UEFI SB support via meta-secure-core layer (#20)
+- Disabling flashing when Dasharo is on board (#25)
+- README.md: make commands copypastable (#22)
+- distro: system76-ectool: update refspec, use Dasharo fork
+- recipes-dts/dts/dasharo-deploy/dasharo-deploy: use baseboard name for MSI
+- dts: use reboot by default on dasharo deploy, print hash of used fw
+- distro: dasharo-deploy: update error log
+- distro: dts-distro: bump v1.1.1
+- distro: packagegroup-dts: install tpm2-tools
+
+
+### Fixed
+- dasharo-hcl-report: fix handling multiple default route (#18)
+- distro: dasharo-deploy: fix path for SCH5545_FW used with T1650 model
+- distro: dasharo-deploy: fix escaping from while loop
+- distro: dasharo-hcl-report: fixes after tests
+
+
+## [1.1.0] - 2022-11-02
+
+### Added
+- dasharo-hcl-report: add check on flash chip, fix determing mac address
+- dts: add description for option 5
+
+
+### Changed
+- Hcl report improvements (#8)
+- CI Builder (#5)
+- Implement Dasharo zero-touch init deployment (#14)
+- distro: packagegroup-coreboot-utils: install missing packages
+- distro: packagegroup-dts: install missing packages
+- distro: bump v1.1.0-rc2
+- Enable firmware rollback from HCL report (#16)
+- Drop CE from names
+
+
+### Fixed
+- dts: fix saving local report
+- dasharo-deploy: fix typo in restore option
+- workflows: fix yamls
+- workflows: fix repo paths
+
+
+## [1.0.2] - 2022-10-12
+
+### Added
+- distro: dts: add vendor menu with novacustom menu
+- kernel: add cfg to silence terminal logs and enable GOOGLE_MEMCONSOLE_COREBOOT
+- CHANGELOG_CE.md: add v1.0.2 changelog
+- CHANGELOG_CE.md: add link for ec transition
+- CHANGELOG_CE.md: add info about OS version in menu
+
+
+### Changed
+- distro: ec_transition: download fw from the internet instead of using local files
+- dts: ec_transition: update sources of NV4x firmware
+- dts-distro: bump to v1.0.2
+- dts: ec_transition: name fix and correctly use PROGRAMMER_BIOS variable
+- dts: print OS version in main menu
+- distro: ec_transition: update ec hash and version for NV4X
+- distro: ec_transition: update ec hash and version for NV4X
+- CHANGELOG_CE.md: update date
+
+
+## [1.0.1] - 2022-09-02
+
+### Changed
+- Initial commit
+- Initial public release
+- Fix README
+
+
+[unreleased]: https://github.com/Dasharo/meta-dts/compare/v1.2.23..HEAD
+[1.2.23]: https://github.com/Dasharo/meta-dts/compare/v1.2.22..v1.2.23
+[1.2.22]: https://github.com/Dasharo/meta-dts/compare/v1.2.21..v1.2.22
+[1.2.21]: https://github.com/Dasharo/meta-dts/compare/v1.2.20..v1.2.21
+[1.2.20]: https://github.com/Dasharo/meta-dts/compare/v1.2.20-rc7..v1.2.20
+[1.2.20-rc7]: https://github.com/Dasharo/meta-dts/compare/v1.2.20-rc6..v1.2.20-rc7
+[1.2.20-rc6]: https://github.com/Dasharo/meta-dts/compare/v1.2.20-rc5..v1.2.20-rc6
+[1.2.20-rc5]: https://github.com/Dasharo/meta-dts/compare/v1.2.20-rc4..v1.2.20-rc5
+[1.2.20-rc4]: https://github.com/Dasharo/meta-dts/compare/v1.2.20-rc1..v1.2.20-rc4
+[1.2.20-rc1]: https://github.com/Dasharo/meta-dts/compare/v1.2.19..v1.2.20-rc1
+[1.2.19]: https://github.com/Dasharo/meta-dts/compare/v1.2.19-rc1..v1.2.19
+[1.2.19-rc1]: https://github.com/Dasharo/meta-dts/compare/v1.2.18..v1.2.19-rc1
+[1.2.18]: https://github.com/Dasharo/meta-dts/compare/v1.2.18-rc1..v1.2.18
+[1.2.18-rc1]: https://github.com/Dasharo/meta-dts/compare/v1.2.17..v1.2.18-rc1
+[1.2.17]: https://github.com/Dasharo/meta-dts/compare/v1.2.17-rc4..v1.2.17
+[1.2.17-rc4]: https://github.com/Dasharo/meta-dts/compare/v1.2.17-rc3..v1.2.17-rc4
+[1.2.17-rc3]: https://github.com/Dasharo/meta-dts/compare/v1.2.17-rc2..v1.2.17-rc3
+[1.2.17-rc2]: https://github.com/Dasharo/meta-dts/compare/v1.2.17-rc1..v1.2.17-rc2
+[1.2.17-rc1]: https://github.com/Dasharo/meta-dts/compare/v1.2.16..v1.2.17-rc1
+[1.2.16]: https://github.com/Dasharo/meta-dts/compare/v1.2.16-rc5..v1.2.16
+[1.2.16-rc5]: https://github.com/Dasharo/meta-dts/compare/v1.2.16-rc4..v1.2.16-rc5
+[1.2.16-rc4]: https://github.com/Dasharo/meta-dts/compare/v1.2.16-rc3..v1.2.16-rc4
+[1.2.16-rc3]: https://github.com/Dasharo/meta-dts/compare/v1.2.15..v1.2.16-rc3
+[1.2.15]: https://github.com/Dasharo/meta-dts/compare/v1.2.14..v1.2.15
+[1.2.14]: https://github.com/Dasharo/meta-dts/compare/v1.2.13..v1.2.14
+[1.2.13]: https://github.com/Dasharo/meta-dts/compare/v1.2.12..v1.2.13
+[1.2.12]: https://github.com/Dasharo/meta-dts/compare/v1.2.11..v1.2.12
+[1.2.11]: https://github.com/Dasharo/meta-dts/compare/v1.2.10..v1.2.11
+[1.2.10]: https://github.com/Dasharo/meta-dts/compare/v1.2.9..v1.2.10
+[1.2.9]: https://github.com/Dasharo/meta-dts/compare/v1.2.8..v1.2.9
+[1.2.8]: https://github.com/Dasharo/meta-dts/compare/v1.2.0..v1.2.8
+[1.2.0]: https://github.com/Dasharo/meta-dts/compare/v1.1.1..v1.2.0
+[1.1.1]: https://github.com/Dasharo/meta-dts/compare/v1.1.0..v1.1.1
+[1.1.0]: https://github.com/Dasharo/meta-dts/compare/v1.0.2..v1.1.0
+[1.0.2]: https://github.com/Dasharo/meta-dts/compare/v1.0.1..v1.0.2
+
+<!-- generated by git-cliff -->
