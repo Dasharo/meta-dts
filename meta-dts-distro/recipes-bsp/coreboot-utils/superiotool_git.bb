@@ -4,8 +4,6 @@ SUMMARY = "A user-space utility to detect Super I/O of a mainboard and provide d
 
 DEPENDS += "pciutils zlib"
 
-PV = "1.0+git${SRCPV}"
-
 EXTRA_OEMAKE = ' \
                 DESTDIR="${D}" \
                 PREFIX="${prefix}" \
