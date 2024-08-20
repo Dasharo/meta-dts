@@ -4,8 +4,6 @@ SUMMARY = "Dump interesting things about Management Engine even if hidden"
 
 DEPENDS += "pciutils zlib"
 
-PV = "1.0+git${SRCPV}"
-
 EXTRA_OEMAKE = ' \
                 DESTDIR="${D}" \
                 PREFIX="${prefix}" \

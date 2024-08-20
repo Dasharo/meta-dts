@@ -7,8 +7,6 @@ SUMMARY = "\
 
 LIC_FILES_CHKSUM = "file://../../COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
-PV = "1.0+git${SRCPV}"
-
 GO_IMPORT = "github.com/dasharo/coreboot/"
 
 # we need to override SRC_URI from coreboot-utils.inc so it's unpacked in the
