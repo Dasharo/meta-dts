@@ -2,6 +2,15 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v2.0.0-rc5
+
+* recipes-bsp/txe-secure-boot/txesbmantool_git.bb: Bump SRCREV
+* .github/workflows: Use separate SSH config for deploy job
+* recipes-bsp: txesbmantool: Change branch and SRCREV
+* distro: extended: minio-cli: amend absolete-license
+* .oelint-ruleset.json: Set homepageping to info so pre-commit ci can run
+* conf/distro/dts-distro.conf: Bump DISTRO_VERSION to 2.0.0-rc5
+
 ## v2.0.0-rc2 - 2024-07-09
 
 * Add support for MTL
