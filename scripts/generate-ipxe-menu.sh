@@ -36,6 +36,6 @@ set path_initrd \${dts_prefix}/dts-base-image-\${dts_version}.cpio.gz
 imgfetch --name file_kernel \${path_kernel}
 imgfetch --name file_initrd \${path_initrd}
 
-kernel file_kernel root=/dev/nfs initrd=file_initrd
+kernel file_kernel initrd=file_initrd
 boot
 EOF
