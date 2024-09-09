@@ -7,6 +7,8 @@ EXTRA_OEMAKE = ' \
                 PREFIX="${prefix}" \
                 '
 
+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+
 do_compile () {
   oe_runmake -C util/nvramtool
 }
