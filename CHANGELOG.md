@@ -2,6 +2,13 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v2.0.0-rc6 - 2024-09-12
+
+* scripts: generate-ipxe-menu: delete root=/dev/nfs
+* python/python3-binwalk_2.3.3.bb: Change src to updated fork
+* meta-dts-distro/conf/layer.conf: Bump layer priority to 9
+* Add support for Dell Optiplex including DPP support
+
 ## v2.0.0-rc5
 
 * recipes-bsp/txe-secure-boot/txesbmantool_git.bb: Bump SRCREV
