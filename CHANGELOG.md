@@ -2,6 +2,11 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v2.0.0-rc7 - 2024-09-23
+
+* pre-commit: use upstream oelint
+* recipes-dts: dts-scripts: Bump SRCREV (verbose mode and sending logs)
+
 ## v2.0.0-rc6 - 2024-09-12
 
 * scripts: generate-ipxe-menu: delete root=/dev/nfs
