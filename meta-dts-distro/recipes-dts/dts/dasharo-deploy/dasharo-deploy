@@ -111,7 +111,7 @@ display_flashing_warning() {
     echo
 
     case ${OPTION} in
-      yes|y|Y|Yes|YES)
+      ""|yes|y|Y|Yes|YES)
         break
         ;;
       n|N)
