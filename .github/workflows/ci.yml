@@ -121,9 +121,9 @@ jobs:
           echo ${DTS_VER} > LATEST_RELEASE
           git add LATEST_RELEASE
           git commit -m "Signing release ${DTS_VER}"
-          git push origin main
+          GIT_SSH_COMMAND='ssh -F ~/.ssh/config_deploy' git push origin main
           git tag ${DTS_VER}
-          git push origin ${DTS_VER}
+          GIT_SSH_COMMAND='ssh -F ~/.ssh/config_deploy' git push origin ${DTS_VER}
           cd -
   cleanup:
     name: Cleanup
