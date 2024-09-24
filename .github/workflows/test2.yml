@@ -1,0 +1,19 @@
+---
+name: test
+on:
+  push:
+
+jobs:
+  test:
+    name: test
+    runs-on:
+      labels: dts-builder
+    steps:
+      - name: Prepare SSH key
+        shell: bash
+        env:
+          SSH_KEY_CI_CD: ${{secrets.SSH_KEY_CI_CD}}
+        run: |
+          echo -e ${SSH_KEY_CI_CD} > /tmp/gitea_dts_release_cicd
+          ls -lh /tmp/gitea_dts_release_cicd
+          rm /tmp/gitea_dts_release_cicd
