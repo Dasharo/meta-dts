@@ -1026,7 +1026,7 @@ force_me_update() {
     echo
 
     case ${OPTION} in
-      yes|y|Y|Yes|YES)
+      ""|yes|y|Y|Yes|YES)
         print_warning "Proceeding without ME flashing, because we were asked to."
         break
         ;;
@@ -1123,7 +1123,7 @@ handle_fw_switching() {
       echo
 
       case ${OPTION} in
-        yes|y|Y|Yes|YES)
+        ""|yes|y|Y|Yes|YES)
           UPDATE_VERSION=$HEADS_REL_VER_DES
           FLASHROM_ADD_OPT_UPDATE_OVERRIDE=$HEADS_SWITCH_FLASHROM_OPT_OVERRIDE
           BIOS_HASH_LINK="${HEADS_LINK_DES}.sha256"
@@ -1161,7 +1161,7 @@ handle_fw_switching() {
         echo
 
         case ${OPTION} in
-          yes|y|Y|Yes|YES)
+          ""|yes|y|Y|Yes|YES)
             echo
             echo "Switching back to regular Dasharo firmware v$UPDATE_VERSION"
             echo
@@ -1206,7 +1206,7 @@ handle_fw_switching() {
       echo
 
       case ${OPTION} in
-        yes|y|Y|Yes|YES)
+        ""|yes|y|Y|Yes|YES)
           echo
           echo "Switching back to regular Dasharo firmware v$UPDATE_VERSION"
           echo
