@@ -14,30 +14,55 @@ All notable changes to the DTS project will be documented in this file.
 * meta-dts-distro/conf/layer.conf: Bump layer priority to 9
 * Add support for Dell Optiplex including DPP support
 
-## v2.0.0-rc5
+## v2.0.0-rc5 - 2024-08-28
 
-* recipes-bsp/txe-secure-boot/txesbmantool_git.bb: Bump SRCREV
 * .github/workflows: Use separate SSH config for deploy job
-* recipes-bsp: txesbmantool: Change branch and SRCREV
 * distro: extended: minio-cli: amend absolete-license
 * .oelint-ruleset.json: Set homepageping to info so pre-commit ci can run
-* conf/distro/dts-distro.conf: Bump DISTRO_VERSION to 2.0.0-rc5
+
+## v2.0.0-rc4 - 2024-07-26
+
+* Add minio-cli
+* dts-scripts: add DES(DPP) packaging support
+
+## v2.0.0-rc3 - 2024-07-18
+
+* dts-scripts: Change to rev removing separate EC update
 
 ## v2.0.0-rc2 - 2024-07-09
 
+* Use sshd.service instead of sshd.socket
+* dts-base-image.inc: Remove 'rootfs' suffix from image
+* dts-scripts: Add more model checks for V54x_6xTU
+* Add and use python semver module to compare versions
+* Add lshw
+* dasharo-ectool: bump rev for Dasharo ACPI ID
+
+## v2.0.0-rc1
+
+* Change meta-secure-core origin
+* Update most of system libraries and applications to newer version
+* linux-yocto: remove efi-ext.scc from KERNEL_FEATURES
+* move DTS scripts to another repo
+* dts-scripts: do_install via Makefile
+* dts-scripts: relicense to Apache-2.0
+* support: hidapi: delete
+* kernel: acpi-call-dkms: change license to GPLv3
+* update layers to scarthgap
+* dts-distro.conf: add usrmerge to DISTRO_FEATURES
+* dasharo-ectool: add sha256sums for cargo deps
+* iotools: allow overriding CC
+* iotools: disable DEBUG by default
+* dts-scripts: fix Intel regions backup
 * Add support for MTL
 * Updated Linux kernel to version 6.6.23
-* Update most of system libraries and applications to newer version
 * Don't use ICMP for network connection verification
-* Update coreboot tools to revision d08d5eaa98b1204b5e665d3ae4f63fb6f84a0d77
-* Update dasharo_ectool to revision 4ae73b9d2cc2ec34c760c7774a7859d240c4c8dd
 * Fixed scp not working without `-O` option
 * Add txesbmantool, revision 235c946838dc8c619ff821c9791386d63f5cbd6a
 * Add smmstoretool, revision 602653abed391ae1b1445ad86d0f05b8b5b678cb
 * Add cpuid tool
-* Add more cukinia tests
-* Add and use python semver module to compare versions
-* Use sshd.service instead of sshd.socket
+* Add pre-commit configuration
+* Add cukinia documentation
 
 ## v1.2.21 - 2024-03-29
 
