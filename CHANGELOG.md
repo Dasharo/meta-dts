@@ -2,6 +2,14 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v2.0.0 - 2024-09-30
+
+* Fix workflow errors
+* Add support for ODROID-H4
+* Add support for NovaCustom V5x0TNx
+* Add support for Dell Optiplex 7010/9010
+* Clean up changelog
+
 ## v2.0.0-rc7 - 2024-09-23
 
 * pre-commit: use upstream oelint
