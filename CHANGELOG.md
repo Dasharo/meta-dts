@@ -63,7 +63,7 @@ All notable changes to the DTS project will be documented in this file.
 * iotools: disable DEBUG by default
 * dts-scripts: fix Intel regions backup
 * Add support for MTL
-* Updated Linux kernel to version 6.6.23
+* Updated Linux kernel to version 6.6.21
 * Don't use ICMP for network connection verification
 * Fixed scp not working without `-O` option
 * Add txesbmantool, revision 235c946838dc8c619ff821c9791386d63f5cbd6a
