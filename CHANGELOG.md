@@ -2,6 +2,76 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v2.0.0 - 2024-09-30
+
+* Fix workflow errors
+* Add support for ODROID-H4
+* Add support for NovaCustom V5x0TNx
+* Add support for Dell Optiplex 7010/9010
+* Clean up changelog
+
+## v2.0.0-rc7 - 2024-09-23
+
+* pre-commit: use upstream oelint
+* recipes-dts: dts-scripts: Bump SRCREV (verbose mode and sending logs)
+
+## v2.0.0-rc6 - 2024-09-12
+
+* scripts: generate-ipxe-menu: delete root=/dev/nfs
+* python/python3-binwalk_2.3.3.bb: Change src to updated fork
+* meta-dts-distro/conf/layer.conf: Bump layer priority to 9
+* Add support for Dell Optiplex including DPP support
+
+## v2.0.0-rc5 - 2024-08-28
+
+* .github/workflows: Use separate SSH config for deploy job
+* distro: extended: minio-cli: amend absolete-license
+* .oelint-ruleset.json: Set homepageping to info so pre-commit ci can run
+
+## v2.0.0-rc4 - 2024-07-26
+
+* Add minio-cli
+* dts-scripts: add DES(DPP) packaging support
+
+## v2.0.0-rc3 - 2024-07-18
+
+* dts-scripts: Change to rev removing separate EC update
+
+## v2.0.0-rc2 - 2024-07-09
+
+* Use sshd.service instead of sshd.socket
+* dts-base-image.inc: Remove 'rootfs' suffix from image
+* dts-scripts: Add more model checks for V54x_6xTU
+* Add and use python semver module to compare versions
+* Add lshw
+* dasharo-ectool: bump rev for Dasharo ACPI ID
+
+## v2.0.0-rc1
+
+* Change meta-secure-core origin
+* Update most of system libraries and applications to newer version
+* linux-yocto: remove efi-ext.scc from KERNEL_FEATURES
+* move DTS scripts to another repo
+* dts-scripts: do_install via Makefile
+* dts-scripts: relicense to Apache-2.0
+* support: hidapi: delete
+* kernel: acpi-call-dkms: change license to GPLv3
+* update layers to scarthgap
+* dts-distro.conf: add usrmerge to DISTRO_FEATURES
+* dasharo-ectool: add sha256sums for cargo deps
+* iotools: allow overriding CC
+* iotools: disable DEBUG by default
+* dts-scripts: fix Intel regions backup
+* Add support for MTL
+* Updated Linux kernel to version 6.6.21
+* Don't use ICMP for network connection verification
+* Fixed scp not working without `-O` option
+* Add txesbmantool, revision 235c946838dc8c619ff821c9791386d63f5cbd6a
+* Add smmstoretool, revision 602653abed391ae1b1445ad86d0f05b8b5b678cb
+* Add cpuid tool
+* Add pre-commit configuration
+* Add cukinia documentation
+
 ## v1.2.23 - 2024-06-27
 
 * Hotfix for PC Engines SeaBIOS firmware variant deployment
@@ -103,10 +173,10 @@ All notable changes to the DTS project will be documented in this file.
   a tool designed to configure Dasharo firmware binary images. It includes task
   such as customizing the boot logo, and setting unique UUIDs or Serial Numbers
   in SMBIOS tables.
-* Added support fot exFAT and NTFS file systems.
+* Added support for exFAT and NTFS file systems.
 * Added ACPI BGRT support in kernel.
 * Added signature verification of Dasharo firmware binaries.
-* Added posibility to run updates from [local server](./README.md#testing-dasharo-firmware-updates-from-local-sources).
+* Added possibility to run updates from [local server](./README.md#testing-dasharo-firmware-updates-from-local-sources).
 * Added check if charger is connected before update on laptops.
 * Added bootsplash migration to preserve logo while updating Dasharo firmware.
 * Fixed network failure errors and added waiting for network to be up before
@@ -188,7 +258,7 @@ All notable changes to the DTS project will be documented in this file.
   option for [supported
   platforms](https://docs.dasharo.com/dasharo-tools-suite/documentation/#supported-hardware).
 * Disabled SSH server by default and added menu option to start/stop SSH server.
-* Improved versions comparision so update from any `rc` or `dev` version of
+* Improved versions comparison so update from any `rc` or `dev` version of
   Dasharo firmware is possible.
 * Improved UX a little by saving flashrom logs to file.
 * Fixed CI workflows.
@@ -241,7 +311,7 @@ All notable changes to the DTS project will be documented in this file.
 * Added new vendor specific menu entry which is displayed only on supported
   platforms, for now NovaCustom menu was added for NV4x and NS50 70MU laptops.
 * DTS version is now printed in the main menu.
-* `ec_transition` script now supports NV4XMB,ME,MZ laptops and automaticaly
+* `ec_transition` script now supports NV4XMB,ME,MZ laptops and automatically
   download firmware used for transition both for NV4x and NS5x laptopts,
   [firmware transition](https://docs.dasharo.com/common-coreboot-docs/dasharo_tools_suite/#dasharo-ec-transition)
   documentation is updated.
@@ -255,9 +325,9 @@ All notable changes to the DTS project will be documented in this file.
 * Added system76_ectool to enable Embedded Controller [firmware
   updating](https://docs.dasharo.com/common-coreboot-docs/dasharo_tools_suite/#dasharo-ec-update).
 * Added ec_transition script which helps with full Dasharo/Embedded Controller
-  [firmware transition](https://docs.dasharo.com/common-coreboot-docs/dasharo_tools_suite/#dasharo-ec-transition) for
-  NS50 70MU and NS70 laptops.
-* First public release: https://github.com/Dasharo/meta-dts.
+  [firmware transition](https://docs.dasharo.com/common-coreboot-docs/dasharo_tools_suite/#dasharo-ec-transition)
+  for NS50 70MU and NS70 laptops.
+* First public release: <https://github.com/Dasharo/meta-dts>.
 
 ## v1.0.0 2022-08-09
 
@@ -265,8 +335,8 @@ All notable changes to the DTS project will be documented in this file.
 * Auto-login functionality.
 * User menu.
 * [Dasharo HCL
-  Report](https://docs.dasharo.com/common-coreboot-docs/dasharo_tools_suite/#dasharo-hcl-report) -
-  the ability to automatically dump device information and send it to 3mdeb
+  Report](https://docs.dasharo.com/common-coreboot-docs/dasharo_tools_suite/#dasharo-hcl-report)
+  \- the ability to automatically dump device information and send it to 3mdeb
   servers.
 * Possibility to manually [update the Dasharo
   firmware](https://docs.dasharo.com/common-coreboot-docs/dasharo_tools_suite/#dasharo-firmware-update).

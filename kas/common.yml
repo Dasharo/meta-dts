@@ -1,3 +1,4 @@
+---
 header:
   version: 11
 
@@ -8,7 +9,7 @@ repos:
 
   poky:
     url: https://git.yoctoproject.org/git/poky
-    refspec: 00c04394cbc5ecaced7cc1bc8bc8787e621f987d
+    refspec: d71d1c02ff622e00d6fa5ca9ce44a4e567691dce
     layers:
       meta:
       meta-poky:
@@ -16,7 +17,7 @@ repos:
 
   meta-openembedded:
     url: https://git.openembedded.org/meta-openembedded
-    refspec: 0b78362654262145415df8211052442823b9ec9b
+    refspec: a72010b414ee3d73888ac9cb4e310e8f05e13aea
     layers:
       meta-oe:
       meta-networking:
@@ -24,7 +25,7 @@ repos:
 
   meta-security:
     url: https://git.yoctoproject.org/git/meta-security
-    refspec: c79262a30bd385f5dbb009ef8704a1a01644528e
+    refspec: 11ea91192d43d7c2b0b95a93aa63ca7e73e38034
     layers:
       meta-tpm:
 
@@ -50,3 +51,5 @@ local_conf_header:
         HALT,/tmp,10M,1K"
   skip_linux_firmware: |
     MACHINE_EXTRA_RRECOMMENDS:remove ="linux-firmware"
+  build_stats: |
+    USER_CLASSES += "buildstats"

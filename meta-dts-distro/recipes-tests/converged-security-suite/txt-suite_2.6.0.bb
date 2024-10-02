@@ -1,4 +1,4 @@
-DESCRIPTION = "Converged Security Suite's txt-suite"
+SUMMARY = "Converged Security Suite's txt-suite"
 HOMEPAGE = "https://github.com/9elements/converged-security-suite"
 SECTION = "devel"
 LICENSE = "BSD-3-Clause"
@@ -14,4 +14,4 @@ do_install() {
     install -m 0755 ${S}/txt-suite ${D}${bindir}
 }
 
-FILES_${PN} = "${bindir}/txt-suite"
+FILES:${PN} += "${bindir}/txt-suite"

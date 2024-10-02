@@ -1,5 +1,7 @@
 require coreboot-utils.inc
 
+SUMMARY = "Tool for manipulating CBFS file"
+
 TARGET_CC_ARCH += "${LDFLAGS}"
 
 EXTRA_OEMAKE = " \

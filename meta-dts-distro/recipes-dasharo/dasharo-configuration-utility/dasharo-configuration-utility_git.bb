@@ -1,6 +1,6 @@
-DESCRIPTION = "Dasharo Configuration Utility (DCU)"
-SECTION = "tools"
+SUMMARY = "Dasharo Configuration Utility (DCU)"
 HOMEPAGE = "https://github.com/Dasharo/dcu"
+SECTION = "tools"
 
 LICENSE = "Apache-2.0"
 

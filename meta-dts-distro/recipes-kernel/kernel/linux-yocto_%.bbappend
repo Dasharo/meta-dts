@@ -19,3 +19,6 @@ SRC_URI:append = " \
     file://ntfs-enable.cfg \
     file://exfat-enable.cfg \
 "
+
+KERNEL_FEATURES:remove:x86 = " ${@bb.utils.contains('DISTRO_FEATURES', 'efi-secure-boot', '${efi_secure_boot_sccs}', '', d)}"
+KERNEL_FEATURES:remove:x86-64 = " ${@bb.utils.contains('DISTRO_FEATURES', 'efi-secure-boot', '${efi_secure_boot_sccs}', '', d)}"

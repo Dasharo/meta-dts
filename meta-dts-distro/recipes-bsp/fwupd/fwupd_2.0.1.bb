@@ -1,4 +1,5 @@
 SUMMARY = "A simple daemon to allow session software to update firmware"
+HOMEPAGE = "https://github.com/Dasharo/fwupd"
 LICENSE = "LGPL-2.1-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
@@ -10,9 +11,6 @@ SRCREV = "1ad6f5156dae1d54963bd3999a89a86567216af2"
 
 S = "${WORKDIR}/git"
 
-# Machine-specific as we examine MACHINE_FEATURES to decide whether to build the UEFI plugins
-PACKAGE_ARCH = "${MACHINE_ARCH}"
-
 inherit meson vala gobject-introspection systemd bash-completion pkgconfig gi-docgen ptest manpages
 
 GIDOCGEN_MESON_OPTION = 'docs'
@@ -23,7 +21,8 @@ GIDOCGEN_MESON_DISABLE_FLAG = 'none'
 # meta-oe) because of following build error
 # ../git/meson.build:1:0: ERROR: Unknown options: "plugin_gpio, plugin_scsi"
 
-PACKAGECONFIG ??= "curl gnutls gudev gusb \
+PACKAGECONFIG ??= "\
+                   curl gnutls gudev gusb \
                    ${@bb.utils.filter('DISTRO_FEATURES', 'bluetooth polkit', d)} \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd offline', '', d)} \
                    ${@bb.utils.contains('MACHINE_FEATURES', 'efi', 'plugin_uefi_capsule plugin_uefi_pk', '', d)} \
@@ -73,7 +72,6 @@ PACKAGECONFIG[sqlite] = "-Dsqlite=true,-Dsqlite=false,sqlite3"
 PACKAGECONFIG[systemd] = "-Dsystemd=true,-Dsystemd=false,systemd"
 PACKAGECONFIG[tests] = "-Dtests=true,-Dtests=false,gcab-native"
 
-
 # TODO plugins-all meta-option that expands to all plugin_*?
 PACKAGECONFIG[plugin_acpi_phat] = "-Dplugin_acpi_phat=true,-Dplugin_acpi_phat=false"
 PACKAGECONFIG[plugin_amt] = "-Dplugin_amt=true,-Dplugin_amt=false"
@@ -113,7 +111,11 @@ DISABLE_NON_X86:x86 = ""
 DISABLE_NON_X86:x86-64 = ""
 PACKAGECONFIG:remove = "${DISABLE_NON_X86}"
 
-FILES:${PN} += "${libdir}/fwupd-plugins-* \
+# Machine-specific as we examine MACHINE_FEATURES to decide whether to build the UEFI plugins
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
+FILES:${PN} += "\
+                ${libdir}/fwupd-plugins-* \
                 ${systemd_unitdir} \
                 ${datadir}/fish \
                 ${datadir}/metainfo \
@@ -122,6 +124,8 @@ FILES:${PN} += "${libdir}/fwupd-plugins-* \
                 ${datadir}/polkit-1 \
                 ${nonarch_libdir}/modules-load.d"
 
-FILES:${PN}-ptest += "${libexecdir}/installed-tests/ \
-                      ${datadir}/installed-tests/"
+FILES:${PN}-ptest += "\
+                      ${libexecdir}/installed-tests/ \
+                      ${datadir}/installed-tests/ \
+                      "
 RDEPENDS:${PN}-ptest += "gnome-desktop-testing"

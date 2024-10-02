@@ -5,4 +5,3 @@ if [ -d /home/root/.dasharo-gnupg ]; then
 
     export GNUPGHOME
 fi
-

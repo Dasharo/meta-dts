@@ -1,10 +1,12 @@
-DESCRIPTION = "dts image"
+SUMMARY = "DTS image"
 
-IMAGE_FEATURES += "ssh-server-openssh debug-tweaks"
+IMAGE_FEATURES += "ssh-server-openssh debug-tweaks package-management"
 
 LICENSE = "MIT"
 
 inherit core-image
+
+IMAGE_NAME_SUFFIX = ""
 
 IMAGE_INSTALL:append = " \
     packagegroup-dts-python \

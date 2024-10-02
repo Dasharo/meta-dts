@@ -1,4 +1,4 @@
-DESCRIPTION = "sbctl - a simple tool"
+SUMMARY = "Secure Boot key manager"
 HOMEPAGE = "https://github.com/foxboron/sbctl.git"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=16d98588b73d8e0dcc069d319889da4c"
@@ -12,4 +12,3 @@ do_install () {
     install -d ${D}${bindir}
     install -m 0755 ${S}/sbctl ${D}${bindir}/
 }
-

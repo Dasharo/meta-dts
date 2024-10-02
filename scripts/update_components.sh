@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SCRIPTDIR=$(readlink -f $(dirname "$0"))
+SCRIPTDIR=$(readlink -f "$(dirname "$0")")
 ROOT=$(readlink -f "${SCRIPTDIR}/..")
 GET_LAST_COMMIT="${SCRIPTDIR}/get_last_commit.sh"
 CHANGELOG_FILE="$ROOT/CHANGELOG.md"
@@ -90,7 +90,7 @@ do_update() {
         line_number=$(grep -n '##' CHANGELOG.md | sed -n '2p' | cut -d ":" -f 1)
         result=$((line_number - 2))
 
-        sed ""$result"a\* Updated $1 to revision $last_commit" $CHANGELOG_FILE > $CHANGELOG_TMP_FILE
+        sed "$result a\* Updated $1 to revision $last_commit" $CHANGELOG_FILE > $CHANGELOG_TMP_FILE
         cp $CHANGELOG_TMP_FILE $CHANGELOG_FILE
         git add "${recipe_path}"
         git commit -F - <<< "${component_name}: update to ${last_commit}"

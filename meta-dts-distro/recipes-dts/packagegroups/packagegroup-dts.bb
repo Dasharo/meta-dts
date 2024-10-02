@@ -33,23 +33,24 @@ RDEPENDS:${PN}-tests = " \
 RDEPENDS:${PN}-tools-base = " \
     packagegroup-coreboot-utils \
     packagegroup-core-tools-debug \
-    bmap-tools \
+    bmaptool \
     flashrom \
     fwupd \
     me-cleaner \
     iperf3 \
+    txesbmantool \
+    smmstoretool \
+    cpuid \
 "
 
 RDEPENDS:${PN}-tools-dts = " \
     mei-amt-check \
     cloudsend \
-    dasharo-deploy \
-    dasharo-hcl-report \
-    dts \
     dasharo-ectool \
     txt-suite \
     bg-suite \
     dasharo-configuration-utility \
+    dts-scripts \
 "
 
 RDEPENDS:${PN}-python = " \

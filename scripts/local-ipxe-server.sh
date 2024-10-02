@@ -34,7 +34,7 @@ fi
 userIP=$(ip route get 1 | sed 's/^.*src \([^ ]*\).*$/\1/;q')
 error_check "cannot get user IP"
 
-distroVersion=$(cat ""$SCRIPTDIR"/../meta-dts-distro/conf/distro/dts-distro.conf" | grep -F "DISTRO_VERSION" | awk -F'"' '{print $2}')
+distroVersion=$(cat "$SCRIPTDIR/../meta-dts-distro/conf/distro/dts-distro.conf" | grep -F "DISTRO_VERSION" | awk -F'"' '{print $2}')
 error_check "cannot get distro version from 'meta-dts/meta-dts-distro/conf/distro/dts-distro.conf'"
 
 mkdir -p $SCRIPTDIR/ipxe-files

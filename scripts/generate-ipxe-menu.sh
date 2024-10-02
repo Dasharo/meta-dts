@@ -17,7 +17,7 @@ fi
 
 # imgverify can be enabled as a next step on top of the HTTPS. The imgtrust
 # should already be executed in the embedded script on the device. Also, we
-# should gracefuly handle older firmware versions, where imgtrust and imgverify
+# should gracefully handle older firmware versions, where imgtrust and imgverify
 # command could not be yet available.
 # imgtrust --permanent
 #
@@ -36,6 +36,6 @@ set path_initrd \${dts_prefix}/dts-base-image-\${dts_version}.cpio.gz
 imgfetch --name file_kernel \${path_kernel}
 imgfetch --name file_initrd \${path_initrd}
 
-kernel file_kernel root=/dev/nfs initrd=file_initrd
+kernel file_kernel initrd=file_initrd
 boot
 EOF

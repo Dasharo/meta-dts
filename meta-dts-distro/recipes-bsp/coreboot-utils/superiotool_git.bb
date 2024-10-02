@@ -1,11 +1,13 @@
 require coreboot-utils.inc
 
+SUMMARY = "A user-space utility to detect Super I/O of a mainboard and provide detailed information about the register contents of the Super I/O. "
+
 DEPENDS += "pciutils zlib"
 
 EXTRA_OEMAKE = ' \
-  DESTDIR="${D}" \
-  PREFIX="${prefix}" \
-'
+                DESTDIR="${D}" \
+                PREFIX="${prefix}" \
+                '
 
 do_compile () {
   oe_runmake -C util/superiotool

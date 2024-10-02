@@ -1,6 +1,4 @@
-FILESEXTRAPATHS += "${THISDIR}/${PN}"
-
-DESCRIPTION = "Converged Security Suite's bg-suite"
+SUMMARY = "Converged Security Suite's bg-suite"
 HOMEPAGE = "https://github.com/9elements/converged-security-suite"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/BSD-3-Clause;md5=550794465ba0ec5312d6919e203a55f9"
