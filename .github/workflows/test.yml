@@ -1,0 +1,41 @@
+---
+name: test
+on:
+  push:
+
+jobs:
+  test:
+    name: test
+    runs-on:
+      labels: dts-builder
+    steps:
+      - name: Prepare SSH key
+        shell: bash
+        env:
+          SSH_KEY_CI_CD: ${{secrets.SSH_KEY_CI_CD}}
+        run: |
+          rm -rf dts-release-cicd-pipeline
+          echo -e ${SSH_KEY_CI_CD} > ~/.ssh/gitea_dts_release_cicd
+          chmod 600 ~/.ssh/gitea_dts_release_cicd
+          echo -e "\n
+          Host git.3mdeb.com\n
+          HostName       git.3mdeb.com\n
+          IdentityFile   ~/.ssh/gitea_dts_release_cicd\n
+          IdentitiesOnly yes" > ~/.ssh/config_deploy
+      - name: Trigger signing
+        shell: bash
+        run: |
+          GIT_SSH_COMMAND='ssh -F ~/.ssh/config_deploy' git clone ssh://git@git.3mdeb.com:2222/3mdeb/dts-release-cicd-pipeline.git
+          cd dts-release-cicd-pipeline
+          ls -l .
+  cleanup:
+    name: Cleanup
+    if: always()
+    runs-on:
+      labels: dts-builder
+    steps:
+      - name: Cleanup after deployment
+        shell: bash
+        run: |
+          rm -rf dts-release-cicd-pipeline
+          rm -f ~/.ssh/gitea_dts_release_cicd
