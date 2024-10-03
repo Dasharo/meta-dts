@@ -40,7 +40,7 @@ SRC_URI:append = " \
     crate://crates.io/winapi/0.3.9 \
 "
 
-SRCREV = "12d626f3ea1fc16c2ad89d2ec0e560121111d5a4"
+SRCREV = "4ae73b9d2cc2ec34c760c7774a7859d240c4c8dd"
 
 SRC_URI[atty-0.2.14.sha256sum] = "d9b39be18770d11421cdb1b9947a45dd3f37e93092cbf377614828a319d5fee8"
 SRC_URI[autocfg-1.1.0.sha256sum] = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"

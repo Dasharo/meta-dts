@@ -9,10 +9,6 @@ All notable changes to the DTS project will be documented in this file.
 * Add support for NovaCustom V5x0TNx
 * Add support for Dell Optiplex 7010/9010
 * Clean up changelog
-* Updated dasharo-configuration-utility to revision 647a5147e5b2914cc92111367c725f888dd37a77
-* Updated ec to revision 12d626f3ea1fc16c2ad89d2ec0e560121111d5a4
-* Updated coreboot-utils to revision adb6e4ca14444eabd6b832dfbe990246cf629bcd
-* Updated 3mdeb-secpack to revision 252ff176bbc1b2c66c15eb55cb9a74677c4991ee
 
 ## v2.0.0-rc7 - 2024-09-23
 
