@@ -19,6 +19,10 @@ IMAGE_INSTALL:append = " \
     alsa-utils-aplay \
     hw-probe \
     lshw \
+    util-linux-libuuid \
+    efibootmgr \
+    rsync \
+    tree \
 "
 
 # Enable local auto-login of the root user (local = serial port and

@@ -8,6 +8,8 @@ IMAGE_INSTALL:append = " \
     kernel-initramfs \
     dnf \
     sbctl \
+    sbsigntool \
+    pesign \
 "
 
 IMAGE_LINGUAS = " "
