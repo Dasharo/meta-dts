@@ -22,11 +22,9 @@ inherit go
 
 do_compile() {
     export GOARCH="${TARGET_GOARCH}"
-    export GOPATH="${WORKDIR}/git/"
-
     cd ${S}
-
-    oe_runmake
+    go version
+    go build -trimpath -v -o intelp2m
 }
 
 do_install() {
