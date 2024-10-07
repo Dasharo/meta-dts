@@ -1,0 +1,20 @@
+---
+header:
+  version: 11
+  includes:
+    - kas.yml
+
+repos:
+  meta-secure-core:
+    url: https://github.com/Wind-River/meta-secure-core
+    refspec: 0aa7452355abc39b700f8787eab1b655f6099407
+    layers:
+      meta-signing-key:
+      meta-efi-secure-boot:
+      meta-secure-core-common:
+
+  meta-openembedded:
+    layers:
+      meta-perl:
+
+distro: dts-ost2-distro
