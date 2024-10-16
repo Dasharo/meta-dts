@@ -10,6 +10,7 @@ IMAGE_INSTALL:append = " \
     sbctl \
     sbsigntool \
     pesign \
+    libsign \
 "
 
 IMAGE_LINGUAS = " "
