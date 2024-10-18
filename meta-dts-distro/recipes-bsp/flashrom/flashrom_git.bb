@@ -6,6 +6,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 
 DEPENDS = "pciutils libusb libftdi"
 
+PV = "dasharo-v1.2.2+git${SRCPV}"
+
 BRANCH = "dasharo-release"
 SRC_URI = "git://github.com/Dasharo/flashrom.git;branch=${BRANCH};protocol=https"
 SRCREV = "f5a48aa6c67bd30603062bb4265419fd49f83870"
