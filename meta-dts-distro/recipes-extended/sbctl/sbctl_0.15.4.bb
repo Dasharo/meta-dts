@@ -8,6 +8,8 @@ SRC_URI[sha256sum] = "5bc440637b25a78685f426441d195d92939b3ed82278220698159c68bc
 
 S = "${WORKDIR}/${BPN}"
 
+RDEPENDS:${PN} = "binutils util-linux-lsblk"
+
 do_install () {
     install -d ${D}${bindir}
     install -m 0755 ${S}/sbctl ${D}${bindir}/
