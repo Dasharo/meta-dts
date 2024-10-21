@@ -1,1 +1,1 @@
-do_package_qa[noexec] = "1"
+insane_skip += "buildpaths"
