@@ -23,7 +23,6 @@ inherit go
 do_compile() {
     export GOARCH="${TARGET_GOARCH}"
     cd ${S}
-    go version
     go build -trimpath -v -o intelp2m
 }
 
