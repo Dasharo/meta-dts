@@ -2,6 +2,11 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v2.0.1-rc1 - 2024-10-23
+
+* recipes-extended: sbctl: update sbctl to v0.15.4
+* dts-scripts: Print warning when creds don't support DPP packages
+
 ## v2.0.0 - 2024-09-30
 
 * Fix workflow errors
