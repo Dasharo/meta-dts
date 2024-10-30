@@ -31,74 +31,21 @@ This section contains the technical aspects of the `DTS` release process. The
 recipients of this information should be those authorised to issue `DTS`
 releases.
 
-Below are information on how to publish `production` and `develop` releases.
+The basic release process can be found [here][zarhus-release-process]
 
-* `Production` releases deploy images to GitHub Release pages and
-  `boot.3mdeb.com`/`boot.dasharo.com` pages to boot via iPXE.
+Follow the first 6 steps from the document linked above. The remaining steps
+will be performed automatically by CI. The pipeline of creating a `DTS` release
+consists of two steps.
 
-* `Develop` releases deploy images to GitHub Release pages, so not all users
-  will be able to use them via iPXE.
+* The first step is done on GitHub Actions. Here the `DTS` image is built and
+  the binaries are pushed to `boot.dasharo.com`.
 
-### How to publish a production release
+* The second step is done on Gitea Actions. There the ipxe menu is pushed to
+  `boot.3mdeb.com` and the binaries are signed. Additionally, CI publishes the
+  release on `https://github.com/Dasharo/meta-dts/releases`, from
+  where binaries can be downloaded.
 
-<!--
-We should prepare scripts that automates this.
--->
-
-Please follow the steps below to release a new production `DTS` image.
-
-1. Make sure that everything that should go into the given release is merged to
-   `main`.
-
-1. Bump the version in `meta-dts-distro/conf/distro/dts-distro.conf` file.
-
-    > Note: In cases where MINOR or MAJOR part of version is updated, please inform
-    one of the maintainers as there will be needed new keys to sign the binaries
-    in next step of CI/CD pipeline.
-
-1. Fill up the [CHANGELOG.md](./CHANGELOG.md) file with latest changes.
-
-1. Run [update_components.sh](./scripts/update_components.sh) script which will
-   update revision of Dasharo related recipes (e.g.
-   [dasharo-ectool](./meta-dts-distro/recipes-support/dasharo-ectool/dasharo-ectool_0.3.8.bb)),
-   create a tag and push it to the remote repository.
-
-From here, rest of the jobs should be carried out by the GitHub and Gitea
-Actions. Whole pipeline of creating `DTS` release consists of two steps.
-
-* First is done on GitHub Actions. Here we update [Dasharo
-  components](./scripts/update_components.sh) build the `DTS` image and push
-  binaries to `boot.dasharo.com`.
-
-* Second is done on Gitea Actions. Here we push the ipxe menu to
-  `boot.3mdeb.com` and sign the `DTS` binaries. The last step of Gitea Actions
-  creates new release at the `https://github.com/Dasharo/meta-dts/releases`
-  from where binaries can be downloaded.
-
-### How to publish a develop release
-
-Please follow the steps below to release a new develop `DTS` image.
-
-1. Make sure that everything that should go into the given release is merged to
-   `develop`.
-
-1. Bump the version in `meta-dts-distro/conf/distro/dts-distro.conf` file by
-   adding `-rcX` suffix.
-
-    > Note: X should increase every time new develop release is created.
-
-1. Create and push tag that match the newly bumped version.
-
-From here, rest of the jobs should be carried out by the GitHub and Gitea
-Actions. Whole pipeline of creating `DTS` release consists of two steps.
-
-* First is done on GitHub Actions. Here we build the `DTS` image.
-
-* Second is done on Gitea Actions. Here we sign the `DTS` binaries and push
-  them to [boot.dasharo.com](https://boot.dasharo.com/dts) under the directory
-  named after rcX version. Also
-  [dts-rc.ipxe](http://boot.dasharo.com/dts/dts-rc.ipxe) is created so the
-  newest rc release is available over iPXE.
+[zarhus-release-process]: https://docs.zarhus.com/development-process/standard-release-process
 
 ## Cukinia tests
 
