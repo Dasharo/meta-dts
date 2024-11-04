@@ -2,6 +2,17 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v2.0.1-rc2 - 2024-11-04
+
+* kernel/linux-yocto: Add CONFIG_SERIAL_8250_DW
+* recipes-extended: sbctl: add RDEPENDS to recipe
+* flashrom: Add TGL chipset detection based on SPI PCI ID
+
+## v2.0.1-rc1 - 2024-10-23
+
+* recipes-extended: sbctl: update sbctl to v0.15.4
+* dts-scripts: Print warning when creds don't support DPP packages
+
 ## v2.0.0 - 2024-09-30
 
 * Fix workflow errors
