@@ -1,0 +1,73 @@
+---
+name: CI on push release tag
+on:
+  pull_request:
+    branches:
+      - 'main'
+jobs:
+  run-tests:
+    name: Run DTS tests
+    if: ${{ github.head_ref == 'develop' }}
+    runs-on:
+      labels: dts-builder
+    steps:
+      - name: Checkout OSFV repo
+        uses: actions/checkout@v4
+        with:
+          repository: 'Dasharo/open-source-firmware-validation'
+          path: 'open-source-firmware-validation'
+          submodules: 'recursive'
+          ref: 'develop'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          cache: 'pip'
+      - name: Install requirements
+        shell: bash
+        run: |
+          cd open-source-firmware-validation
+          python3 -m virtualenv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+      - name: Run QEMU
+        shell: bash
+        id: run_qemu
+        run: |
+          ./scripts/ci/qemu-run.sh nographic os &
+          pid=$!
+          echo "qemu_pid=$pid" >> "$GITHUB_OUTPUT"
+      - name: Create directory for logs
+        shell: bash
+        id: log_dirs
+        run: |
+          timestamp=$(date -u +%Y-%m-%dT%H:%M:%S%Z)
+          directory="/tmp/dts-test-ci-${timestamp}"
+          mkdir $directory
+          echo "directory=$directory" >> "$GITHUB_OUTPUT"
+      # TODO: Add DPP keys to secrets and use them in tests
+      - name: Run tests
+        shell: bash
+        env:
+          DPP_EMAIL: ${{ secrets.DPP_EMAIL }}
+          DPP_PASSWORD: ${{ secrets.DPP_PASSWORD }}
+          LOG_DIR: ${{ steps.log_dirs.outputs.directory }}
+        run: |
+          robot -L TRACE -v config:qemu -v rte_ip:127.0.0.1 -v snipeit:no \
+             dts/dts-e2e.robot > $LOG_DIR/output.log
+      - name: Copy log
+        shell: bash
+        env:
+          LOG_DIR: ${{ steps.log_dirs.outputs.directory }}
+        run: |
+          cp log.html $LOG_DIR/log.html
+      - name: Cleanup
+        if: always()
+        shell: bash
+        run: |
+          deactivate
+          qemu_pid="${{ steps.run_qemu.outputs.qemu_pid }}"
+          if [ ! -z "$qemu_pid" ]; then
+            kill $qemu_pid
+          fi
+          cd ..
+          rm -rf open-source-firmware-validation
