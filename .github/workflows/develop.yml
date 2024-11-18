@@ -100,7 +100,7 @@ jobs:
       - name: Deploy manifest on boot.dasharo.com
         shell: bash
         run: |
-          DTS_VER="${{steps.dts-ver.outputs.DTS_VER}}"
+          DTS_VER="${{ env.DTS_VER }}"
           cd build/tmp/deploy/images/genericx86-64/
           cp dts-base-image-genericx86-64.manifest dts-base-image-${DTS_VER}.manifest
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.manifest builder@10.1.40.2:boot/dts/${DTS_VER}/
