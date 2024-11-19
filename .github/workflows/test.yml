@@ -63,7 +63,7 @@ jobs:
           LOG_DIR: ${{ steps.log_dirs.outputs.directory }}
         run: |
           robot -L TRACE -v config:qemu -v rte_ip:127.0.0.1 -v snipeit:no \
-             dts/dts-e2e.robot > $LOG_DIR/output.log
+             dts/dts-e2e.robot 2>&1 | tee $LOG_DIR/output.log | grep "| PASS |\|| FAIL |"
       - name: Copy log
         shell: bash
         env:
