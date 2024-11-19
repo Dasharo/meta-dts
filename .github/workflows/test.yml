@@ -5,40 +5,15 @@ on:
     branches:
       - 'main'
 jobs:
+  build-dts:
+    uses: ./.github/workflows/build.yml
   run-tests:
     name: Run DTS tests
-    if: ${{ github.head_ref == 'develop' }}
+    if: ${{ github.head_ref == 'develop' && contains(join(needs.*.result, ','), 'success') }}
+    needs: build
     runs-on:
       labels: dts-builder
     steps:
-      - name: Checkout meta-dts repo
-        uses: actions/checkout@v2
-        with:
-          path: "meta-dts"
-      - name: Build DTS image
-        shell: bash
-        id: build_image
-        run: |
-          for attempt in {1..5}; do
-            if kas-container build meta-dts/kas.yml; then
-              echo "Build command succeeded on attempt $attempt"
-              break
-            else
-              echo "Build command failed on attempt $attempt"
-              if [ $attempt -lt 5 ]; then
-                sleep 5
-              fi
-            fi
-          done
-        continue-on-error: true
-      - name: Report build command
-        run: |
-          if [ ${{ steps.build_image.outcome }} == 'failure' ]; then
-            echo "All build attempts failed."
-            exit 1
-          else
-            echo "At least one build attempt succeeded."
-          fi
       - name: Checkout OSFV repo
         uses: actions/checkout@v4
         with:
