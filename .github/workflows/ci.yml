@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     uses: ./.github/workflows/build.yml
+    with:
+      cacheless: false
   deploy-images:
     name: Deploy DTS artifacts on boot.dasharo.com and GitHub Release
     if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
