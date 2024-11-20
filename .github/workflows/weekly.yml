@@ -12,7 +12,6 @@ jobs:
       cacheless: true
   deploy-cache:
     name: Deploy cache on cache.dasharo.com
-    if: always()
     needs: build
     runs-on:
       labels: dts-builder

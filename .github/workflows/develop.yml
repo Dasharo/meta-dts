@@ -12,7 +12,6 @@ jobs:
       cacheless: false
   deploy-images:
     name: Deploy DTS artifacts on boot.dasharo.com
-    if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
     needs: build
     runs-on:
       labels: dts-builder
