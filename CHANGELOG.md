@@ -2,6 +2,12 @@
 
 All notable changes to the DTS project will be documented in this file.
 
+## v2.0.1-rc3 - 2024-11-21
+
+* dts-scripts: Enhance verbose mode + collect cbmem console in hcl report
+* dts-scripts: Add vbt to hcl report
+* dts-scripts: Bump DPP versions for MSI
+
 ## v2.0.1-rc2 - 2024-11-04
 
 * kernel/linux-yocto: Add CONFIG_SERIAL_8250_DW
