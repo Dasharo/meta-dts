@@ -45,6 +45,10 @@ consists of two steps.
   release on `https://github.com/Dasharo/meta-dts/releases`, from
   where binaries can be downloaded.
 
+When generating the changelog, you can provide your GitHub access token as a
+parameter to `generate-changelog.sh`. This will increase the cap on API call
+rate, which may otherwise prevent you from running `git cliff`.
+
 [zarhus-release-process]: https://docs.zarhus.com/development-process/standard-release-process
 
 ## Cukinia tests
