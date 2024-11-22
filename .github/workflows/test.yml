@@ -12,7 +12,7 @@ jobs:
   run-tests:
     name: Run DTS tests
     if: ${{ github.head_ref == 'develop' && contains(join(needs.*.result, ','), 'success') }}
-    needs: build
+    needs: build-dts
     runs-on:
       labels: dts-builder
     steps:
