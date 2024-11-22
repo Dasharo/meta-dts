@@ -8,11 +8,14 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384
 
 DEPENDS = "gnupg"
 
+PV = "1.0+git${SRCPV}"
+
 SRC_URI = " \
     git://github.com/3mdeb/3mdeb-secpack.git;protocol=https;branch=master \
     file://3mdeb-secpack.sh \
 "
 SRCREV = "f52771d2d001c55b164fae397d060d6e5af9c733"
+
 S = "${WORKDIR}/git"
 
 DASHARO_KEYS_HOMEDIR = "${WORKDIR}/dasharo_keys"

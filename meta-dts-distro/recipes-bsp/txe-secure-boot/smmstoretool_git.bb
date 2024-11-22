@@ -6,6 +6,8 @@ LIC_FILES_CHKSUM = " \
     file://${WORKDIR}/git/LICENSES/GPL-2.0-or-later.txt;md5=261bea1168c0bdfa73232ee90df11eb6 \
 "
 
+PV = "1.0+git${SRCPV}"
+
 SRC_URI = " \
     git://github.com/coreboot/coreboot.git;branch=main;protocol=https \
     file://a5df001.diff;patchdir=${WORKDIR}/git \

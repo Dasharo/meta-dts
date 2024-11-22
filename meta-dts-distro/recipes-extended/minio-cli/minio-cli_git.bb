@@ -9,6 +9,8 @@ inherit go-mod
 LICENSE = "AGPL-3.0-only"
 LIC_FILES_CHKSUM = "file://src/${GO_IMPORT}/LICENSE;md5=eb1e647870add0502f8f010b19de32af"
 
+PV = "1.0+git${SRCPV}"
+
 SRC_URI = "git://${GO_IMPORT};protocol=https;branch=master"
 SRCREV = "e7c9a733c680fe62066d24e8718f81938b4f6606"
 

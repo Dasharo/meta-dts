@@ -97,6 +97,13 @@ jobs:
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.wic.gz builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.wic.bmap builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.iso builder@10.1.40.2:boot/dts/${DTS_VER}/
+      - name: Deploy manifest on boot.dasharo.com
+        shell: bash
+        run: |
+          DTS_VER="${{ env.DTS_VER }}"
+          cd build/tmp/deploy/images/genericx86-64/
+          cp dts-base-image-genericx86-64.manifest dts-base-image-${DTS_VER}.manifest
+          scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.manifest builder@10.1.40.2:boot/dts/${DTS_VER}/
       - name: Deploy sha256 on boot.dasharo.com
         shell: bash
         run: |
@@ -107,11 +114,13 @@ jobs:
           sha256sum dts-base-image-${DTS_VER}.wic.gz > dts-base-image-${DTS_VER}.wic.gz.sha256
           sha256sum dts-base-image-${DTS_VER}.wic.bmap > dts-base-image-${DTS_VER}.wic.bmap.sha256
           sha256sum dts-base-image-${DTS_VER}.iso > dts-base-image-${DTS_VER}.iso.sha256
+          sha256sum dts-base-image-${DTS_VER}.manifest > dts-base-image-${DTS_VER}.manifest.sha256
           scp -i ~/.ssh/dts-ci-key bzImage-${DTS_VER}.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.cpio.gz.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.wic.gz.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.wic.bmap.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.iso.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
+          scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.manifest.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
       - name: Update iPXE menu
         shell: bash
         run: |
