@@ -48,7 +48,8 @@ jobs:
         id: run_qemu
         run: |
           cd open-source-firmware-validation/scripts/ci
-          qemu-img create -f qcow2 qemu-data/hdd.qcow 20G
+          mkdir qemu-data
+          touch qemu-data/hdd.qcow
           ./qemu-run.sh nographic os &
       - name: Create directory for logs
         shell: bash
