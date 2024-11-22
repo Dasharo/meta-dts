@@ -2,26 +2,133 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [Unreleased]
-
-### Added
-- workflows: add 'v' to DTS_VER
-
+## [2.0.1-rc3] - 2024-11-21
 
 ### Changed
-- workflows: get DTS_VER from tag not dts-distro.conf
-- Rename python3-roca-detect_git_1.2.12.bb
-- CHANGELOG: Reintroduce notes for v1.2.22 and v1.2.23
-- CHANGELOG: Fix kernel version for 2.0.0-rc1
-- kas-uefi-sb.yml: update to scarthgap
-- Add generate-changed-recipes script + specify PV for git recipes
-- .github/workflows: Deploy manifest to boot.dasharo.com
-- Use git-cliff to generate changelog
-- recipes-bsp/coreboot-utils: Use 4.21 as base version for coreboot-utils packages
+- dts-scripts: Enhance verbose mode + collect cbmem console in hcl report
+- dts-scripts: Add vbt to hcl report
+- dts-scripts: Bump DPP versions for MSI
+
+
+## [2.0.1-rc2] - 2024-11-04
+
+### Changed
+- kernel/linux-yocto: Add CONFIG_SERIAL_8250_DW
+- recipes-extended: sbctl: add RDEPENDS to recipe
+- flashrom: Add TGL chipset detection based on SPI PCI ID
+
+
+## [2.0.1-rc1] - 2024-10-23
+
+### Changed
+- recipes-extended: sbctl: update sbctl to v0.15.4
+- dts-scripts: Print warning when creds don't support DPP packages
+
+
+## [2.0.0] - 2024-09-30
+
+### Changed
+- Clean up changelog
+
+
+### Added
+- Add support for ODROID-H4
+- Add support for NovaCustom V5x0TNx
+- Add support for Dell Optiplex 7010/9010
 
 
 ### Fixed
-- python3-roca-detect: fix missing dependencies
+- Fix workflow errors
+
+
+## [2.0.0-rc7] - 2024-09-23
+
+### Changed
+- pre-commit: use upstream oelint
+- recipes-dts: dts-scripts: Bump SRCREV (verbose mode and sending logs)
+
+
+## [2.0.0-rc6] - 2024-09-12
+
+### Changed
+- scripts: generate-ipxe-menu: delete root=/dev/nfs
+- python/python3-binwalk_2.3.3.bb: Change src to updated fork
+- meta-dts-distro/conf/layer.conf: Bump layer priority to 9
+
+
+### Added
+- Add support for Dell Optiplex including DPP support
+
+
+## [2.0.0-rc5] - 2024-08-28
+
+### Changed
+- .github/workflows: Use separate SSH config for deploy job
+- distro: extended: minio-cli: amend absolete-license
+- .oelint-ruleset.json: Set homepageping to info so pre-commit ci can run
+
+
+## [2.0.0-rc4] - 2024-07-26
+
+### Added
+- Add minio-cli
+- dts-scripts: add DES(DPP) packaging support
+
+
+## [2.0.0-rc3] - 2024-07-16
+
+### Changed
+- dts-scripts: Change to rev removing separate EC update
+
+
+## [2.0.0-rc2] - 2024-07-09
+
+### Changed
+- Use sshd.service instead of sshd.socket
+- dts-base-image.inc: Remove 'rootfs' suffix from image
+- dts-scripts: Add more model checks for V54x_6xTU
+- dasharo-ectool: bump rev for Dasharo ACPI ID
+
+### Added
+- Add and use python semver module to compare versions
+- Add lshw
+
+
+## [2.0.0-rc1] - 2024-07-08
+
+### Added
+- Add support for MTL
+- Add txesbmantool, revision 235c946838dc8c619ff821c9791386d63f5cbd6a
+- Add smmstoretool, revision 602653abed391ae1b1445ad86d0f05b8b5b678cb
+- Add cpuid tool
+- Add pre-commit configuration
+- Add cukinia documentation
+
+
+### Changed
+- Change meta-secure-core origin
+- Update most of system libraries and applications to newer version
+- linux-yocto: remove efi-ext.scc from KERNEL_FEATURES
+- move DTS scripts to another repo
+- dts-scripts: do_install via Makefile
+- dts-scripts: relicense to Apache-2.0
+- kernel: acpi-call-dkms: change license to GPLv3
+- update layers to scarthgap
+- dts-distro.conf: add usrmerge to DISTRO_FEATURES
+- dasharo-ectool: add sha256sums for cargo deps
+- iotools: allow overriding CC
+- iotools: disable DEBUG by default
+- Updated Linux kernel to version 6.6.21
+- Don't use ICMP for network connection verification
+
+
+### Fixed
+- dts-scripts: fix Intel regions backup
+- Fixed scp not working without `-O` option
+
+
+### Removed
+- support: hidapi: delete
 
 
 ## [1.2.23] - 2024-06-27
