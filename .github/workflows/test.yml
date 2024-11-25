@@ -35,7 +35,7 @@ jobs:
           imgfetch --name file_initrd dts-base-image-genericx86-64.cpio.gz\n
           kernel file_kernel root=/dev/nfs initrd=file_initrd\n
           boot" > ipxe/dts.ipxe
-          cd ipxe && python3-m http.server 4321 &
+          cd ipxe && python3 -m http.server 4321 &
       - name: Install requirements
         shell: bash
         run: |
