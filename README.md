@@ -107,13 +107,13 @@ server.
    `novacustom_ns5x_adl/v1.7.2/` and inside put binaries, hashes and signatures
    from that release.
 
-1. Boot `DTS` and start shell by pressing `9`.
+1. Boot `DTS` and start shell by pressing `S`.
 
 1. Start `dts` script with `FW_STORE_URL_DEV` variable set to started server on
    the host PC. E.g. if the PC has IP address `192.168.1.14` use below command.
 
     ```bash
-    FW_STORE_URL_DEV="http://192.168.1.14:1234" dts
+    FW_STORE_URL_DEV="http://192.168.1.14:1234" dts-boot
     ```
 
 1. Normal `dts` menu entry will be displayed but any request to the server with
