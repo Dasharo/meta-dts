@@ -107,6 +107,7 @@ jobs:
 
       - name: Copy log
         shell: bash
+        if: ${{ !cancelled() }}
         env:
           LOG_DIR: ${{ steps.log_dirs.outputs.directory }}
         run: |
