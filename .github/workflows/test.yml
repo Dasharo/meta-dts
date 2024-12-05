@@ -26,7 +26,9 @@ jobs:
           ref: "develop"
       - name: Run IPXE server
         shell: bash
-        run: ./open-source-firmware-validation/scripts/ci/ipxe-run.sh
+        run: ./open-source-firmware-validation/scripts/ci/ipxe-run.sh \
+          build/tmp/deploy/images/genericx86-64/dts-base-image-genericx86-64.cpio.gz \
+          build/tmp/deploy/images/genericx86-64/bzImage
       - name: Install requirements
         shell: bash
         run: |
