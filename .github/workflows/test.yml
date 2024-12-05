@@ -10,41 +10,6 @@ jobs:
     with:
       cacheless: false
 
-  prepare-for-tests:
-    name: Prepare for DTS tests
-    if: ${{ github.head_ref == 'develop' && contains(join(needs.*.result, ','), 'success') }}
-    needs: build-dts
-    runs-on:
-      labels: dts-builder
-    steps:
-      - name: Checkout OSFV repo
-        uses: actions/checkout@v4
-        with:
-          repository: "Dasharo/open-source-firmware-validation"
-          path: "open-source-firmware-validation"
-          submodules: "recursive"
-          ref: "develop"
-      - name: Run IPXE server
-        shell: bash
-        run: ./open-source-firmware-validation/scripts/ci/ipxe-run.sh \
-          build/tmp/deploy/images/genericx86-64/dts-base-image-genericx86-64.cpio.gz \
-          build/tmp/deploy/images/genericx86-64/bzImage
-      - name: Install requirements
-        shell: bash
-        run: |
-          cd open-source-firmware-validation
-          python3 -m virtualenv venv
-          source venv/bin/activate
-          pip install -r requirements.txt
-      - name: Run QEMU
-        shell: bash
-        id: run_qemu
-        run: |
-          cd open-source-firmware-validation/scripts/ci
-          mkdir qemu-data
-          touch qemu-data/hdd.qcow
-          ./qemu-run.sh nographic os &
-
   run-tests:
     name: Run DTS tests
     if: ${{ github.head_ref == 'develop' && contains(join(needs.*.result, ','), 'success') }}
@@ -85,6 +50,37 @@ jobs:
             log_file: output_pcengines_seabios.log
 
     steps:
+      - name: Checkout OSFV repo
+        uses: actions/checkout@v4
+        with:
+          repository: "Dasharo/open-source-firmware-validation"
+          path: "open-source-firmware-validation"
+          submodules: "recursive"
+          ref: "develop"
+
+      - name: Run IPXE server
+        shell: bash
+        run: ./open-source-firmware-validation/scripts/ci/ipxe-run.sh \
+          build/tmp/deploy/images/genericx86-64/dts-base-image-genericx86-64.cpio.gz \
+          build/tmp/deploy/images/genericx86-64/bzImage
+
+      - name: Install requirements
+        shell: bash
+        run: |
+          cd open-source-firmware-validation
+          python3 -m virtualenv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+
+      - name: Run QEMU
+        shell: bash
+        id: run_qemu
+        run: |
+          cd open-source-firmware-validation/scripts/ci
+          mkdir qemu-data
+          touch qemu-data/hdd.qcow
+          ./qemu-run.sh nographic os &
+
       - name: Run ${{ matrix.config.test }}
         shell: bash
         env:
@@ -115,6 +111,7 @@ jobs:
           LOG_DIR: ${{ steps.log_dirs.outputs.directory }}
         run: |
           cp open-source-firmware-validation/log.html $LOG_DIR/log.html
+
   cleanup:
     name: Cleanup
     if: always()
