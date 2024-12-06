@@ -48,7 +48,7 @@ jobs:
         run: |
           cd open-source-firmware-validation/scripts/ci
           mkdir qemu-data
-          touch qemu-data/hdd.qcow
+          touch qemu-data/hdd.qcow2
           ./qemu-run.sh nographic os &
       - name: Create directory for logs
         shell: bash
