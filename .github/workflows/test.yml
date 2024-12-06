@@ -105,8 +105,6 @@ jobs:
 
       - name: Run ${{ matrix.include.test }}
         shell: bash
-        env:
-          LOG_DIR: ${{ steps.log_dirs.outputs.directory }}
         run: |
           cd open-source-firmware-validation
           source venv/bin/activate
@@ -125,15 +123,13 @@ jobs:
           -v dpp_logs_key:${{ matrix.include.dpp_logs_key }} -v netboot_utilities_support:True \
           -v dts_ipxe_link:http://${ip_addr}:4321/dts.ipxe \
           -i ${{ matrix.include.test }} dts/dts-e2e.robot 2>&1 \
-          | tee $LOG_DIR/${{ matrix.include.log_file }} | grep "| PASS |\|| FAIL |"
+          | tee ${{ env.LOG_DIR }}/${{ matrix.include.log_file }} | grep "| PASS |\|| FAIL |"
 
       - name: Copy log
         shell: bash
         if: ${{ !cancelled() }}
-        env:
-          LOG_DIR: ${{ steps.log_dirs.outputs.directory }}
         run: |
-          cp open-source-firmware-validation/log.html $LOG_DIR/log.html
+          cp open-source-firmware-validation/log.html ${{ env.LOG_DIR }}/log.html
 
   cleanup:
     name: Cleanup
