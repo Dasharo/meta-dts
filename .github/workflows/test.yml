@@ -77,7 +77,9 @@ jobs:
         shell: bash
         run: |
           cd open-source-firmware-validation
-          python3 -m virtualenv venv
+          if [ ! -d "venv" ]; then
+            python3 -m venv venv
+          fi
           source venv/bin/activate
           pip install -r requirements.txt
 
