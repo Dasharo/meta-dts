@@ -10,6 +10,17 @@ jobs:
     with:
       cacheless: false
 
+  checkout-osfv:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout OSFV repo
+        uses: actions/checkout@v4
+        with:
+          repository: "Dasharo/open-source-firmware-validation"
+          path: "open-source-firmware-validation"
+          submodules: "recursive"
+          ref: "develop"
+
   run-tests:
     name: Run DTS tests
     needs: build-dts
@@ -59,14 +70,6 @@ jobs:
             log_file: output_pcengines_seabios.log
 
     steps:
-      - name: Checkout OSFV repo
-        uses: actions/checkout@v4
-        with:
-          repository: "Dasharo/open-source-firmware-validation"
-          path: "open-source-firmware-validation"
-          submodules: "recursive"
-          ref: "develop"
-
       - name: Run IPXE server
         shell: bash
         run: ./open-source-firmware-validation/scripts/ci/ipxe-run.sh \
