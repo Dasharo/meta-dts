@@ -7,6 +7,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=025e46592215127e8c98b397ff29a037"
 
 inherit module
 
+PV = "1.2.2+git${SRCPV}"
+
 SRC_URI = "\
            git://github.com/nix-community/acpi_call.git;branch=master;protocol=https \
            file://0001-Makefile-fixing-build-errrors.patch \

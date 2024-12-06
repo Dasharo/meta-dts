@@ -7,41 +7,11 @@ on:
 
 jobs:
   build:
-    name: Build system image
-    runs-on:
-      labels: dts-builder
-    steps:
-      - name: Checkout meta-dts repo
-        uses: actions/checkout@v2
-        with:
-          path: "meta-dts"
-      - name: Build DTS image
-        shell: bash
-        id: build_image
-        run: |
-          for attempt in {1..5}; do
-            if kas-container build meta-dts/kas.yml; then
-              echo "Build command succeeded on attempt $attempt"
-              break
-            else
-              echo "Build command failed on attempt $attempt"
-              if [ $attempt -lt 5 ]; then
-                sleep 5
-              fi
-            fi
-          done
-        continue-on-error: true
-      - name: Report build command
-        run: |
-          if [ ${{ steps.build_image.outcome }} == 'failure' ]; then
-            echo "All build attempts failed."
-            exit 1
-          else
-            echo "At least one build attempt succeeded."
-          fi
+    uses: ./.github/workflows/build.yml
+    with:
+      cacheless: false
   deploy-images:
     name: Deploy DTS artifacts on boot.dasharo.com
-    if: ${{ always() && contains(join(needs.*.result, ','), 'success') }}
     needs: build
     runs-on:
       labels: dts-builder
@@ -97,6 +67,13 @@ jobs:
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.wic.gz builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.wic.bmap builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.iso builder@10.1.40.2:boot/dts/${DTS_VER}/
+      - name: Deploy manifest on boot.dasharo.com
+        shell: bash
+        run: |
+          DTS_VER="${{ env.DTS_VER }}"
+          cd build/tmp/deploy/images/genericx86-64/
+          cp dts-base-image-genericx86-64.manifest dts-base-image-${DTS_VER}.manifest
+          scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.manifest builder@10.1.40.2:boot/dts/${DTS_VER}/
       - name: Deploy sha256 on boot.dasharo.com
         shell: bash
         run: |
@@ -107,11 +84,13 @@ jobs:
           sha256sum dts-base-image-${DTS_VER}.wic.gz > dts-base-image-${DTS_VER}.wic.gz.sha256
           sha256sum dts-base-image-${DTS_VER}.wic.bmap > dts-base-image-${DTS_VER}.wic.bmap.sha256
           sha256sum dts-base-image-${DTS_VER}.iso > dts-base-image-${DTS_VER}.iso.sha256
+          sha256sum dts-base-image-${DTS_VER}.manifest > dts-base-image-${DTS_VER}.manifest.sha256
           scp -i ~/.ssh/dts-ci-key bzImage-${DTS_VER}.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.cpio.gz.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.wic.gz.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.wic.bmap.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.iso.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
+          scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.manifest.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
       - name: Update iPXE menu
         shell: bash
         run: |
@@ -143,4 +122,4 @@ jobs:
           rm -rf ~/.ssh/dts-ci-key
           rm -rf dts-release-cicd-pipeline
           rm -f ~/.ssh/gitea_dts_release_cicd
-          rm -rf build
+          rm -rf build meta-dts

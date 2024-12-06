@@ -1,0 +1,117 @@
+---
+name: Run DTS tests
+on:
+  pull_request:
+    branches:
+      - 'main'
+jobs:
+  build-dts:
+    uses: ./.github/workflows/build.yml
+    with:
+      cacheless: false
+  run-tests:
+    name: Run DTS tests
+    needs: build-dts
+    runs-on:
+      labels: dts-builder
+    steps:
+      - name: Checkout OSFV repo
+        uses: actions/checkout@v4
+        with:
+          repository: 'Dasharo/open-source-firmware-validation'
+          path: 'open-source-firmware-validation'
+          submodules: 'recursive'
+          ref: 'develop'
+      - name: Run IPXE server
+        shell: bash
+        run: |
+          cd open-source-firmware-validation
+          ./scripts/ci/ipxe-run.sh ../build/tmp/deploy/images/genericx86-64/dts-base-image-genericx86-64.cpio.gz ../build/tmp/deploy/images/genericx86-64/bzImage &
+      - name: Install requirements
+        shell: bash
+        run: |
+          cd open-source-firmware-validation
+          python3 -m virtualenv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+      - name: Run QEMU
+        shell: bash
+        id: run_qemu
+        run: |
+          cd open-source-firmware-validation/scripts/ci
+          mkdir qemu-data
+          touch qemu-data/hdd.qcow2
+          ./qemu-run.sh nographic os &
+      - name: Create directory for logs
+        shell: bash
+        id: log_dirs
+        run: |
+          timestamp=$(date -u +%Y-%m-%dT%H:%M:%S%Z)
+          directory="/tmp/dts-test-ci-${timestamp}"
+          mkdir $directory
+          echo "directory=$directory" >> "$GITHUB_OUTPUT"
+      - name: Run tests
+        shell: bash
+        env:
+          LOG_DIR: ${{ steps.log_dirs.outputs.directory }}
+        run: |
+          cd open-source-firmware-validation
+          source venv/bin/activate
+          # This file is already present on dts-builder.
+          # It contains credentials for DPP subscriptions.
+          # It has the following form:
+          # DPP_PASSWORD="..."
+          # <SUBSCRIPTION_TYPE>_DOWNLOADS="download key"
+          # <SUBSCRIPTION_TYPE>_LOGS="logs key"
+          # (...)
+          source ~/.secrets/dpp-keys
+          ip_addr=$(ip -o -4 addr list eno2 | awk '{print $4}' | cut -d/ -f1)
+
+          robot -L TRACE -v config:qemu -v rte_ip:127.0.0.1 -v snipeit:no \
+          -v dpp_password:$DPP_PASSWORD -v dpp_download_key:$MSI_DOWNLOAD \
+          -v dpp_logs_key:$MSI_LOGS -v boot_dts_from_ipxe_shell:True \
+          -v dts_ipxe_link:http://${ip_addr}:4321/dts.ipxe \
+          -i "msi_comm" -i "msi_dpp" dts/dts-e2e.robot 2>&1 | tee $LOG_DIR/output_msi.log | grep "| PASS |\|| FAIL |"
+
+          robot -L TRACE -v config:qemu -v rte_ip:127.0.0.1 -v snipeit:no \
+          -v dpp_password:$DPP_PASSWORD -v dpp_download_key:$MSI_HEADS_DOWNLOAD \
+          -v dpp_logs_key:$MSI_HEADS_LOGS -v boot_dts_from_ipxe_shell:True \
+          -v dts_ipxe_link:http://${ip_addr}:4321/dts.ipxe \
+          -i "msi_heads" dts/dts-e2e.robot 2>&1 | tee $LOG_DIR/output_msi_heads.log | grep "| PASS |\|| FAIL |"
+
+          robot -L TRACE -v config:qemu -v rte_ip:127.0.0.1 -v snipeit:no \
+          -v dpp_password:$DPP_PASSWORD -v dpp_download_key:$OPTIPLEX_DOWNLOAD \
+          -v dpp_logs_key:$OPTIPLEX_LOGS -v boot_dts_from_ipxe_shell:True \
+          -v dts_ipxe_link:http://${ip_addr}:4321/dts.ipxe \
+          -i "optiplex_dpp" dts/dts-e2e.robot 2>&1 | tee $LOG_DIR/output_optiplex.log | grep "| PASS |\|| FAIL |"
+
+          robot -L TRACE -v config:qemu -v rte_ip:127.0.0.1 -v snipeit:no \
+          -v dpp_password:$DPP_PASSWORD -v dpp_download_key:$NOVACUSTOM_HEADS_DOWNLOAD \
+          -v dpp_logs_key:$NOVACUSTOM_HEADS_LOGS -v boot_dts_from_ipxe_shell:True \
+          -v dts_ipxe_link:http://${ip_addr}:4321/dts.ipxe \
+          -i "novacustom_heads" -i "novacustom_comm" dts/dts-e2e.robot 2>&1 | tee $LOG_DIR/output_nc_heads.log | grep "| PASS |\|| FAIL |"
+
+          robot -L TRACE -v config:qemu -v rte_ip:127.0.0.1 -v snipeit:no \
+          -v dpp_password:$DPP_PASSWORD -v dpp_download_key:$PCENGINES_DOWNLOAD \
+          -v dpp_logs_key:$PCENGINES_LOGS -v boot_dts_from_ipxe_shell:True \
+          -v dts_ipxe_link:http://${ip_addr}:4321/dts.ipxe \
+          -i "pcengines_dpp" dts/dts-e2e.robot 2>&1 | tee $LOG_DIR/output_pcengines.log | grep "| PASS |\|| FAIL |"
+
+      - name: Copy log
+        shell: bash
+        if: ${{ !cancelled() }}
+        env:
+          LOG_DIR: ${{ steps.log_dirs.outputs.directory }}
+        run: |
+          cp open-source-firmware-validation/log.html $LOG_DIR/log.html
+  cleanup:
+    name: Cleanup
+    if: always()
+    needs: run-tests
+    runs-on:
+      labels: dts-builder
+    steps:
+      - name: Cleanup after tests
+        shell: bash
+        run: |
+          rm -rf $GITHUB_WORKSPACE; mkdir $GITHUB_WORKSPACE
