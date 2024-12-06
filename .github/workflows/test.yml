@@ -26,7 +26,7 @@ jobs:
         shell: bash
         run: |
           cd open-source-firmware-validation
-          ./scripts/ci/ipxe-run.sh build/tmp/deploy/images/genericx86-64/dts-base-image-genericx86-64.cpio.gz build/tmp/deploy/images/genericx86-64/bzImage &
+          ./scripts/ci/ipxe-run.sh ../build/tmp/deploy/images/genericx86-64/dts-base-image-genericx86-64.cpio.gz ../build/tmp/deploy/images/genericx86-64/bzImage &
       - name: Install requirements
         shell: bash
         run: |
