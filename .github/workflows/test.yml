@@ -11,7 +11,7 @@ jobs:
       cacheless: false
 
   checkout-osfv:
-    runs-on: ubuntu-latest
+    runs-on: dts-builder
     steps:
       - name: Checkout OSFV repo
         uses: actions/checkout@v4
