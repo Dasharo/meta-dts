@@ -86,7 +86,7 @@ jobs:
         id: run_qemu
         run: |
           cd open-source-firmware-validation/scripts/ci
-          mkdir qemu-data
+          mkdir -p qemu-data
           touch qemu-data/hdd.qcow2
           ./qemu-run.sh nographic os &
 
