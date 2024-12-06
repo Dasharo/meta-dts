@@ -81,7 +81,7 @@ jobs:
           touch qemu-data/hdd.qcow
           ./qemu-run.sh nographic os &
 
-      - name: Run ${{ matrix.config.test }}
+      - name: Run ${{ matrix.include.test }}
         shell: bash
         env:
           LOG_DIR: ${{ steps.log_dirs.outputs.directory }}
@@ -99,11 +99,11 @@ jobs:
           ip_addr=$(ip -o -4 addr list eno2 | awk '{print $4}' | cut -d/ -f1)
 
           ./scripts/run.sh -L TRACE -v config:qemu -v rte_ip:127.0.0.1 -v snipeit:no \
-          -v dpp_password:$DPP_PASSWORD -v dpp_download_key:${{ matrix.config.dpp_download_key }} \
-          -v dpp_logs_key:${{ matrix.config.dpp_logs_key }} -v netboot_utilities_support:True \
+          -v dpp_password:$DPP_PASSWORD -v dpp_download_key:${{ matrix.include.dpp_download_key }} \
+          -v dpp_logs_key:${{ matrix.include.dpp_logs_key }} -v netboot_utilities_support:True \
           -v dts_ipxe_link:http://${ip_addr}:4321/dts.ipxe \
-          -i ${{ matrix.config.test }} dts/dts-e2e.robot 2>&1 \
-          | tee $LOG_DIR/${{ matrix.config.log_file }} | grep "| PASS |\|| FAIL |"
+          -i ${{ matrix.include.test }} dts/dts-e2e.robot 2>&1 \
+          | tee $LOG_DIR/${{ matrix.include.log_file }} | grep "| PASS |\|| FAIL |"
 
       - name: Copy log
         shell: bash
