@@ -12,14 +12,18 @@ jobs:
 
   run-tests:
     name: Run DTS tests
-    if: ${{ github.head_ref == 'develop' && contains(join(needs.*.result, ','), 'success') }}
     needs: build-dts
     runs-on:
       labels: dts-builder
     strategy:
       matrix:
         include:
-          - test: msi
+          - test: msi_comm
+            dpp_download_key: $MSI_DOWNLOAD
+            dpp_logs_key: $MSI_LOGS
+            log_file: output_msi.log
+
+          - test: msi_dpp
             dpp_download_key: $MSI_DOWNLOAD
             dpp_logs_key: $MSI_LOGS
             log_file: output_msi.log
@@ -29,7 +33,7 @@ jobs:
             dpp_logs_key: $MSI_HEADS_LOGS
             log_file: output_msi_heads.log
 
-          - test: optiplex
+          - test: optiplex_dpp
             dpp_download_key: $OPTIPLEX_DOWNLOAD
             dpp_logs_key: $OPTIPLEX_LOGS
             log_file: output_nc_heads.log
@@ -39,7 +43,12 @@ jobs:
             dpp_logs_key: $OPTIPLEX_LOGS
             log_file: output_nc_heads.log
 
-          - test: pcengines
+          - test: novacustom_comm
+            dpp_download_key: $OPTIPLEX_DOWNLOAD
+            dpp_logs_key: $OPTIPLEX_LOGS
+            log_file: output_nc_heads.log
+
+          - test: pcengines_dpp
             dpp_download_key: $PCENGINES_DOWNLOAD
             dpp_logs_key: $PCENGINES_LOGS
             log_file: output_pcengines.log
@@ -78,7 +87,7 @@ jobs:
         run: |
           cd open-source-firmware-validation/scripts/ci
           mkdir qemu-data
-          touch qemu-data/hdd.qcow
+          touch qemu-data/hdd.qcow2
           ./qemu-run.sh nographic os &
 
       - name: Create directory for logs
@@ -115,6 +124,7 @@ jobs:
 
       - name: Copy log
         shell: bash
+        if: ${{ !cancelled() }}
         env:
           LOG_DIR: ${{ steps.log_dirs.outputs.directory }}
         run: |
