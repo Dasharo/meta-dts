@@ -10,6 +10,8 @@ LICENSE = "MIT"
 
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
+PV = "2.2.8+git${SRCPV}"
+
 SRC_URI = "\
     git://github.com/tavinus/cloudsend.sh.git;protocol=https;branch=master \
     file://0001-cloudsend.sh-Add-fail-with-body-flag.patch \

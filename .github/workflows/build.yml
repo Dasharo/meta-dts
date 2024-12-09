@@ -1,0 +1,47 @@
+---
+name: Build DTS
+on:
+  workflow_call:
+    inputs:
+      cacheless:
+        type: boolean
+        required: true
+
+jobs:
+  build:
+    runs-on:
+      labels: dts-builder
+    env:
+      FAILED_ATTEMPTS: 0
+    steps:
+      - name: Checkout meta-dts repo
+        uses: actions/checkout@v4
+        with:
+          path: "meta-dts"
+      - name: Prepare cache-less build configuration
+        if: ${{ inputs.cacheless }}
+        shell: bash
+        run: |
+          sed -i '/cache.yml/d' meta-dts/kas.yml
+      - name: Build DTS image
+        shell: bash
+        id: build_image
+        run: |
+          for attempt in {1..5}; do
+            if kas-container build meta-dts/kas.yml; then
+              echo "Build command succeeded on attempt $attempt"
+              break
+            else
+              echo "Build command failed on attempt $attempt"
+              echo "FAILED_ATTEMPTS=$attempt" >> $GITHUB_ENV
+              if [ $attempt -lt 5 ]; then
+                sleep 5
+              else
+                exit 1
+              fi
+            fi
+          done
+      - name: Report build command
+        if: always()
+        run: |
+          echo "$FAILED_ATTEMPTS build attempts failed"

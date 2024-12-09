@@ -1,0 +1,1 @@
+insane_skip += "buildpaths"
