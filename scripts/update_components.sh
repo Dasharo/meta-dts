@@ -97,31 +97,6 @@ do_update() {
     fi
 }
 
-do_update "dasharo-configuration-utility" \
-    "meta-dts-distro/recipes-dasharo/dasharo-configuration-utility/dasharo-configuration-utility_git.bb" \
-    "Dasharo/dcu" \
-    "main"
-
-do_update "flashrom" \
-    "meta-dts-distro/recipes-bsp/flashrom/flashrom_git.bb" \
-    "Dasharo/flashrom" \
-    "dasharo-release"
-
-do_update "ec" \
-    "meta-dts-distro/recipes-support/dasharo-ectool/dasharo-ectool_0.3.8.bb" \
-    "Dasharo/ec" \
-    "master"
-
-do_update "fwupd" \
-    "meta-dts-distro/recipes-bsp/fwupd/fwupd_2.0.1.bb" \
-    "Dasharo/fwupd" \
-    "dasharo-release"
-
-do_update "coreboot-utils" \
-    "meta-dts-distro/recipes-bsp/coreboot-utils/coreboot-utils.inc" \
-    "Dasharo/coreboot" \
-    "dasharo"
-
 do_update "3mdeb-secpack" \
     "meta-dts-distro/recipes-dasharo/3mdeb-secpack/3mdeb-secpack_git.bb" \
     "3mdeb/3mdeb-secpack" \

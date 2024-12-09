@@ -29,11 +29,20 @@ repos:
     layers:
       meta-tpm:
 
+  meta-dasharo:
+    url: https://github.com/Dasharo/meta-dasharo
+    refspec: 377a068111b45c801ba08fbd176d1ef9cb97bf85
+
+  meta-coreboot:
+    url: https://github.com/zarhus/meta-coreboot
+    refspec: 87e7f941008a774b337cd79f101b92cdebca5335
+
 bblayers_conf_header:
   standard: |
     POKY_BBLAYERS_CONF_VERSION = "2"
     BBPATH = "${TOPDIR}"
     BBFILES ?= ""
+
 local_conf_header:
   standard: |
     CONF_VERSION = "2"
