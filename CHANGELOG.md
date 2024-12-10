@@ -1,6 +1,55 @@
+# Changelog
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+
+## [2.1.0] - 2024-12-09
+
+### Added
+- recipes-gnome: gcab: add bbapend that disable qa tests
+- recipes-kernel: linux-yocto: add efivars.cfg back to SRC_URI
+- distro: recipes-kernel: linux-yocto: add capsule update configuration
+
+
+### Changed
+- conf/distro/dts-distro.conf: ROOT_HOME was missing
+- recipes-bsp: txe-secure-boot: smmstoretool fix buildpaths warning
+- recipes-bsp: coreboot-utils: nvramtool - Fix buildpath warning
+- recipes-connectivity: wolfssl: Ignore [buildpaths] QA ISSUE
+- recipes-gnome: gcab: use insane_skip instead of disabling whole qa check
+- recipes-core: base-files: Mount efivars by default. Needed by FUM
+- distro: recipes-dts: dts-scripts: bump revision
+- Add generate-changed-recipes script + specify PV for git recipes
+- .github/workflows: Deploy manifest to boot.dasharo.com
+- Use git-cliff to generate changelog
+- recipes-bsp/coreboot-utils: Use 4.21 as base version for coreboot-utils packages
+- README: Link Zarhus release process
+- Change git-cliff config
+- .github/workflows: Fix getting DTS_VER in manifest deployment
+- Move generate-changelog.sh to scripts
+- Fill up CHANGELOG after rebase
+- Add extension to generate-changed-recipes
+- README: Explain parameter in generate-changelog.sh
+- .github/workflows: Add workflow with DTS tests
+- .github/workflows: Add build.yml reusable workflow
+- dts-distro.conf: bump to 2.1.0
+- dts-scripts: Improve UI/UX
+- dts-scripts: Use correct flashrom flags
+- dts-distro.conf: Change PREFERRED_VERSION_flashrom
+- Remove condition for running tests
+- dts-scripts: Bump Optiplex version to 0.1.1
+
+
+### Fixed
+- recipes-bsp/coreboot-utils/intelp2m_git.bb: fix buildpath error
+- workflow: fix build artifact paths
+
+
+### Removed
+- linux-yocto: remove deprecated kconfig entries
+- recipes-bsp: intelp2m: remove useless 'go version' command
+
 
 ## [2.0.1-rc3] - 2024-11-21
 
@@ -917,7 +966,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Fix README
 
 
-[unreleased]: https://github.com/Dasharo/meta-dts/compare/v1.2.23..HEAD
+[2.1.0]: https://github.com/Dasharo/meta-dts/compare/v2.0.1-rc3..v2.1.0
+[2.0.1-rc3]: https://github.com/Dasharo/meta-dts/compare/v2.0.1-rc2..v2.0.1-rc3
+[2.0.1-rc2]: https://github.com/Dasharo/meta-dts/compare/v2.0.1-rc1..v2.0.1-rc2
+[2.0.1-rc1]: https://github.com/Dasharo/meta-dts/compare/v2.0.0..v2.0.1-rc1
+[2.0.0]: https://github.com/Dasharo/meta-dts/compare/v2.0.0-rc7..v2.0.0
+[2.0.0-rc7]: https://github.com/Dasharo/meta-dts/compare/v2.0.0-rc6..v2.0.0-rc7
+[2.0.0-rc6]: https://github.com/Dasharo/meta-dts/compare/v2.0.0-rc5..v2.0.0-rc6
+[2.0.0-rc5]: https://github.com/Dasharo/meta-dts/compare/v2.0.0-rc4..v2.0.0-rc5
+[2.0.0-rc4]: https://github.com/Dasharo/meta-dts/compare/v2.0.0-rc3..v2.0.0-rc4
+[2.0.0-rc3]: https://github.com/Dasharo/meta-dts/compare/v2.0.0-rc2..v2.0.0-rc3
+[2.0.0-rc2]: https://github.com/Dasharo/meta-dts/compare/v2.0.0-rc1..v2.0.0-rc2
+[2.0.0-rc1]: https://github.com/Dasharo/meta-dts/compare/v1.2.23..v2.0.0-rc1
 [1.2.23]: https://github.com/Dasharo/meta-dts/compare/v1.2.22..v1.2.23
 [1.2.22]: https://github.com/Dasharo/meta-dts/compare/v1.2.21..v1.2.22
 [1.2.21]: https://github.com/Dasharo/meta-dts/compare/v1.2.20..v1.2.21

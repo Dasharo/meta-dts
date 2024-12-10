@@ -141,4 +141,4 @@ jobs:
       - name: Cleanup after tests
         shell: bash
         run: |
-          rm -rf open-source-firmware-validation meta-dts build ipxe
+          rm -rf $GITHUB_WORKSPACE; mkdir $GITHUB_WORKSPACE
