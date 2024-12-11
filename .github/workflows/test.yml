@@ -100,7 +100,7 @@ jobs:
         shell: bash
         id: create_log_dirs
         run: |
-          LOG_DIR="/tmp/dst-test-ci-${{ github.run_id }}/${{ matrix.test }}"
+          LOG_DIR="/tmp/dts-test-ci-${{ github.run_id }}/${{ matrix.test }}"
           mkdir -p $LOG_DIR
           echo "LOG_DIR=$LOG_DIR" >> $GITHUB_ENV
 
