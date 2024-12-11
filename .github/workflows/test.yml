@@ -27,6 +27,7 @@ jobs:
     runs-on:
       labels: dts-builder
     strategy:
+      fail-fast: false
       matrix:
         include:
           - test: msi_comm
