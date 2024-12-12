@@ -123,7 +123,7 @@ jobs:
           echo "::add-mask::${{ matrix.dpp_logs_key }}"
           echo "::add-mask::$DPP_PASSWORD"
 
-          RTE_IP="127.0.0.1" CONFIG="qemu" SNIPEIT="no" DPP_PASSWORD="$DPP_PASSWORD" DPP_DOWNLOAD_KEY="${{ matrix.dpp_download_key }}"" DPP_LOGS_KEY="${{ matrix.dpp_logs_key }}"" NETBOOT_UTILITIES_SUPPORT="True" DTS_IPXE_LINK="http://${ip_addr}:4321/dts.ipxe" ./scripts/run.sh dts -- -L TRACE \
+          RTE_IP="127.0.0.1" CONFIG="qemu" SNIPEIT="no" DPP_PASSWORD="$DPP_PASSWORD" DPP_DOWNLOAD_KEY="${{ matrix.dpp_download_key }}" DPP_LOGS_KEY="${{ matrix.dpp_logs_key }}" NETBOOT_UTILITIES_SUPPORT="True" DTS_IPXE_LINK="http://${ip_addr}:4321/dts.ipxe" ./scripts/run.sh dts -- -L TRACE \
           -i ${{ matrix.test }} dts/dts-e2e.robot 2>&1 \
           | tee ${{ env.LOG_DIR }}/${{ matrix.log_file }} | grep "| PASS |\|| FAIL |"
 
