@@ -124,7 +124,7 @@ jobs:
           -v dpp_logs_key:${{ matrix.dpp_logs_key }} -v netboot_utilities_support:True \
           -v dts_ipxe_link:http://${ip_addr}:4321/dts.ipxe \
           -i ${{ matrix.test }} dts/dts-e2e.robot 2>&1 \
-          | tee ${{ env.LOG_DIR }}/${{ matrix.log_file }} | grep "| PASS |\|| FAIL |"
+          | tee ${{ env.LOG_DIR }}/${{ matrix.test }}/${{ matrix.log_file }} | grep "| PASS |\|| FAIL |"
 
       - name: Copy log
         shell: bash
