@@ -131,6 +131,7 @@ jobs:
         shell: bash
         if: ${{ !cancelled() }}
         run: |
+          cd open-source-firmware-validation
           find logs -type f -name "*log.html" -exec mv {} "${{ env.LOG_DIR }}/${{ matrix.test }}_log.html" \;
 
   cleanup:
