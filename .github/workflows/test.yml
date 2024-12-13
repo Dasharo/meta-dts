@@ -71,6 +71,13 @@ jobs:
             log_file: output_pcengines_seabios.log
 
     steps:
+      - name: TEST SECRETS MASK
+        shell: bash
+        run: |
+          SECRET=pass1234
+          echo "::add-mask::$SECRET"
+          echo "$SECRET"
+
       - name: Run IPXE server
         shell: bash
         run: ./open-source-firmware-validation/scripts/ci/ipxe-run.sh \
