@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.1.1] - 2024-12-13
+
+### Added
+- kas/common.yml: add meta-coreboot and meta-dasharo
+
+
+### Changed
+- Remove recipes from meta-dts-distro as part of migration
+- dts-distro.conf: bump to 2.1.1
+
+
+### Fixed
+- dts-scripts: fix boardmismatch unhandled parameter error
+
+
+### Removed
+- scripts/update_components.sh: remove migrated components
+
+
 ## [2.1.0] - 2024-12-09
 
 ### Added
@@ -958,14 +977,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - CHANGELOG_CE.md: update date
 
 
-## [1.0.1] - 2022-09-02
+## 1.0.1 - 2022-09-02
 
 ### Changed
 - Initial commit
 - Initial public release
 - Fix README
 
-
+[2.1.1]: https://github.com/Dasharo/meta-dts/compare/v2.1.0..v2.1.1
 [2.1.0]: https://github.com/Dasharo/meta-dts/compare/v2.0.1-rc3..v2.1.0
 [2.0.1-rc3]: https://github.com/Dasharo/meta-dts/compare/v2.0.1-rc2..v2.0.1-rc3
 [2.0.1-rc2]: https://github.com/Dasharo/meta-dts/compare/v2.0.1-rc1..v2.0.1-rc2
