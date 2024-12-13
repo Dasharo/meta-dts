@@ -131,7 +131,7 @@ jobs:
         shell: bash
         if: ${{ !cancelled() }}
         run: |
-          cp open-source-firmware-validation/log.html ${{ env.LOG_DIR }}/log.html
+          find logs -type f -name "*log.html" -exec mv {} "${{ env.LOG_DIR }}/${{ matrix.test }}_log.html" \;
 
   cleanup:
     name: Cleanup
