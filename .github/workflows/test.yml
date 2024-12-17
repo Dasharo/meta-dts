@@ -55,14 +55,14 @@ jobs:
             log_file: output_nc_heads.log
 
           - test: novacustom_heads
-            dpp_download_key: $OPTIPLEX_DOWNLOAD
-            dpp_logs_key: $OPTIPLEX_LOGS
+            dpp_download_key: $NOVACUSTOM_HEADS_DOWNLOAD
+            dpp_logs_key: $NOVACUSTOM_HEADS_LOGS
             log_file: output_nc_heads.log
 
           - test: novacustom_comm
-            dpp_download_key: $OPTIPLEX_DOWNLOAD
-            dpp_logs_key: $OPTIPLEX_LOGS
-            log_file: output_nc_heads.log
+            dpp_download_key: $NOVACUSTOM_HEADS_DOWNLOAD
+            dpp_logs_key: $NOVACUSTOM_HEADS_LOGS
+            log_file: output_nc_comm.log
 
           - test: pcengines_dpp
             dpp_download_key: $PCENGINES_DOWNLOAD
