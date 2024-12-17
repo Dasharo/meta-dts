@@ -27,7 +27,7 @@ jobs:
 
   run-tests:
     name: Run DTS tests
-    needs: [checkout-osfv, dts]
+    needs: [checkout-osfv, build-dts]
     runs-on:
       labels: dts-builder
     strategy:
