@@ -9,10 +9,10 @@ concurrency:
   group: ${{ github.workflow }}
 
 jobs:
-  # build-dts:
-  #   uses: ./.github/workflows/build.yml
-  #   with:
-  #     cacheless: false
+  build-dts:
+    uses: ./.github/workflows/build.yml
+    with:
+      cacheless: false
 
   checkout-osfv:
     runs-on: dts-builder
@@ -27,7 +27,7 @@ jobs:
 
   run-tests:
     name: Run DTS tests
-    needs: [checkout-osfv]
+    needs: [checkout-osfv, dts]
     runs-on:
       labels: dts-builder
     strategy:
@@ -75,20 +75,12 @@ jobs:
             log_file: output_pcengines_seabios.log
 
     steps:
-      - name: TEST SECRETS MASK
-        shell: bash
-        run: |
-          SECRET=pass1234
-          echo "::add-mask::$SECRET"
-          echo "$SECRET"
-
       - name: Run IPXE server
         shell: bash
         run: |
           ./open-source-firmware-validation/scripts/ci/ipxe-run.sh \
-            ~/dts2.1.0/dts-base-image-v2.1.0.cpio.gz ~/dts2.1.0/bzImage-v2.1.0 &
-          # build/tmp/deploy/images/genericx86-64/dts-base-image-genericx86-64.cpio.gz \
-          # build/tmp/deploy/images/genericx86-64/bzImage &
+          build/tmp/deploy/images/genericx86-64/dts-base-image-genericx86-64.cpio.gz \
+          build/tmp/deploy/images/genericx86-64/bzImage &
 
       - name: Install requirements
         shell: bash
