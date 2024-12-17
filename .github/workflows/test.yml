@@ -71,7 +71,7 @@ jobs:
 
           - test: pcengines_seabios
             dpp_download_key: $PCENGINES_SEABIOS_DOWNLOAD
-            dpp_logs_key: $PCENGINES_SEABIOS_LOGS
+            dpp_logs_key: $PCENGINES_LOGS
             log_file: output_pcengines_seabios.log
 
     steps:
