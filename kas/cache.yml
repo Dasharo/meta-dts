@@ -9,3 +9,5 @@ local_conf_header:
     INHERIT += "own-mirrors"
     LOCAL_PREMIRROR_SERVER ?= "cache.dasharo.com"
     PROJECT_NAME ?= "yocto/dts"
+    BB_SIGNATURE_HANDLER = "OEBasicHash"
+    BB_HASHSERVE = ""
