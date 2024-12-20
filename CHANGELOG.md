@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [2.1.2] - 2024-12-20
+
+### Changed
+- .github/workflows/test.yml: Improve test workflow (#200)
+- kas: cache.yml: don't use local hash equivalence server
+- distro: bump to 2.1.2
+
+
+### Fixed
+- dts-scripts: fix acpidump command in HCL report
+- distro: dts: dts-scripts: fix for empty credentials
+- distro: dts: dts-scripts: change DTS Extensions message
+
+
 ## [2.1.1] - 2024-12-13
 
 ### Added
@@ -984,6 +998,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Initial public release
 - Fix README
 
+[2.1.2]: https://github.com/Dasharo/meta-dts/compare/v2.1.1..v2.1.2
 [2.1.1]: https://github.com/Dasharo/meta-dts/compare/v2.1.0..v2.1.1
 [2.1.0]: https://github.com/Dasharo/meta-dts/compare/v2.0.1-rc3..v2.1.0
 [2.0.1-rc3]: https://github.com/Dasharo/meta-dts/compare/v2.0.1-rc2..v2.0.1-rc3
