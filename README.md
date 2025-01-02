@@ -4,9 +4,9 @@ You can find documentation about the DTS system, including information on
 building the system, running the system, and the functionalities included in the
 system, by visiting the following links.
 
-* [Building the system](https://docs.dasharo.com/dasharo-tools-suite/documentation/#building)
-* [Running the system](https://docs.dasharo.com/dasharo-tools-suite/documentation/#running)
-* [Features included in the system](https://docs.dasharo.com/dasharo-tools-suite/documentation/#features)
+* [Building the system](https://docs.dasharo.com/dasharo-tools-suite/documentation/building)
+* [Running the system](https://docs.dasharo.com/dasharo-tools-suite/documentation/running)
+* [Features included in the system](https://docs.dasharo.com/dasharo-tools-suite/documentation/features)
 
 Please visit [release](https://docs.dasharo.com/dasharo-tools-suite/releases/)
 section to get latest version of DTS.
