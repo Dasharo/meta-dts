@@ -123,7 +123,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Add support for ODROID-H4
 - Add support for NovaCustom V5x0TNx
 - Add support for Dell Optiplex 7010/9010
-
+- CHANGELOG: add changelog for v2.0.0
 
 ### Fixed
 - Fix workflow errors
@@ -136,6 +136,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - recipes-dts: dts-scripts: Bump SRCREV (verbose mode and sending logs)
 
 
+### Added
+- CHANGELOG: add changelog for v2.0.0-rc7
+
 ## [2.0.0-rc6] - 2024-09-12
 
 ### Changed
@@ -146,14 +149,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 - Add support for Dell Optiplex including DPP support
-
+- CHANGELOG: add changelog for v2.0.0-rc6
 
 ## [2.0.0-rc5] - 2024-08-28
 
 ### Changed
 - .github/workflows: Use separate SSH config for deploy job
+- recipes-bsp/txe-secure-boot/txesbmantool_git.bb: Bump SRCREV
+- recipes-bsp: txesbmantool: Change branch and SRCREV
 - distro: extended: minio-cli: amend absolete-license
 - .oelint-ruleset.json: Set homepageping to info so pre-commit ci can run
+- conf/distro/dts-distro.conf: Bump DISTRO_VERSION to 2.0.0-rc5
 
 
 ## [2.0.0-rc4] - 2024-07-26
@@ -167,7 +173,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 - dts-scripts: Change to rev removing separate EC update
-
+- dts-distro.conf: bump to 2.0.0-rc3
 
 ## [2.0.0-rc2] - 2024-07-09
 
@@ -176,10 +182,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - dts-base-image.inc: Remove 'rootfs' suffix from image
 - dts-scripts: Add more model checks for V54x_6xTU
 - dasharo-ectool: bump rev for Dasharo ACPI ID
+- dts-distro.conf: bump version to 2.0.0-rc2
+
 
 ### Added
 - Add and use python semver module to compare versions
 - Add lshw
+- CHANGELOG.md: Add v2.0.0-rc2
 
 
 ## [2.0.0-rc1] - 2024-07-08
@@ -208,6 +217,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - iotools: disable DEBUG by default
 - Updated Linux kernel to version 6.6.21
 - Don't use ICMP for network connection verification
+- dts-distro.conf: bump to v2.0.0-rc1
 
 
 ### Fixed
@@ -221,14 +231,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [1.2.23] - 2024-06-27
 
-### Added
-- dts-functions: support seabios in check_se_creds()
-
-
 ### Changed
 - dts-distro.conf: bump to v1.2.23
 - CHANGELOG.md: v1.2.23
-
+- dts-functions: support seabios in check_se_creds()
 
 ### Fixed
 - dasharo-deploy: fix flashrom_extra_args
@@ -237,131 +243,34 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## [1.2.22] - 2024-06-27
 
 ### Added
+- CHANGELOG.md: add v1.2.22
 - packagegroup-dts.bb: add iperf3 to tools
+- unit_tests: basic support for running in QEMU and OSFV
+- dts: initial deployment for PC Engines SeaBIOS
 - dts-base-image: add lshw
 - meta-dts-distro: add python3-roca-detect
 - meta-dts-distro: add rdepends for python3-roca-detect
-- CHANGELOG.md: add v1.2.22
-- dts-functions: support seabios in check_se_creds()
-- distro: support: hidapi: delete
-- dts-distro.conf: add usrmerge to DISTRO_FEATURES
-- dasharo-ectoo: add sha256sums for cargo deps
-- distro: recipes-extended: minio-cli: add
-- distro: recipes-dts: dts-scripts: add DES packaging support
-- CHANGELOG: add changelog for v2.0.0-rc6
-- CHANGELOG: add changelog for v2.0.0-rc7
-- distro: dts-scripts: add support for NovaCustom V5x0TNx
-- CHANGELOG: add changelog for v2.0.0
-- dts-base-image: add lshw
-- meta-dts-distro: add python3-roca-detect
-- meta-dts-distro: add rdepends for python3-roca-detect
-- CHANGELOG.md: add v1.2.22
+- dasharo-deploy: preserve settings for seabios initial deploy
 
 
 ### Changed
 - dts-distro: coreboot-utils: Update branch and commit
-- Fix Dell Optiplex variables to enable firmware download
-- Remove unneeded line that is commented out
-- dts: Remove separate EC update when updating Dasharo
 - dts/dts-functions.sh: bump ncm adl heads to v0.9.1
 - conf/distro/dts-distro.conf: bump to v1.2.22
 - dts-functions.sh: clarify on heads update path
 - dts: allow overriding some variables from env
-- unit_tests: basic support for running in QEMU and OSFV
-- dts: initial deployment for PC Engines SeaBIOS
-- Revert "dts: Remove separate EC update when updating Dasharo"
-- dasharo-deploy: preserve settings for seabios initial deploy
-- dts-distro.conf: bump to v1.2.23
-- CHANGELOG.md: v1.2.23
-- workflows: get DTS_VER from tag not dts-distro.conf
-- kas-uefi-sb: change meta-secure-core origin
-- dts: dts-functions: make dts not use ICMP for network connection check
-- distro: recipes-dts: move DTS scripts to another repo
-- distro: recipes-dts: dts-scripts: do_install via Makefile
-- dts-scripts_git.bb: relicense to Apache-2.0
-- distro: dts-scripts: bump revision
-- distro: kernel: acpi-call-dkms: change license to GPLv3
-- update layers to scarthgap
-- packagegroup-dts.bb: s/bmap-tools/bmaptool
-- iotools: allow overriding CC
-- kas/common.yml: enable buildstats class
-- iotools: disable DEBUG by default
-- dts-scripts: update SRCREV
-- dts-scripts: update SRCREV
-- README: Add section about cukinia tests
-- meta-dts-distro: Add txesbmantool
-- meta-dts-distro/recipes-tests/dts-tests: cukinia.conf: Add txesbmantool check
-- recipes-bsp/txe-secure-boot/txe-secure-boot_git.bb: Use bindir in FILES
-- recipes-bsp/txe-secure-boot/txesbmantool_git: Adjust PKG_CONFIG_PATH
-- recipes-bsp/txe-secure-boot/txesbmantool_git: Specify EXTRA_OEMAKE + fix style
-- meta-dts-distro/recipes Add smmstore tool
-- meta-dts-distro/recipes-bsp/txe-secure-boot/smmstoretool_git: Refactor file
-- meta-dts-distro/recipes-tests/dts-tests: cukinia.conf: Add smmstoretool test
-- recipes-bsp/txe-secure-boot/smmstoretool_git.bb: Specify EXTRA_OEMAKE
-- Add basic pre-commit configuration
-- recipes-dts: Remove dts-functions.sh
-- recipes-support/cloudsend: Fetch script from git and add `--fail-with-body` flag
-- Fix files so that pre-commit passes
-- recipes-bsp/txe-secure-boot/txesbmantool_git: Update revision
-- Change pre-commit hook revisions
-- Add cpuid tool + cukinia test
-- dts-distro.conf: bump to v2.0.0-rc1
-- openssh_%.bbappend: use sshd.service instead of sshd.socket
-- workflow: Change action and jobs names
-- dts-base-image.inc: Remove 'rootfs' suffix from image
-- dts-scripts: Update revision
-- dts-scripts: Add python3-semver dependency
-- meta-dts-distro/recipes-support/dasharo-ectool: bump rev for Dasharo ACPI ID
-- CHANGELOG.md: Add v2.0.0-rc2
-- dts-distro.conf: bump version to 2.0.0-rc2
-- dts-scripts: Change to rev removing separate EC update
-- dasharo-ectool: automatically get PV hash from SRCCREV
-- Revert "dts-scripts: Change to rev removing separate EC update"
-- dts-scripts: Change to rev removing separate EC update
-- dts-distro.conf: bump to 2.0.0-rc3
-- dts-scripts: update SRCREV
-- recipes-bsp/txe-secure-boot/txesbmantool_git.bb: Bump SRCREV
-- .github/workflows: Use separate SSH config for deploy job
-- recipes-bsp: txesbmantool: Change branch and SRCREV
-- distro: extended: minio-cli: amend absolete-license
-- .oelint-ruleset.json: Set homepageping to info so pre-commit ci can run
-- conf/distro/dts-distro.conf: Bump DISTRO_VERSION to 2.0.0-rc5
-- CHANGELOG: Add change notes v2.0.0-rc5
-- meta-dts/meta-dts-distro/recipes-dts/dts-scripts/dts-scripts_git.bb: SRCREV update
-- python/python3-binwalk_2.3.3.bb: changed src to updated fork
-- meta-dts-distro/conf/layer.conf: bump layer priority
-- meta-dts-distro/recipes-dts: dts-scripts: Bump revision to support Optiplex
-- meta-dts-distro/recipes-dts: dts-scripts: Bump SRCREV to support Optiplex DPP
-- dts-distro.conf: bump to 2.0.0-rc6
-- pre-commit: use upstream oelint
-- recipes-dts: dts-scripts: Bump SRCREV (verbose mode and sending logs)
-- dts-distro.conf: bump to 2.0.0-rc7
-- dts-scripts: update to version with ODROID-H4+ support
-- dts-scripts: update srcrev, fixes optiplex dpp link
-- Clean up changelog
-- dts-distro.conf: bump to 2.0.0
-- Remove unit_tests and scripts/local-deploy
 - coreboot-utils: update SRCREV
-- Revert "dts: Remove separate EC update when updating Dasharo"
-- dasharo-deploy: preserve settings for seabios initial deploy
 
 
 ### Fixed
 - dts: dts-functions.sh: fix BINARY_HAS_RW_B value
+- Fix Dell Optiplex variables to enable firmware download
 - dasharo-hcl-report: fix generation on qemu (coreboot + edk2)
-- dasharo-deploy: fix flashrom_extra_args
-- acpi-call-dkms: fix kernel module installation on scarthgap
-- openssh: fix scp not working (Dasharo/dasharo-issues#840)
-- tests: cukinia: Add semver module check
-- workflows: fix dts-release-cicd-pipeline ssh errors
 
 
 ### Removed
 - reports: dasharo-hcl-report: remove board_config call
-- distro: kernel: linux-yocto: remove efi-ext.scc from KERNEL_FEATURES
-- scripts: generate-ipxe-menu: delete root=/dev/nfs
-- meta-dts-distro/recipes-devtool: remove outdated python3-uefi-firmware
-
+- Remove unneeded line that is commented out
 
 ## [1.2.21] - 2024-03-29
 
@@ -372,7 +281,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed
 - deploy: make it exit only on specific boards
-- Update meta-dts-distro/recipes-dts/dts/dasharo-deploy/dasharo-deploy
 - Update meta-dts-distro/recipes-dts/dts/dasharo-deploy/dasharo-deploy
 - meta-dts-distro/recipes-dts: dts-functions: Add config for PC Engines APU boards
 - recipes-dts: dts-functions.sh: Modify config for APU platforms
@@ -392,7 +300,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Fixed
 - fix hcl report freezing, update script for hw-probe
 - fix removing the mac adress from logs
->>>>>>> 17c474b669c2 (Use git-cliff to generate changelog)
 
 
 ### Removed
@@ -920,7 +827,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - recipes-dts: dts: removed client's specific scripts
 
 
-## [1.1.1] - 2023-02-17
+## 1.1.1 - 2023-02-17
 
 ### Added
 - ipxe-commands: added service able to run scripts (#21)
