@@ -4,13 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [2.1.3] - 2025-01-03
+## 2.1.3 - 2025-01-03
 
 ### Fixed
 - dts-scripts: fix for logs not being sent after update/install
 
 
-## [2.1.2] - 2024-12-20
+## 2.1.2 - 2024-12-20
 
 ### Changed
 - .github/workflows/test.yml: Improve test workflow (#200)
@@ -24,7 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - distro: dts: dts-scripts: change DTS Extensions message
 
 
-## [2.1.1] - 2024-12-13
+## 2.1.1 - 2024-12-13
 
 ### Added
 - kas/common.yml: add meta-coreboot and meta-dasharo
@@ -43,7 +43,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - scripts/update_components.sh: remove migrated components
 
 
-## [2.1.0] - 2024-12-09
+## 2.1.0 - 2024-12-09
 
 ### Added
 - recipes-gnome: gcab: add bbapend that disable qa tests
@@ -90,7 +90,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - recipes-bsp: intelp2m: remove useless 'go version' command
 
 
-## [2.0.1-rc3] - 2024-11-21
+## 2.0.1-rc3 - 2024-11-21
 
 ### Changed
 - dts-scripts: Enhance verbose mode + collect cbmem console in hcl report
@@ -98,7 +98,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - dts-scripts: Bump DPP versions for MSI
 
 
-## [2.0.1-rc2] - 2024-11-04
+## 2.0.1-rc2 - 2024-11-04
 
 ### Changed
 - kernel/linux-yocto: Add CONFIG_SERIAL_8250_DW
@@ -106,14 +106,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - flashrom: Add TGL chipset detection based on SPI PCI ID
 
 
-## [2.0.1-rc1] - 2024-10-23
+## 2.0.1-rc1 - 2024-10-23
 
 ### Changed
 - recipes-extended: sbctl: update sbctl to v0.15.4
 - dts-scripts: Print warning when creds don't support DPP packages
 
 
-## [2.0.0] - 2024-09-30
+## 2.0.0 - 2024-09-30
 
 ### Changed
 - Clean up changelog
@@ -129,7 +129,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Fix workflow errors
 
 
-## [2.0.0-rc7] - 2024-09-23
+## 2.0.0-rc7 - 2024-09-23
 
 ### Changed
 - pre-commit: use upstream oelint
@@ -139,7 +139,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - CHANGELOG: add changelog for v2.0.0-rc7
 
-## [2.0.0-rc6] - 2024-09-12
+## 2.0.0-rc6 - 2024-09-12
 
 ### Changed
 - scripts: generate-ipxe-menu: delete root=/dev/nfs
@@ -151,7 +151,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Add support for Dell Optiplex including DPP support
 - CHANGELOG: add changelog for v2.0.0-rc6
 
-## [2.0.0-rc5] - 2024-08-28
+## 2.0.0-rc5 - 2024-08-28
 
 ### Changed
 - .github/workflows: Use separate SSH config for deploy job
@@ -162,20 +162,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - conf/distro/dts-distro.conf: Bump DISTRO_VERSION to 2.0.0-rc5
 
 
-## [2.0.0-rc4] - 2024-07-26
+## 2.0.0-rc4 - 2024-07-26
 
 ### Added
 - Add minio-cli
 - dts-scripts: add DES(DPP) packaging support
 
 
-## [2.0.0-rc3] - 2024-07-16
+## 2.0.0-rc3 - 2024-07-16
 
 ### Changed
 - dts-scripts: Change to rev removing separate EC update
 - dts-distro.conf: bump to 2.0.0-rc3
 
-## [2.0.0-rc2] - 2024-07-09
+## 2.0.0-rc2 - 2024-07-09
 
 ### Changed
 - Use sshd.service instead of sshd.socket
@@ -191,7 +191,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - CHANGELOG.md: Add v2.0.0-rc2
 
 
-## [2.0.0-rc1] - 2024-07-08
+## 2.0.0-rc1 - 2024-07-08
 
 ### Added
 - Add support for MTL
@@ -229,7 +229,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - support: hidapi: delete
 
 
-## [1.2.23] - 2024-06-27
+## 1.2.23 - 2024-06-27
 
 ### Changed
 - dts-distro.conf: bump to v1.2.23
@@ -240,7 +240,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - dasharo-deploy: fix flashrom_extra_args
 
 
-## [1.2.22] - 2024-06-27
+## 1.2.22 - 2024-06-27
 
 ### Added
 - CHANGELOG.md: add v1.2.22
@@ -272,7 +272,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - reports: dasharo-hcl-report: remove board_config call
 - Remove unneeded line that is commented out
 
-## [1.2.21] - 2024-03-29
+## 1.2.21 - 2024-03-29
 
 ### Added
 - deploy: add exit when trying to flash v1.1.1 on 13th gen and above
@@ -306,7 +306,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - deploy: remove extra boards
 
 
-## [1.2.20] - 2024-03-19
+## 1.2.20 - 2024-03-19
 
 ### Added
 - CHANGELOG: add v1.2.20
@@ -320,7 +320,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - distro: dts-distro: bump v1.2.20
 
 
-## [1.2.20-rc7] - 2024-03-18
+## 1.2.20-rc7 - 2024-03-18
 
 ### Changed
 - distro: wic: change boot partition to efi type
@@ -332,7 +332,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - distro: dts-distro: bump v1.2.20-rc7
 
 
-## [1.2.20-rc6] - 2024-03-18
+## 1.2.20-rc6 - 2024-03-18
 
 ### Changed
 - distro: dts-distro: bump v1.2.20-rc6
@@ -345,7 +345,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - dts: dts: fix providing DES creds, allow to use $ character
 
 
-## [1.2.20-rc5] - 2024-03-15
+## 1.2.20-rc5 - 2024-03-15
 
 ### Added
 - dts: dts-functions: add PLATFORM_SIGN_KEY for heads binary
@@ -361,7 +361,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - dts: dts-functions: fix get_signing_keys function
 
 
-## [1.2.20-rc4] - 2024-03-13
+## 1.2.20-rc4 - 2024-03-13
 
 ### Added
 - distro: dts: add dropin to set DTS_ENV, DTS_FUNCS vars on ssh connection
@@ -379,7 +379,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - distro: dasharo-hcl-report: fix sed command to remove MAC address info
 
 
-## [1.2.20-rc1] - 2024-03-13
+## 1.2.20-rc1 - 2024-03-13
 
 ### Added
 - distro: dts: dts-functions: add flags for NovaCustom EC flashing
@@ -391,7 +391,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - distro: dts-distro: bump v1.2.20-rc1
 
 
-## [1.2.19] - 2024-02-28
+## 1.2.19 - 2024-02-28
 
 ### Added
 - distro: packagegroup-dts: add missing packages for TPM2 support
@@ -410,7 +410,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - CHANGELOG.md: fill up after automatic update of components
 
 
-## [1.2.19-rc1] - 2024-02-27
+## 1.2.19-rc1 - 2024-02-27
 
 ### Added
 - local-ipxe-server.sh: added
@@ -437,14 +437,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - unit_tests: dts-environment: fixes in CMD_POWEROFF/REBOOT after review
 
 
-## [1.2.18] - 2024-01-22
+## 1.2.18 - 2024-01-22
 
 ### Changed
 - distro: bump v1.2.18
 - Release v1.2.18
 
 
-## [1.2.18-rc1] - 2024-01-17
+## 1.2.18-rc1 - 2024-01-17
 
 ### Changed
 - Bring back changes reverted in d72852e76e9f
@@ -452,7 +452,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - distro: bump v1.2.18-rc1
 
 
-## [1.2.17] - 2024-01-17
+## 1.2.17 - 2024-01-17
 
 ### Added
 - CHANGELOG: add changelog for v1.2.17
@@ -464,7 +464,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - CHANGELOG.md: fill up after automatic update of components
 
 
-## [1.2.17-rc4] - 2024-01-17
+## 1.2.17-rc4 - 2024-01-17
 
 ### Changed
 - Revert changes introduced by commits d5054bc2f8b7 through b240c2484981
@@ -472,7 +472,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - distro: bump v1.2.17-rc4
 
 
-## [1.2.17-rc3] - 2024-01-16
+## 1.2.17-rc3 - 2024-01-16
 
 ### Changed
 - distro: bump v1.2.17-rc3
@@ -482,14 +482,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - distro: dasharo-deploy: fix typo in if statement
 
 
-## [1.2.17-rc2] - 2024-01-16
+## 1.2.17-rc2 - 2024-01-16
 
 ### Changed
 - meta-dts-distro/recipes-dts/dts/dts/dts-functions.sh: Add missing fi
 - distro: bump v1.2.17-rc2
 
 
-## [1.2.17-rc1] - 2024-01-16
+## 1.2.17-rc1 - 2024-01-16
 
 ### Added
 - distr: dts-sb-distro: adds working distro configuration
@@ -514,7 +514,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - distro: bump v1.2.17-rc1
 
 
-## [1.2.16] - 2024-01-11
+## 1.2.16 - 2024-01-11
 
 ### Changed
 - dts: dts-functions: reset ns5x tgl to v1.5.1
@@ -522,14 +522,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - CHANGELOG: fill up list of changes for v1.2.16
 
 
-## [1.2.16-rc5] - 2024-01-11
+## 1.2.16-rc5 - 2024-01-11
 
 ### Changed
 - dasharo-deploy: use dcu for patching bootlogo
 - dts-distro: bump v1.2.16-rc5
 
 
-## [1.2.16-rc4] - 2024-01-11
+## 1.2.16-rc4 - 2024-01-11
 
 ### Added
 - README: add info about rc rel available over iPXE on boot.dasharo.com
@@ -539,7 +539,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - dts-distro: bump v1.2.16-rc4
 
 
-## [1.2.16-rc3] - 2024-01-11
+## 1.2.16-rc3 - 2024-01-11
 
 ### Added
 - scripts: get_last_commit: add script to get latest commit from given branch
@@ -569,7 +569,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - workflows: develop: fix tag re, push rc iPXE menu to boot.dasharo.com
 
 
-## [1.2.15] - 2024-01-11
+## 1.2.15 - 2024-01-11
 
 ### Added
 - CHANGELOG: add v1.2.15
@@ -601,7 +601,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - workflows: remove not needed comments
 
 
-## [1.2.14] - 2024-01-03
+## 1.2.14 - 2024-01-03
 
 ### Added
 - README: add information how to publish develop release
@@ -627,7 +627,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - workflows: fix usage of SSH_KEY_GITEA secret
 
 
-## [1.2.13] - 2023-12-22
+## 1.2.13 - 2023-12-22
 
 ### Added
 - meta-dts-distro: add dasharo_ectool
@@ -679,7 +679,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - distro: dts-environment: remove unused variable
 
 
-## [1.2.12] - 2023-11-03
+## 1.2.12 - 2023-11-03
 
 ### Changed
 - bump to 1.2.12
@@ -692,13 +692,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - github: workflows: fix typos
 
 
-## [1.2.11] - 2023-10-31
+## 1.2.11 - 2023-10-31
 
 ### Changed
 - dts/dts-functions.sh: set NovaCustom versions to 1.5.1/1.7.1
 
 
-## [1.2.10] - 2023-10-27
+## 1.2.10 - 2023-10-27
 
 ### Added
 - meta-dts-distro/recipes-dts/dts: add coreboot_customizer
@@ -721,7 +721,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - CHANGELOG.md: fix typos for rel v1.2.10
 
 
-## [1.2.9] - 2023-09-29
+## 1.2.9 - 2023-09-29
 
 ### Added
 - dts: dts-functions: add fum_exit
@@ -747,7 +747,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - dts: dasharo-deploy: fix log typos
 
 
-## [1.2.8] - 2023-09-05
+## 1.2.8 - 2023-09-05
 
 ### Added
 - recipes-devtool/me-cleaner: add recipe
@@ -802,7 +802,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - CHANGELOG: fixed typo
 
 
-## [1.2.0] - 2023-05-10
+## 1.2.0 - 2023-05-10
 
 ### Added
 - linux-yocto/dts.cfg: add IXGBE driver as module
@@ -858,7 +858,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - distro: dasharo-hcl-report: fixes after tests
 
 
-## [1.1.0] - 2022-11-02
+## 1.1.0 - 2022-11-02
 
 ### Added
 - dasharo-hcl-report: add check on flash chip, fix determing mac address
@@ -883,7 +883,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - workflows: fix repo paths
 
 
-## [1.0.2] - 2022-10-12
+## 1.0.2 - 2022-10-12
 
 ### Added
 - distro: dts: add vendor menu with novacustom menu
@@ -910,55 +910,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Initial commit
 - Initial public release
 - Fix README
-
-[2.1.3]: https://github.com/Dasharo/meta-dts/compare/v2.1.2..v2.1.3
-[2.1.2]: https://github.com/Dasharo/meta-dts/compare/v2.1.1..v2.1.2
-[2.1.1]: https://github.com/Dasharo/meta-dts/compare/v2.1.0..v2.1.1
-[2.1.0]: https://github.com/Dasharo/meta-dts/compare/v2.0.1-rc3..v2.1.0
-[2.0.1-rc3]: https://github.com/Dasharo/meta-dts/compare/v2.0.1-rc2..v2.0.1-rc3
-[2.0.1-rc2]: https://github.com/Dasharo/meta-dts/compare/v2.0.1-rc1..v2.0.1-rc2
-[2.0.1-rc1]: https://github.com/Dasharo/meta-dts/compare/v2.0.0..v2.0.1-rc1
-[2.0.0]: https://github.com/Dasharo/meta-dts/compare/v2.0.0-rc7..v2.0.0
-[2.0.0-rc7]: https://github.com/Dasharo/meta-dts/compare/v2.0.0-rc6..v2.0.0-rc7
-[2.0.0-rc6]: https://github.com/Dasharo/meta-dts/compare/v2.0.0-rc5..v2.0.0-rc6
-[2.0.0-rc5]: https://github.com/Dasharo/meta-dts/compare/v2.0.0-rc4..v2.0.0-rc5
-[2.0.0-rc4]: https://github.com/Dasharo/meta-dts/compare/v2.0.0-rc3..v2.0.0-rc4
-[2.0.0-rc3]: https://github.com/Dasharo/meta-dts/compare/v2.0.0-rc2..v2.0.0-rc3
-[2.0.0-rc2]: https://github.com/Dasharo/meta-dts/compare/v2.0.0-rc1..v2.0.0-rc2
-[2.0.0-rc1]: https://github.com/Dasharo/meta-dts/compare/v1.2.23..v2.0.0-rc1
-[1.2.23]: https://github.com/Dasharo/meta-dts/compare/v1.2.22..v1.2.23
-[1.2.22]: https://github.com/Dasharo/meta-dts/compare/v1.2.21..v1.2.22
-[1.2.21]: https://github.com/Dasharo/meta-dts/compare/v1.2.20..v1.2.21
-[1.2.20]: https://github.com/Dasharo/meta-dts/compare/v1.2.20-rc7..v1.2.20
-[1.2.20-rc7]: https://github.com/Dasharo/meta-dts/compare/v1.2.20-rc6..v1.2.20-rc7
-[1.2.20-rc6]: https://github.com/Dasharo/meta-dts/compare/v1.2.20-rc5..v1.2.20-rc6
-[1.2.20-rc5]: https://github.com/Dasharo/meta-dts/compare/v1.2.20-rc4..v1.2.20-rc5
-[1.2.20-rc4]: https://github.com/Dasharo/meta-dts/compare/v1.2.20-rc1..v1.2.20-rc4
-[1.2.20-rc1]: https://github.com/Dasharo/meta-dts/compare/v1.2.19..v1.2.20-rc1
-[1.2.19]: https://github.com/Dasharo/meta-dts/compare/v1.2.19-rc1..v1.2.19
-[1.2.19-rc1]: https://github.com/Dasharo/meta-dts/compare/v1.2.18..v1.2.19-rc1
-[1.2.18]: https://github.com/Dasharo/meta-dts/compare/v1.2.18-rc1..v1.2.18
-[1.2.18-rc1]: https://github.com/Dasharo/meta-dts/compare/v1.2.17..v1.2.18-rc1
-[1.2.17]: https://github.com/Dasharo/meta-dts/compare/v1.2.17-rc4..v1.2.17
-[1.2.17-rc4]: https://github.com/Dasharo/meta-dts/compare/v1.2.17-rc3..v1.2.17-rc4
-[1.2.17-rc3]: https://github.com/Dasharo/meta-dts/compare/v1.2.17-rc2..v1.2.17-rc3
-[1.2.17-rc2]: https://github.com/Dasharo/meta-dts/compare/v1.2.17-rc1..v1.2.17-rc2
-[1.2.17-rc1]: https://github.com/Dasharo/meta-dts/compare/v1.2.16..v1.2.17-rc1
-[1.2.16]: https://github.com/Dasharo/meta-dts/compare/v1.2.16-rc5..v1.2.16
-[1.2.16-rc5]: https://github.com/Dasharo/meta-dts/compare/v1.2.16-rc4..v1.2.16-rc5
-[1.2.16-rc4]: https://github.com/Dasharo/meta-dts/compare/v1.2.16-rc3..v1.2.16-rc4
-[1.2.16-rc3]: https://github.com/Dasharo/meta-dts/compare/v1.2.15..v1.2.16-rc3
-[1.2.15]: https://github.com/Dasharo/meta-dts/compare/v1.2.14..v1.2.15
-[1.2.14]: https://github.com/Dasharo/meta-dts/compare/v1.2.13..v1.2.14
-[1.2.13]: https://github.com/Dasharo/meta-dts/compare/v1.2.12..v1.2.13
-[1.2.12]: https://github.com/Dasharo/meta-dts/compare/v1.2.11..v1.2.12
-[1.2.11]: https://github.com/Dasharo/meta-dts/compare/v1.2.10..v1.2.11
-[1.2.10]: https://github.com/Dasharo/meta-dts/compare/v1.2.9..v1.2.10
-[1.2.9]: https://github.com/Dasharo/meta-dts/compare/v1.2.8..v1.2.9
-[1.2.8]: https://github.com/Dasharo/meta-dts/compare/v1.2.0..v1.2.8
-[1.2.0]: https://github.com/Dasharo/meta-dts/compare/v1.1.1..v1.2.0
-[1.1.1]: https://github.com/Dasharo/meta-dts/compare/v1.1.0..v1.1.1
-[1.1.0]: https://github.com/Dasharo/meta-dts/compare/v1.0.2..v1.1.0
-[1.0.2]: https://github.com/Dasharo/meta-dts/compare/v1.0.1..v1.0.2
 
 <!-- generated by git-cliff -->
