@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSES/Apache-2.0.txt;md5=c846ebb396f8b174b10ded477
 PV = "0.1+git${SRCPV}"
 
 SRC_URI = "git://github.com/Dasharo/dts-scripts;protocol=https;branch=main"
-SRCREV = "f0ff4646942835bd339a4b00769a9daa57b19c0d"
+SRCREV = "094dd338a8075777d2d0c66044723d995a4da4f7"
 
 S = "${WORKDIR}/git"
 
