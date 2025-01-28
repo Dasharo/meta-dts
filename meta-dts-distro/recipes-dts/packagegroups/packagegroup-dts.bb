@@ -24,6 +24,8 @@ RDEPENDS:${PN}-system = " \
     gnupg \
     wget \
     ipxe-commands \
+    msr-tools \
+    bc \
 "
 
 RDEPENDS:${PN}-tests = " \
