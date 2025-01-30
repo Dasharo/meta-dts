@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 2.2.0 - 2025-01-30
+
+### Added
+- dts-scripts: add V560TU Heads support
+
+
+### Changed
+- README.md: update docs.dasharo links
+- README.md: update old information
+- dts-scripts: enhanced logging also fixes Dasharo/dasharo-issues#1165
+- workflow: test.yml: use line buffering with grep
+- distro: dts-scripts: mock sound card in HCL report
+- distro: dts-scripts: HCL should not exit on error
+- CHANGELOG.md: Fix Dasharo/dasharo-issues#1185
+- CHANGELOG.md: Remove links from changelog
+- scripts/generate-changelog.sh: Fix arguments
+- dts-scripts: Change FW access warning to less alarming message
+- meta-dts-distro: packagegroup-dts: Add msr-tools and bc
+- distro: bump to 2.2.0
+
+
+### Fixed
+- distro: dts-scripts: fix DPP message typo
+- distro: dts-scripts: fix DTS Extensions messages
+- distro: dts-scripts: fix DPP access message
+
+
 ## 2.1.3 - 2025-01-03
 
 ### Fixed
