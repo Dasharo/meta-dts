@@ -64,12 +64,12 @@ DEPENDS += "\
     os-release \
     systemd-boot \
     systemd-boot-native \
-    virtual/cross-binutils \
+    binutils-cross-${TARGET_ARCH} \
     virtual/kernel \
+    python3-pefile-native \
 "
 
 inherit image-artifact-names
-require ../conf/image-uefi.conf
 
 INITRAMFS_IMAGE ?= "core-image-minimal-initramfs"
 
@@ -94,12 +94,13 @@ do_uki[depends] += " \
                      "
 do_uki[depends] += "${@ '${INITRAMFS_IMAGE}:do_image_complete' if d.getVar('INITRAMFS_IMAGE') else ''}"
 
-# ensure that the build directory is empty everytime we generate a newly-created uki
+# ensure that the build directory is empty every time we generate a newly-created uki
 do_uki[cleandirs] = "${B}"
 # influence the build directory at the start of the builds
 do_uki[dirs] = "${B}"
 
 # we want to allow specifying files in SRC_URI, such as for signing the UKI
+# nooelint: oelint.task.noanonpython
 python () {
     d.delVarFlag("do_fetch","noexec")
     d.delVarFlag("do_unpack","noexec")
