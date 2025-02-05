@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 2.2.1 - 2025-02-05
+
+### Changed
+- generate-changelog.sh: Add help and remove container after use
+- workflow: change backticks to quotes
+- dts-distro.conf: bump version to 2.2.1
+
+
+### Fixed
+- dts-scripts: fixes failed update when FD/ME is locked on e.g. MSI
+- dts-scripts: fix ODROID-H4 firmware link and initial deployment
+
+
 ## 2.2.0 - 2025-01-30
 
 ### Added
