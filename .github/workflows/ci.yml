@@ -7,7 +7,7 @@ on:
       - '!v*-rc*'
 
 concurrency:
-  group: ${{ github.workflow }}
+  group: run-only-one-workflow
 
 jobs:
   build:
