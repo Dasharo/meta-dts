@@ -52,7 +52,7 @@ jobs:
           DTS_VER_ACTUAL="v$(cat meta-dts/meta-dts-distro/conf/distro/dts-distro.conf | grep DISTRO_VERSION | tr -d "\" [A-Z]_=")"
 
           if [ "${DTS_VER_EXPECTED}" != "${DTS_VER_ACTUAL}" ]; then
-            echo "Tag (${DTS_VER_EXPECTED}) does not match version (${DTS_VER_ACTUAL}) in `meta-dts/meta-dts-distro/conf/distro/dts-distro.conf`"
+            echo "Tag (${DTS_VER_EXPECTED}) does not match version (${DTS_VER_ACTUAL}) in 'meta-dts/meta-dts-distro/conf/distro/dts-distro.conf'"
             exit 1
           fi
       - name: Deploy DTS on boot.dasharo.com
