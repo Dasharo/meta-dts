@@ -10,10 +10,25 @@ concurrency:
   group: run-only-one-workflow
 
 jobs:
-  build:
+  build-uefi-sb:
     uses: ./.github/workflows/build.yml
     with:
       cacheless: false
+      kas-path: meta-dts/kas-uefi-sb.yml
+  move-build-artifacts:
+    needs: build-uefi-sb
+    runs-on:
+      labels: dts-builder
+    steps:
+      - name: Move UEFI SB build artifacts
+        run: |
+          mv build build-sb
+  build:
+    needs: move-build-artifacts
+    uses: ./.github/workflows/build.yml
+    with:
+      cacheless: false
+      kas-path: meta-dts/kas.yml
   deploy-images:
     name: Deploy DTS artifacts on boot.dasharo.com and GitHub Release
     needs: build
@@ -134,4 +149,4 @@ jobs:
           rm -rf ~/.ssh/dts-ci-key
           rm -rf dts-release-cicd-pipeline
           rm -f ~/.ssh/gitea_dts_release_cicd
-          rm -rf build meta-dts
+          rm -rf build build-sb meta-dts
