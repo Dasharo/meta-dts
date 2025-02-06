@@ -74,6 +74,11 @@ jobs:
             dpp_logs_key: $PCENGINES_LOGS
             log_file: output_pcengines_seabios.log
 
+          - test: odroid_dpp
+            dpp_download_key: $ODROID_DOWNLOAD
+            dpp_logs_key: $ODROID_LOGS
+            log_file: output_odroid_dpp.log
+
     steps:
       - name: Run IPXE server
         shell: bash
