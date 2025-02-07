@@ -9,12 +9,25 @@ concurrency:
   group: run-only-one-workflow
 
 jobs:
+  build-uefi-sb:
+    uses: ./.github/workflows/build.yml
+    with:
+      cacheless: true
+      kas-path: meta-dts/kas-uefi-sb.yml
+  move-build-artifacts:
+    needs: build-uefi-sb
+    runs-on:
+      labels: dts-builder
+    steps:
+      - name: Move UEFI SB build artifacts
+        run: |
+          mv build build-sb
   build:
+    needs: move-build-artifacts
     uses: ./.github/workflows/build.yml
     with:
       cacheless: true
       kas-path: meta-dts/kas.yml
-
   deploy-cache:
     name: Deploy cache on cache.dasharo.com
     needs: build
@@ -32,11 +45,14 @@ jobs:
         shell: bash
         run: |
           ssh -i ~/.ssh/dts-ci-key builder@10.1.40.2 "mkdir -p cache/yocto/dts"
+          ssh -i ~/.ssh/dts-ci-key builder@10.1.40.2 "mkdir -p cache/yocto/dts/dts-uefi-sb"
           rsync -P -e "ssh -i ~/.ssh/dts-ci-key" -rlptD --delete build/sstate-cache builder@10.1.40.2:cache/yocto/dts
+          rsync -P -e "ssh -i ~/.ssh/dts-ci-key" -rlptD --delete build-sb/sstate-cache builder@10.1.40.2:cache/yocto/dts/dts-uefi-sb
       - name: Send downloads folder to cache.dasharo.com
         shell: bash
         run: |
           rsync -P -e "ssh -i ~/.ssh/dts-ci-key" -rlptD --delete build/downloads builder@10.1.40.2:cache/yocto/dts
+          rsync -P -e "ssh -i ~/.ssh/dts-ci-key" -rlptD --delete build-sb/downloads builder@10.1.40.2:cache/yocto/dts/dts-uefi-sb
   cleanup:
     name: Cleanup
     if: always()
@@ -48,4 +64,4 @@ jobs:
         shell: bash
         run: |
           rm -rf ~/.ssh/dts-ci-key
-          rm -rf build
+          rm -rf build build-sb
