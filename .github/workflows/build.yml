@@ -6,6 +6,9 @@ on:
       cacheless:
         type: boolean
         required: true
+      kas-path:
+        type: string
+        required: true
 
 jobs:
   build:
@@ -22,13 +25,13 @@ jobs:
         if: ${{ inputs.cacheless }}
         shell: bash
         run: |
-          sed -i '/cache.yml/d' meta-dts/kas.yml
+          sed -i '/cache.yml/d' "${{ inputs.kas-path }}"
       - name: Build DTS image
         shell: bash
         id: build_image
         run: |
           for attempt in {1..5}; do
-            if kas-container build meta-dts/kas.yml; then
+            if kas-container build "${{ inputs.kas-path }}"; then
               echo "Build command succeeded on attempt $attempt"
               break
             else
