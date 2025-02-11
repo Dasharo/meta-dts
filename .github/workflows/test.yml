@@ -9,8 +9,24 @@ concurrency:
   group: run-only-one-workflow
 
 jobs:
+  build-uefi-sb:
+    uses: ./.github/workflows/build.yml
+    with:
+      cacheless: false
+      kas-path: meta-dts/kas-uefi-sb.yml
+
+  remove-build:
+    needs: build-uefi-sb
+    runs-on:
+      labels: dts-builder
+    steps:
+      - name: Remove build directory after UEFI SB build
+        run: |
+          rm -rf build
+
   build-dts:
     uses: ./.github/workflows/build.yml
+    needs: remove-build
     with:
       cacheless: false
       kas-path: meta-dts/kas.yml
