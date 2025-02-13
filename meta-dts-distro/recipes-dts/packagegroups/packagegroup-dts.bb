@@ -26,6 +26,14 @@ RDEPENDS:${PN}-system = " \
     ipxe-commands \
     msr-tools \
     bc \
+    sbsigntool \
+    pesign \
+    util-linux-libuuid \
+    efibootmgr \
+    rsync \
+    tree \
+    util-linux \
+    sbctl \
 "
 
 RDEPENDS:${PN}-tests = " \
