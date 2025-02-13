@@ -5,6 +5,8 @@ LICENSE = "MIT"
 
 inherit packagegroup
 
+PACKAGE_ARCH = "${TUNE_PKGARCH}"
+
 PACKAGES = " \
     ${PN}-python \
     ${PN}-system \
