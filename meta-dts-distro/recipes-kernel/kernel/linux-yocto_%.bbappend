@@ -22,5 +22,8 @@ SRC_URI:append = " \
     file://exfat-enable.cfg \
 "
 
+KBRANCH = "v6.12/standard/base"
+SRCREV_machine = "c58d3ea5bbce394208d8099e9d6783bb0a0ddd25"
+
 KERNEL_FEATURES:remove:x86 = " ${@bb.utils.contains('DISTRO_FEATURES', 'efi-secure-boot', '${efi_secure_boot_sccs}', '', d)}"
 KERNEL_FEATURES:remove:x86-64 = " ${@bb.utils.contains('DISTRO_FEATURES', 'efi-secure-boot', '${efi_secure_boot_sccs}', '', d)}"
