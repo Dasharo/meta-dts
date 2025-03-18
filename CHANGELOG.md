@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 2.3.0 - 2025-03-19
+
+### Added
+- dts-scripts: Add Heads FW to V540TU
+- CHANGELOG: Add notes for v2.3.0
+
+
+### Changed
+- .github/workflows: Build DTS from kas-uefi-sb.yml
+- Use separate cache for kas-uefi-sb + build kas-uefi-sb in weekly workflow
+- .github/workflows/test.yml: Build from kas-uefi-sb.yml
+- recipes=bsp/grub/grub-efi-efi-custom.inc: Force do_deploy execution
+- distro: dts-scripts: Hide DPP credentials
+- dts-scripts: Initialize _check_dwn_req_resp_uefi_cap
+- dts-distro.conf: bump version to 2.3.0
+- cliff.toml: Allow parsing keywords starting with uppercase letters
+
+
+### Fixed
+- distro: dts-scripts: Fix double ME warning
+
+
 ## 2.2.1 - 2025-02-05
 
 ### Changed
