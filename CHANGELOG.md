@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 - distro: dts-scripts: Fix double ME warning
+- dts-scripts: Fix Intel SINIT ACM download
 
 
 ## 2.2.1 - 2025-02-05
