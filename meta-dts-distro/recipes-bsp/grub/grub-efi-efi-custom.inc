@@ -13,3 +13,5 @@ do_deploy:append () {
     # see: https://git.yoctoproject.org/poky/tree/scripts/lib/wic/plugins/source/bootimg-efi.py?id=00c04394cbc5ecaced7cc1bc8bc8787e621f987d#n360
     rm -rf ${DEPLOYDIR}/${GRUB_IMAGE_PREFIX}${GRUB_IMAGE}
 }
+
+do_deploy[nostamp] = "1"

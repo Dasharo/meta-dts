@@ -23,3 +23,7 @@ repos:
   meta-openembedded:
     layers:
       meta-perl:
+
+local_conf_header:
+  yocto-cache-uefi-sb: |
+      PROJECT_NAME = "yocto/dts/dts-uefi-sb"
