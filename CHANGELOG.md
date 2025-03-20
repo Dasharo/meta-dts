@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## 2.3.0 - 2025-03-19
+## 2.3.0 - 2025-03-20
 
 ### Added
 - dts-scripts: Add Heads FW to V540TU
@@ -20,6 +20,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - dts-scripts: Initialize _check_dwn_req_resp_uefi_cap
 - dts-distro.conf: bump version to 2.3.0
 - cliff.toml: Allow parsing keywords starting with uppercase letters
+- dts-scripts: Download SINIT ACM from dl.3mdeb.com
 
 
 ### Fixed
