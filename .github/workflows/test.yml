@@ -47,55 +47,6 @@ jobs:
     needs: [checkout-osfv, build-dts]
     runs-on:
       labels: dts-builder
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - test: msi_comm
-            dpp_download_key: $MSI_DOWNLOAD
-            dpp_logs_key: $MSI_LOGS
-            log_file: output_msi.log
-
-          - test: msi_dpp
-            dpp_download_key: $MSI_DOWNLOAD
-            dpp_logs_key: $MSI_LOGS
-            log_file: output_msi.log
-
-          - test: msi_heads
-            dpp_download_key: $MSI_HEADS_DOWNLOAD
-            dpp_logs_key: $MSI_HEADS_LOGS
-            log_file: output_msi_heads.log
-
-          - test: optiplex_dpp
-            dpp_download_key: $OPTIPLEX_DOWNLOAD
-            dpp_logs_key: $OPTIPLEX_LOGS
-            log_file: output_nc_heads.log
-
-          - test: novacustom_heads
-            dpp_download_key: $NOVACUSTOM_HEADS_DOWNLOAD
-            dpp_logs_key: $NOVACUSTOM_HEADS_LOGS
-            log_file: output_nc_heads.log
-
-          - test: novacustom_comm
-            dpp_download_key: $NOVACUSTOM_HEADS_DOWNLOAD
-            dpp_logs_key: $NOVACUSTOM_HEADS_LOGS
-            log_file: output_nc_comm.log
-
-          - test: pcengines_dpp
-            dpp_download_key: $PCENGINES_DOWNLOAD
-            dpp_logs_key: $PCENGINES_LOGS
-            log_file: output_pcengines.log
-
-          - test: pcengines_seabios
-            dpp_download_key: $PCENGINES_SEABIOS_DOWNLOAD
-            dpp_logs_key: $PCENGINES_LOGS
-            log_file: output_pcengines_seabios.log
-
-          - test: odroid_dpp
-            dpp_download_key: $ODROID_DOWNLOAD
-            dpp_logs_key: $ODROID_LOGS
-            log_file: output_odroid_dpp.log
-
     steps:
       - name: Run IPXE server
         shell: bash
@@ -127,11 +78,11 @@ jobs:
         shell: bash
         id: create_log_dirs
         run: |
-          LOG_DIR="/tmp/dts-test-ci-${{ github.run_id }}/${{ matrix.test }}"
+          LOG_DIR="/tmp/dts-test-ci-${{ github.run_id }}"
           mkdir -p $LOG_DIR
           echo "LOG_DIR=$LOG_DIR" >> $GITHUB_ENV
 
-      - name: Run ${{ matrix.test }}
+      - name: Run tests
         shell: bash
         run: |
           cd open-source-firmware-validation
@@ -139,34 +90,29 @@ jobs:
           # This file is already present on dts-builder.
           # It contains credentials for DPP subscriptions.
           # It has the following form:
+          # DPP_EMAIL="..."
           # DPP_PASSWORD="..."
-          # <SUBSCRIPTION_TYPE>_DOWNLOADS="download key"
-          # <SUBSCRIPTION_TYPE>_LOGS="logs key"
-          # (...)
-          source ~/.secrets/dpp-keys
+          source ~/.secrets/dpp-keys-minio
           ip_addr=$(ip -o -4 addr list eno2 | awk '{print $4}' | cut -d/ -f1)
 
-          echo "::add-mask::${{matrix.dpp_download_key}}"
-          echo "::add-mask::${{matrix.dpp_logs_key}}"
+          echo "::add-mask::$DPP_EMAIL"
           echo "::add-mask::$DPP_PASSWORD"
 
           RTE_IP="127.0.0.1" CONFIG="qemu" ./scripts/run.sh dts/dts-e2e.robot -- \
             -L TRACE \
             -v snipeit:no \
+            -v dpp_email:$DPP_EMAIL \
             -v dpp_password:$DPP_PASSWORD \
-            -v dpp_download_key:${{matrix.dpp_download_key}} \
-            -v dpp_logs_key:"${{matrix.dpp_logs_key}}" \
             -v boot_dts_from_ipxe_shell:True \
-            -v dts_ipxe_link:http://${ip_addr}:4321/dts.ipxe \
-            -i ${{ matrix.test }} 2>&1 \
-            | tee ${{ env.LOG_DIR }}/${{ matrix.log_file }} | grep --line-buffered "| PASS |\|| FAIL |"
+            -v dts_ipxe_link:http://${ip_addr}:4321/dts.ipxe 2>&1 \
+            | tee ${{ env.LOG_DIR }}/dts-tests.log | grep --line-buffered "| PASS |\|| FAIL |"
 
       - name: Copy log
         shell: bash
         if: ${{ !cancelled() }}
         run: |
           cd open-source-firmware-validation
-          find logs -type f -name "*log.html" -exec mv {} "${{ env.LOG_DIR }}/${{ matrix.test }}_log.html" \;
+          find logs -type f -name "*log.html" -exec mv {} "${{ env.LOG_DIR }}/dts-tests_log.html" \;
 
   cleanup:
     name: Cleanup
