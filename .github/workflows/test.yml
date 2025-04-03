@@ -40,7 +40,7 @@ jobs:
           repository: "Dasharo/open-source-firmware-validation"
           path: "open-source-firmware-validation"
           submodules: "recursive"
-          ref: "develop"
+          ref: "add-dts-update-tests"
 
   run-tests:
     name: Run DTS tests
