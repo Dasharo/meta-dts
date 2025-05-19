@@ -53,6 +53,7 @@ RDEPENDS:${PN}-tools-dts = " \
     bg-suite \
     dasharo-configuration-utility \
     dts-scripts \
+    novacustom-binary \
 "
 
 RDEPENDS:${PN}-python = " \
