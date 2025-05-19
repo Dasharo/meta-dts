@@ -2,7 +2,7 @@ SUMMARY = "A package that provides Dasharo firmware for Novacustom V54/56 14th G
 
 HOMEPAGE = "https://dasharo.com/"
 
-LICENSE="GPL-2.0-only & GPL-3.0-only"
+LICENSE = "GPL-2.0-only & GPL-3.0-only"
 
 LIC_FILES_CHKSUM = " \
     file://LICENSE;md5=1ebbd3e34237af26da5dc08a4e440464 \

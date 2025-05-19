@@ -63,7 +63,9 @@ repos:
     hooks:
       - id: namespell
         args: [--fix]
-        exclude: meta-dts-distro/recipes-tests/converged-security-suite/bg-suite/bg-suite
+        exclude: |
+          meta-dts-distro/recipes-tests/converged-security-suite/bg-suite/bg-suite|
+          meta-dts-distro/recipes-dts/novacustom-binary/novacustom-binary/
 ci:
   autoupdate_commit_msg: 'pre-commit: autoupdate hooks'
   autofix_prs: false
