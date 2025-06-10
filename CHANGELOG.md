@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 2.5.0 - 2025-06-10
+
+### Changed
+- kas/common.yml: bump meta-dasharo for updated dasharo_ectool
+- dts-scripts: use external board_config repository
+- kas/common.yml: Bump meta-coreboot revision
+- dts-distro.conf: bump version to 2.5.0
+
+
 ## 2.4.0 - 2025-03-31
 
 ### Changed
