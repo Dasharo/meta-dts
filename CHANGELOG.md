@@ -6,11 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## 2.5.0 - 2025-06-10
 
+### Added
+- CHANGELOG: add notes for v2.5.0
+
+
 ### Changed
 - kas/common.yml: bump meta-dasharo for updated dasharo_ectool
 - dts-scripts: use external board_config repository
 - kas/common.yml: Bump meta-coreboot revision
 - dts-distro.conf: bump version to 2.5.0
+- dts-scripts: Quick fix for parsing configs
 
 
 ## 2.4.0 - 2025-03-31
