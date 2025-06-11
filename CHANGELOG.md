@@ -4,18 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## 2.5.0 - 2025-06-10
+## 2.5.0 - 2025-06-11
 
 ### Added
 - CHANGELOG: add notes for v2.5.0
+- distro: dts-scripts: add SeaBIOS support
 
 
 ### Changed
 - kas/common.yml: bump meta-dasharo for updated dasharo_ectool
-- dts-scripts: use external board_config repository
+- dts-scripts: Use external board_config repository. DTS releases are no longer
+  needed after new Dasharo release.
 - kas/common.yml: Bump meta-coreboot revision
 - dts-distro.conf: bump version to 2.5.0
-- dts-scripts: Quick fix for parsing configs
 
 
 ## 2.4.0 - 2025-03-31
