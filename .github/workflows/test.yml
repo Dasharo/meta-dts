@@ -73,6 +73,13 @@ jobs:
           mkdir -p qemu-data
           touch qemu-data/hdd.qcow2
           ./qemu-run.sh nographic os &
+          for _ in {1..60}; do
+            sleep 1
+            if [ -f /tmp/qemu-pid ]; then
+              exit 0
+            fi
+          done
+          exit 1
 
       - name: Create directory for logs
         shell: bash
