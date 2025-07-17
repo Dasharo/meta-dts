@@ -10,7 +10,7 @@ concurrency:
 
 jobs:
   build-uefi-sb:
-    uses: ./.github/workflows/build.yml
+    uses: Dasharo/meta-dts/.github/workflows/build.yml@refs/heads/develop
     with:
       cacheless: true
       kas-path: meta-dts/kas-uefi-sb.yml
@@ -24,7 +24,7 @@ jobs:
           mv build build-sb
   build:
     needs: move-build-artifacts
-    uses: ./.github/workflows/build.yml
+    uses: Dasharo/meta-dts/.github/workflows/build.yml@refs/heads/develop
     with:
       cacheless: true
       kas-path: meta-dts/kas.yml
