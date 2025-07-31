@@ -10,10 +10,11 @@ concurrency:
 
 jobs:
   build-uefi-sb:
-    uses: Dasharo/meta-dts/.github/workflows/build.yml@refs/heads/develop
+    uses: Dasharo/meta-dts/.github/workflows/build.yml
     with:
       cacheless: true
       kas-path: meta-dts/kas-uefi-sb.yml
+      ref: develop
   move-build-artifacts:
     needs: build-uefi-sb
     runs-on:
@@ -24,10 +25,11 @@ jobs:
           mv build build-sb
   build:
     needs: move-build-artifacts
-    uses: Dasharo/meta-dts/.github/workflows/build.yml@refs/heads/develop
+    uses: Dasharo/meta-dts/.github/workflows/build.yml
     with:
       cacheless: true
       kas-path: meta-dts/kas.yml
+      ref: develop
   deploy-cache:
     name: Deploy cache on cache.dasharo.com
     needs: build
