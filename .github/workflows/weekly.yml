@@ -10,11 +10,13 @@ concurrency:
 
 jobs:
   build-uefi-sb:
-    uses: Dasharo/meta-dts/.github/workflows/build.yml
+    uses: ./.github/workflows/build.yml
     with:
       cacheless: true
       kas-path: meta-dts/kas-uefi-sb.yml
       ref: develop
+      nightly: true
+
   move-build-artifacts:
     needs: build-uefi-sb
     runs-on:
@@ -23,13 +25,16 @@ jobs:
       - name: Move UEFI SB build artifacts
         run: |
           mv build build-sb
+
   build:
     needs: move-build-artifacts
-    uses: Dasharo/meta-dts/.github/workflows/build.yml
+    uses: ./.github/workflows/build.yml
     with:
       cacheless: true
       kas-path: meta-dts/kas.yml
       ref: develop
+      nightly: true
+
   deploy-cache:
     name: Deploy cache on cache.dasharo.com
     needs: build
@@ -55,12 +60,18 @@ jobs:
         run: |
           rsync -P -e "ssh -i ~/.ssh/dts-ci-key" -rlptD --delete build/downloads builder@10.1.40.2:cache/yocto/dts
           rsync -P -e "ssh -i ~/.ssh/dts-ci-key" -rlptD --delete build-sb/downloads builder@10.1.40.2:cache/yocto/dts/dts-uefi-sb
+
   deploy-nightly-images:
     name: Deploy nightly DTS artifacts on boot.dasharo.com
     needs: build
     runs-on:
       labels: dts-builder
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+          fetch-depth: 1
       - name: Prepare SSH key
         shell: bash
         env:
@@ -68,42 +79,22 @@ jobs:
         run: |
           echo -e ${SSH_KEY} > ~/.ssh/dts-ci-key
           chmod 600 ~/.ssh/dts-ci-key
-      - name: Get timestamp for nightly build
-        id: nightly-ver
-        shell: bash
-        run: |
-          NIGHTLY_VER=$(date +"%Y-%m-%d-%H-%M")
-          echo "NIGHTLY_VER=${NIGHTLY_VER}" >> $GITHUB_ENV
       - name: Deploy DTS on boot.dasharo.com
         shell: bash
         run: |
-          NIGHTLY_VER="${{ env.NIGHTLY_VER }}"
-          ssh -i ~/.ssh/dts-ci-key builder@10.1.40.2 "mkdir -p boot/dts/nightly/${NIGHTLY_VER}"
           cd build/tmp/deploy/images/genericx86-64/
-          cp bzImage bzImage-${NIGHTLY_VER}
-          cp dts-base-image-genericx86-64.cpio.gz dts-base-image-${NIGHTLY_VER}.cpio.gz
-          cp dts-base-image-genericx86-64.wic.gz dts-base-image-${NIGHTLY_VER}.wic.gz
-          cp dts-base-image-genericx86-64.wic.bmap dts-base-image-${NIGHTLY_VER}.wic.bmap
-          scp -i ~/.ssh/dts-ci-key bzImage-${NIGHTLY_VER} builder@10.1.40.2:boot/dts/nightly/${NIGHTLY_VER}/
-          scp -i ~/.ssh/dts-ci-key dts-base-image-${NIGHTLY_VER}.cpio.gz builder@10.1.40.2:boot/dts/nightly/${NIGHTLY_VER}/
-          scp -i ~/.ssh/dts-ci-key dts-base-image-${NIGHTLY_VER}.wic.gz builder@10.1.40.2:boot/dts/nightly/${NIGHTLY_VER}/
-          scp -i ~/.ssh/dts-ci-key dts-base-image-${NIGHTLY_VER}.wic.bmap builder@10.1.40.2:boot/dts/nightly/${NIGHTLY_VER}/
-      - name: Deploy manifest and sha256
+          scp -i ~/.ssh/dts-ci-key bzImage builder@10.1.40.2:boot/dts/nightly/
+          scp -i ~/.ssh/dts-ci-key dts-base-image-genericx86-64.cpio.gz builder@10.1.40.2:boot/dts/nightly/dts-base-image.cpio.gz
+      - name: Update nightly.ipxe variables
         shell: bash
+        env:
+          DTS_SCRIPTS_HASH_FROM_BUILD: ${{ needs.build.outputs.dts_scripts_hash_output }}
         run: |
-          NIGHTLY_VER="${{ env.NIGHTLY_VER }}"
-          cd build/tmp/deploy/images/genericx86-64/
-          cp dts-base-image-genericx86-64.manifest dts-base-image-${NIGHTLY_VER}.manifest
-          sha256sum bzImage-${NIGHTLY_VER} > bzImage-${NIGHTLY_VER}.sha256
-          sha256sum dts-base-image-${NIGHTLY_VER}.cpio.gz > dts-base-image-${NIGHTLY_VER}.cpio.gz.sha256
-          sha256sum dts-base-image-${NIGHTLY_VER}.wic.gz > dts-base-image-${NIGHTLY_VER}.wic.gz.sha256
-          sha256sum dts-base-image-${NIGHTLY_VER}.wic.bmap > dts-base-image-${NIGHTLY_VER}.wic.bmap.sha256
-          sha256sum dts-base-image-${NIGHTLY_VER}.manifest > dts-base-image-${NIGHTLY_VER}.manifest.sha256
-          scp -i ~/.ssh/dts-ci-key bzImage-${NIGHTLY_VER}.sha256 builder@10.1.40.2:boot/dts/nightly/${NIGHTLY_VER}/
-          scp -i ~/.ssh/dts-ci-key dts-base-image-${NIGHTLY_VER}.cpio.gz.sha256 builder@10.1.40.2:boot/dts/nightly/${NIGHTLY_VER}/
-          scp -i ~/.ssh/dts-ci-key dts-base-image-${NIGHTLY_VER}.wic.gz.sha256 builder@10.1.40.2:boot/dts/nightly/${NIGHTLY_VER}/
-          scp -i ~/.ssh/dts-ci-key dts-base-image-${NIGHTLY_VER}.wic.bmap.sha256 builder@10.1.40.2:boot/dts/nightly/${NIGHTLY_VER}/
-          scp -i ~/.ssh/dts-ci-key dts-base-image-${NIGHTLY_VER}.manifest.sha256 builder@10.1.40.2:boot/dts/nightly/${NIGHTLY_VER}/
+          META_DTS_REVISION_VALUE=$(git rev-parse HEAD)
+          DTS_SCRIPTS_VERSION_VALUE="${DTS_SCRIPTS_HASH_FROM_BUILD}"
+          ssh -i ~/.ssh/dts-ci-key builder@10.1.40.2 "sed -i 's/^set META_DTS_REVISION .*$/set META_DTS_REVISION ${META_DTS_REVISION_VALUE}/' boot/dts/nightly/nightly.ipxe"
+          ssh -i ~/.ssh/dts-ci-key builder@10.1.40.2 "sed -i 's/^set DTS_SCRIPTS_VERSION .*$/set DTS_SCRIPTS_VERSION ${DTS_SCRIPTS_VERSION_VALUE}/' boot/dts/nightly/nightly.ipxe"
+
   cleanup:
     name: Cleanup
     if: always()
