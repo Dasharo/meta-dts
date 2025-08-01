@@ -13,6 +13,14 @@ on:
         type: string
         required: false
         default: ${{ github.sha }}
+      nightly:
+        type: boolean
+        required: false
+        default: false
+    outputs:
+      dts_scripts_hash_output:
+        description: "Hash of dts-scripts main branch used for SRCREV"
+        value: ${{ jobs.build.outputs.dts_scripts_hash_nightly }}
 
 jobs:
   build:
@@ -20,12 +28,32 @@ jobs:
       labels: dts-builder
     env:
       FAILED_ATTEMPTS: 0
+    outputs:
+      dts_scripts_hash_nightly:
+        value: ${{ steps.set_dts_scripts_hash_output.outputs.hash }}
     steps:
       - name: Checkout meta-dts repo
         uses: actions/checkout@v4
         with:
           path: "meta-dts"
           ref: ${{ inputs.ref }}
+      - name: Prepare nightly SRCREV
+        if: ${{ inputs.nightly == true }}
+        id: set_dts_scripts_hash_output
+        shell: bash
+        run: |
+          git clone --depth 1 https://github.com/Dasharo/dts-scripts dts-scripts-tmp
+          DTS_SCRIPTS_HASH=$(cd dts-scripts-tmp && git rev-parse HEAD)
+          echo "hash=${DTS_SCRIPTS_HASH}" >> $GITHUB_OUTPUT
+          rm -rf dts-scripts-tmp
+          FILE_PATH="meta-dts/meta-dts-distro/recipes-dts/dts-scripts/dts-scripts_git.bb"
+          if [ -f "$FILE_PATH" ]; then
+            sed -i "s/^SRCREV = \".*\"/SRCREV = \"${DTS_SCRIPTS_HASH}\"/" "$FILE_PATH"
+            echo "Updated SRCREV in $FILE_PATH to ${DTS_SCRIPTS_HASH}"
+          else
+            echo "Error: File $FILE_PATH not found. Cannot update SRCREV."
+            exit 1
+          fi
       - name: Prepare cache-less build configuration
         if: ${{ inputs.cacheless }}
         shell: bash
