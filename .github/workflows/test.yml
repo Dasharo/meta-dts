@@ -60,7 +60,7 @@ jobs:
         run: |
           cd open-source-firmware-validation
           if [ ! -d "venv" ]; then
-            python3 -m venv venv
+            python3.13 -m venv venv
           fi
           source venv/bin/activate
           pip install -r requirements.txt
@@ -72,7 +72,7 @@ jobs:
           cd open-source-firmware-validation/scripts/ci
           mkdir -p qemu-data
           touch qemu-data/hdd.qcow2
-          ./qemu-run.sh nographic os &
+          ./qemu-run.sh nographic os --no-audio-emulation &
           for _ in {1..60}; do
             sleep 1
             if [ -f /tmp/qemu-pid ]; then
