@@ -102,7 +102,9 @@ jobs:
           source ~/.secrets/dpp-keys-minio
           ip_addr=$(ip -o -4 addr list eno2 | awk '{print $4}' | cut -d/ -f1)
           DTS_CONFIG_REF="refs/heads/develop"
+          DTS_CONFIG_HASH=$(git ls-remote https://github.com/Dasharo/dts-configs.git "${DTS_CONFIG_REF}" | awk '{print $1}')
 
+          echo "Using DTS config hash: ${DTS_CONFIG_HASH}"
           echo "::add-mask::$DPP_EMAIL"
           echo "::add-mask::$DPP_PASSWORD"
 
