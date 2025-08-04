@@ -29,8 +29,7 @@ jobs:
     env:
       FAILED_ATTEMPTS: 0
     outputs:
-      dts_scripts_hash_nightly:
-        value: ${{ steps.set_dts_scripts_hash_output.outputs.hash }}
+      dts_scripts_hash_nightly: ${{ steps.set_dts_scripts_hash_output.outputs.hash }}
     steps:
       - name: Checkout meta-dts repo
         uses: actions/checkout@v4

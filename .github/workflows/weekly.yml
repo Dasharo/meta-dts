@@ -72,6 +72,7 @@ jobs:
         with:
           ref: develop
           fetch-depth: 1
+          path: "meta-dts"
       - name: Prepare SSH key
         shell: bash
         env:
@@ -90,7 +91,7 @@ jobs:
         env:
           DTS_SCRIPTS_HASH_FROM_BUILD: ${{ needs.build.outputs.dts_scripts_hash_output }}
         run: |
-          META_DTS_REVISION_VALUE=$(git rev-parse HEAD)
+          META_DTS_REVISION_VALUE=$(cd meta-dts && git rev-parse HEAD)
           DTS_SCRIPTS_VERSION_VALUE="${DTS_SCRIPTS_HASH_FROM_BUILD}"
           ssh -i ~/.ssh/dts-ci-key builder@10.1.40.2 "sed -i 's/^set META_DTS_REVISION .*$/set META_DTS_REVISION ${META_DTS_REVISION_VALUE}/' boot/dts/nightly/nightly.ipxe"
           ssh -i ~/.ssh/dts-ci-key builder@10.1.40.2 "sed -i 's/^set DTS_SCRIPTS_VERSION .*$/set DTS_SCRIPTS_VERSION ${DTS_SCRIPTS_VERSION_VALUE}/' boot/dts/nightly/nightly.ipxe"
@@ -98,7 +99,7 @@ jobs:
   cleanup:
     name: Cleanup
     if: always()
-    needs: deploy-nightly-images
+    needs: [deploy-cache, deploy-nightly-images]
     runs-on:
       labels: dts-builder
     steps:
