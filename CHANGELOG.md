@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 2.6.0 - 2025-08-06
+
+### Added
+- docs: testing.md: add DTS end to end testing methodology
+- dts-scripts: add DTS end to end tests profile generation, fix HCL report and
+  password indent
+- Add Dasharo (Slim Bootloader+UEFI) for Hardkernel Odroid H4: initial
+  deployment and transition
+
+
+### Changed
+- HCL report: Fix empty lspci and lsusb in HCL report
+- scripts: add remote-update and run-qemu scripts
+- Add ability to use another ref for dts-configs
+- Add DTS nightly builds
+
+
+### Fixed
+- test workflow: fix by waiting for QEMU to start before continuing, fix SeaBIOS
+  payload detection mocking
+
+
 ## 2.5.0 - 2025-06-11
 
 ### Added
