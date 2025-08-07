@@ -14,6 +14,9 @@ jobs:
     with:
       cacheless: true
       kas-path: meta-dts/kas-uefi-sb.yml
+      ref: develop
+      nightly: true
+
   move-build-artifacts:
     needs: build-uefi-sb
     runs-on:
@@ -22,12 +25,16 @@ jobs:
       - name: Move UEFI SB build artifacts
         run: |
           mv build build-sb
+
   build:
     needs: move-build-artifacts
     uses: ./.github/workflows/build.yml
     with:
       cacheless: true
       kas-path: meta-dts/kas.yml
+      ref: develop
+      nightly: true
+
   deploy-cache:
     name: Deploy cache on cache.dasharo.com
     needs: build
@@ -53,10 +60,46 @@ jobs:
         run: |
           rsync -P -e "ssh -i ~/.ssh/dts-ci-key" -rlptD --delete build/downloads builder@10.1.40.2:cache/yocto/dts
           rsync -P -e "ssh -i ~/.ssh/dts-ci-key" -rlptD --delete build-sb/downloads builder@10.1.40.2:cache/yocto/dts/dts-uefi-sb
+
+  deploy-nightly-images:
+    name: Deploy nightly DTS artifacts on boot.dasharo.com
+    needs: build
+    runs-on:
+      labels: dts-builder
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: develop
+          fetch-depth: 1
+          path: "meta-dts"
+      - name: Prepare SSH key
+        shell: bash
+        env:
+          SSH_KEY: ${{secrets.SSH_KEY}}
+        run: |
+          echo -e ${SSH_KEY} > ~/.ssh/dts-ci-key
+          chmod 600 ~/.ssh/dts-ci-key
+      - name: Deploy DTS on boot.dasharo.com
+        shell: bash
+        run: |
+          cd build/tmp/deploy/images/genericx86-64/
+          scp -i ~/.ssh/dts-ci-key bzImage builder@10.1.40.2:boot/dts/nightly/
+          scp -i ~/.ssh/dts-ci-key dts-base-image-genericx86-64.cpio.gz builder@10.1.40.2:boot/dts/nightly/dts-base-image.cpio.gz
+      - name: Update nightly.ipxe variables
+        shell: bash
+        env:
+          DTS_SCRIPTS_HASH_FROM_BUILD: ${{ needs.build.outputs.dts_scripts_hash_output }}
+        run: |
+          META_DTS_REVISION_VALUE=$(cd meta-dts && git rev-parse HEAD)
+          DTS_SCRIPTS_VERSION_VALUE="${DTS_SCRIPTS_HASH_FROM_BUILD}"
+          ssh -i ~/.ssh/dts-ci-key builder@10.1.40.2 "sed -i 's/^set meta_dts_version.*/set meta_dts_version ${META_DTS_REVISION_VALUE}/' boot/dts/nightly.ipxe"
+          ssh -i ~/.ssh/dts-ci-key builder@10.1.40.2 "sed -i 's/^set dts_scripts_version.*/set dts_scripts_version ${DTS_SCRIPTS_VERSION_VALUE}/' boot/dts/nightly.ipxe"
+
   cleanup:
     name: Cleanup
     if: always()
-    needs: deploy-cache
+    needs: [deploy-cache, deploy-nightly-images]
     runs-on:
       labels: dts-builder
     steps:

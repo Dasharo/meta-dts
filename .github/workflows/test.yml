@@ -60,7 +60,7 @@ jobs:
         run: |
           cd open-source-firmware-validation
           if [ ! -d "venv" ]; then
-            python3 -m venv venv
+            python3.13 -m venv venv
           fi
           source venv/bin/activate
           pip install -r requirements.txt
@@ -72,7 +72,14 @@ jobs:
           cd open-source-firmware-validation/scripts/ci
           mkdir -p qemu-data
           touch qemu-data/hdd.qcow2
-          ./qemu-run.sh nographic os &
+          ./qemu-run.sh nographic os --no-audio-emulation &
+          for _ in {1..60}; do
+            sleep 1
+            if [ -f /tmp/qemu-pid ]; then
+              exit 0
+            fi
+          done
+          exit 1
 
       - name: Create directory for logs
         shell: bash
@@ -94,7 +101,10 @@ jobs:
           # DPP_PASSWORD="..."
           source ~/.secrets/dpp-keys-minio
           ip_addr=$(ip -o -4 addr list eno2 | awk '{print $4}' | cut -d/ -f1)
+          DTS_CONFIG_REF="refs/heads/develop"
+          DTS_CONFIG_HASH=$(git ls-remote https://github.com/Dasharo/dts-configs.git "${DTS_CONFIG_REF}" | awk '{print $1}')
 
+          echo "Using DTS config hash: ${DTS_CONFIG_HASH}"
           echo "::add-mask::$DPP_EMAIL"
           echo "::add-mask::$DPP_PASSWORD"
 
@@ -104,6 +114,7 @@ jobs:
             -v dpp_email:$DPP_EMAIL \
             -v dpp_password:$DPP_PASSWORD \
             -v boot_dts_from_ipxe_shell:True \
+            -v dts_config_ref:"${DTS_CONFIG_REF}" \
             -v dts_ipxe_link:http://${ip_addr}:4321/dts.ipxe 2>&1 \
             | tee ${{ env.LOG_DIR }}/dts-tests.log | grep --line-buffered "| PASS |\|| FAIL |"
 
