@@ -20,7 +20,10 @@ BINARIES = " \
     novacustom_v5x0_mtl/novacustom_mtl_igpu/novacustom_v560tu_mtl/uefi/v1.0.0/novacustom_v56x_mtl_igpu_ec_v1.0.0.rom.sha256.sig;name=v560tu-ec-sha-sig \
 "
 
-SRC_URI = ""
+DEPENDS = "tar"
+
+SRC_URI = "git://github.com/Dasharo/dts-configs.git;name=dts-configs;protocol=https;branch=develop"
+SRCREV = "d4fe961c6caa7b1a38ab6489180b8ba7ea331031"
 
 SRC_URI[v540tu.sha256sum] = "d18c4677cf488f69e9caa33a307a4f580eea14b4addb27a2857b2669327708c9"
 SRC_URI[v540tu-sha.sha256sum] = "34f4ec1f4cc81c41f4b5bbcda97651b9f5a0394e616a399118fc1a337fb4c480"
@@ -35,6 +38,7 @@ SRC_URI[v560tu-ec.sha256sum] = "4f5a2c3a9023b47a9a4e39b539d34689419c48e31abaa310
 SRC_URI[v560tu-ec-sha.sha256sum] = "fc3885764248f9627b2157f48b4ad6077b9e96545189f88d109afc54f3db91cf"
 SRC_URI[v560tu-ec-sha-sig.sha256sum] = "254a2833822ae22f6b8d65d18874dfb8ec37e0cd0a64bf95e192acaad8ad3aff"
 
+S = "${WORKDIR}/git"
 FILES:${PN} += "/firmware"
 
 # Add BINARIES to SRC_URI with prepended ${FW_STORE_URL}
@@ -56,6 +60,7 @@ do_install(){
         binary_name=$(basename "$binary")
         install -Dm 0644 "${WORKDIR}/$binary_name" "${D}/firmware/$binary_dir/$binary_name"
     done
+    tar czvf "${D}/firmware/dts-configs.tar.gz" -C "$(dirname "${S}")" "$(basename "${S}")"
 }
 
 INHIBIT_DEFAULT_DEPS = "1"
