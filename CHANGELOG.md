@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 2.6.1 - 2025-09-04
+
+### Added
+- wic: add cosole=ttyUSB0 to kernel command line
+- distro: dts: dts-scripts: add NovaCustom NUC BOX support
+- distro: dts: dts-scripts: add Hardkernel ODROID H4 Dasharo (coreboot+UEFI)
+  v0.9.1 support
+
+
+### Changed
+- testing workflow: show '[ WARN ]' lines when running DTS end to end tests
+  without profiles
+- distro: dts-scripts: use proper platforms mocking on QEMU for DTS end to end
+  testing
+- distro: bump version to 2.6.1
+
+
 ## 2.6.0 - 2025-08-06
 
 ### Added
