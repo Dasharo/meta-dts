@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 2.6.1 - 2025-09-04
+
+### Added
+- Linux kernel command line now includes console=ttyUSB0 for improved serial
+  access.
+- **NovaCustom NUC BOX** is now officially supported!
+- **Hardkernel ODROID H4 Dasharo (coreboot+UEFI) v0.9.1** update support added.
+
+
+### Changed
+- End to end testing workflow now shows [ WARN ] lines when running without
+  profiles. This will indicate, whether the test can be trusted or not.
+- DTS scripts now use proper platform mocking on QEMU for end to end testing,
+  making the automated tests trustworthy.
+
+
 ## 2.6.0 - 2025-08-06
 
 ### Added
