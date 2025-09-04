@@ -13,11 +13,11 @@ S = "${WORKDIR}/git"
 inherit setuptools3
 
 RDEPENDS:${PN} += " \
-                    python3 \
-                    python3-cryptography \
-                    python3-six \
-                    python3-future \
-                    python3-coloredlogs \
-                    python3-pgpdump \
-                    python3-dateutil \
-                    "
+    python3 \
+    python3-cryptography \
+    python3-six \
+    python3-future \
+    python3-coloredlogs \
+    python3-pgpdump \
+    python3-dateutil \
+"
