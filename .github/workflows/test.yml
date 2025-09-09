@@ -116,7 +116,7 @@ jobs:
             -v boot_dts_from_ipxe_shell:True \
             -v dts_config_ref:"${DTS_CONFIG_REF}" \
             -v dts_ipxe_link:http://${ip_addr}:4321/dts.ipxe 2>&1 \
-            | tee ${{ env.LOG_DIR }}/dts-tests.log | grep --line-buffered "| PASS |\|| FAIL |\|\[ WARN \]"
+            | tee ${{ env.LOG_DIR }}/dts-tests.log | grep --line-buffered "| PASS |\|| FAIL |\|| SKIP |\|\[ WARN \]"
 
       - name: Copy log
         shell: bash
