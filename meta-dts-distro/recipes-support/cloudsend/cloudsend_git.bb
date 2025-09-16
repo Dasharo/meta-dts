@@ -1,7 +1,7 @@
 SUMMARY = "\
-           Bash script that uses curl to send files and folders to a \
-           nextcloud / owncloud publicly shared folder.\
-           "
+    Bash script that uses curl to send files and folders to a \
+    nextcloud / owncloud publicly shared folder.\
+"
 
 HOMEPAGE = "https://github.com/tavinus/cloudsend.sh"
 SECTION = "GPLv3"
@@ -15,7 +15,7 @@ PV = "2.2.8+git${SRCPV}"
 SRC_URI = "\
     git://github.com/tavinus/cloudsend.sh.git;protocol=https;branch=master \
     file://0001-cloudsend.sh-Add-fail-with-body-flag.patch \
-    "
+"
 
 SRCREV = "65abbc6d809bcce13870dc5ea07937d324283173"
 
