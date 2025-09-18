@@ -107,16 +107,28 @@ jobs:
           echo "Using DTS config hash: ${DTS_CONFIG_HASH}"
           echo "::add-mask::$DPP_EMAIL"
           echo "::add-mask::$DPP_PASSWORD"
+          echo "::add-mask::$DPP_EMAIL_FW_ONLY"
+          echo "::add-mask::$DPP_PASSWORD_FW_ONLY"
+          echo "::add-mask::$DPP_EMAIL_EXTENSIONS_ONLY"
+          echo "::add-mask::$DPP_PASSWORD_EXTENSIONS_ONLY"
+          echo "::add-mask::$DPP_EMAIL_NO_ACCESS"
+          echo "::add-mask::$DPP_PASSWORD_NO_ACCESS"
 
           RTE_IP="127.0.0.1" CONFIG="qemu" ./scripts/run.sh dts/dts-e2e.robot -- \
             -L TRACE \
             -v snipeit:no \
             -v dpp_email:$DPP_EMAIL \
             -v dpp_password:$DPP_PASSWORD \
+            -v dpp_email_fw_only:$DPP_EMAIL_FW_ONLY \
+            -v dpp_password_fw_only:$DPP_PASSWORD_FW_ONLY \
+            -v dpp_email_extensions_only:$DPP_EMAIL_EXTENSIONS_ONLY \
+            -v dpp_password_extensions_only:$DPP_PASSWORD_EXTENSIONS_ONLY \
+            -v dpp_email_no_access:$DPP_EMAIL_NO_ACCESS \
+            -v dpp_password_no_access:$DPP_PASSWORD_NO_ACCESS \
             -v boot_dts_from_ipxe_shell:True \
             -v dts_config_ref:"${DTS_CONFIG_REF}" \
             -v dts_ipxe_link:http://${ip_addr}:4321/dts.ipxe 2>&1 \
-            | tee ${{ env.LOG_DIR }}/dts-tests.log | grep --line-buffered "| PASS |\|| FAIL |\|\[ WARN \]"
+            | tee ${{ env.LOG_DIR }}/dts-tests.log | grep --line-buffered "| PASS |\|| FAIL |\|| SKIP |\|\[ WARN \]"
 
       - name: Copy log
         shell: bash

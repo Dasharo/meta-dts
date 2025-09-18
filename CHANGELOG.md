@@ -4,6 +4,46 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+
+## 2.7.0 - 2025-09-18
+
+### Added
+- Add advanced Dasharo Pro Package credentials testing into the automated CI/CD
+  workflow. New test cases include:
+- Added test cases for the basic DTS UI commands: reboot, power off, SSH, etc..
+- **Added a fix** for the Dasharo (coreboot+UEFI) v0.9.x issue with **no
+  internet over iPXE boot** on NovaCustom V540TU and Novacustom V560TU. Now you
+  can easily update your firmware that will fix the issue.
+- **Added a fix** for the Dasharo (coreboot+UEFI) v0.9.0 issue with **no
+  internet over iPXE boot** on NovaCustom V540TU and Novacustom V560TU. Now you
+  can easily update your firmware that will fix the issue.
+- **Dasharo (coreboot+UEFI) v1.0.0 for NovaCustom V540TU and Novacustom V560TU
+  DTS Update** is now officially supported!
+- **Dasharo (coreboot+UEFI) v1.1.5 for both DDR4 and DDR5 variants of MSI PRO
+  Z690-A DTS Update** is now officially supported!
+- **Dasharo (coreboot+UEFI) v0.9.3 for both DDR4 and DDR5 variants of MSI PRO
+  Z790-A DTS Update** is now officially supported!
+- **A completely new DTS workflow** for fusing device **is now officially
+  supported** for **Dasharo (coreboot+UEFI) v1.0.0 for NovaCustom V540TU and
+  Novacustom V560TU**. Now you can fuse your device, and no other firmware,
+  except the one released by a trusted vendor, can be launched on your laptop!
+
+
+### Changed
+- Now the automated CI/CD DTS testing workflow shows SKIP for the skipped tests.
+  Assuring fewer issues will get into the DTS release image.
+
+
+### Fixed
+- Fixed HCL report showing UNKNOWN for all components. Now there will be less
+  confusion. [#1304](https://github.com/Dasharo/dasharo-issues/issues/1304)
+- Fixed an issue with DTS going into the update workflow when there is no update
+  available. [#1424](https://github.com/Dasharo/dasharo-issues/issues/1424)
+- Fixed a confusing typo during Dasharo (coreboot+UEFI) DTS Update workflow that
+  showed the Heads payload instead of
+  UEFI. [#1373](https://github.com/Dasharo/dasharo-issues/issues/1373)
+
+
 ## 2.6.1 - 2025-09-04
 
 ### Added
