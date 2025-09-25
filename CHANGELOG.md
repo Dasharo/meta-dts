@@ -4,6 +4,37 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 2.7.1 - 2025-09-25
+
+### Changed
+
+- Print error and stop update if reading flash during `checking flash layout`
+  fails.
+- Prompt the user to continue the update if BIOS configuration migration fails.
+  Continuing with update will result in all configuration being reset to
+  default.
+- Improve message when sending logs to 3mdeb and print path to archive with
+  logs. In case of failure display link to documentation on how to share logs
+  manually.
+- [DTS: Add recovery information/steps when flashing
+  fails](https://github.com/Dasharo/dasharo-issues/issues/1626) - Rework error
+  message displayed when flashing fails, providing guidance on what the user
+  should do and including 3mdeb contact information.
+
+### Fixed
+
+- [DTS can't send logs in case of wrong
+  credentials](https://github.com/Dasharo/dasharo-issues/issues/1385) - Fixed
+  issue where logs weren't sent if user entered wrong DPP credentials
+  previously.
+- Fixed issue where command error output was being visible when trying to send
+  logs if network interface was down
+- [Automatic FUM update starts on every
+  TTY](https://github.com/Dasharo/dasharo-issues/issues/1603) - Fixed issue
+  where multiple FUM updates were being run simultaneously which resulted in
+  random failures. This resulted in update failing in random place:
+  [Failed to update fw on NovaCUstom V54 iGPU laptop via FUM/DTS (0.9.0 ->
+  1.0.0)](https://github.com/Dasharo/dasharo-issues/issues/1613)
 
 ## 2.7.0 - 2025-09-18
 
