@@ -106,6 +106,9 @@ Possible error paths in DTS and how to trigger them
       unsupported platform (`TEST_SYSTEM_*` and `TEST_BOARD_MODEL` variables).
     * modify `DTS_CONFIG_REF` to use `dts-configs` branch with removed support
       for your platform
+- firmware to be deployed doesn't support platform hardware e.g.
+    * [firmware doesn't support 13th gen
+      CPU](https://github.com/Dasharo/open-source-firmware-validation/blob/085e87c254975cc21c778291307aa16aa1848dca/dts/dts-e2e.robot#L56)
 - wrong hash
     * modify `.sha256` file used during workflow
     * use custom file server with wrong hash files
