@@ -15,11 +15,11 @@ do_install () {
 
 SYSTEMD_SERVICE:${PN} = " \
     ipxe-commands.service \
-    "
+"
 
 SYSTEMD_PACKAGES = " \
     ${PN} \
-    "
+"
 
 SYSTEMD_AUTO_ENABLE:${PN} = "enable"
 

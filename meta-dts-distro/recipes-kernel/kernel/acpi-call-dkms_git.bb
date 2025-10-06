@@ -10,10 +10,10 @@ inherit module
 PV = "1.2.2+git${SRCPV}"
 
 SRC_URI = "\
-           git://github.com/nix-community/acpi_call.git;branch=master;protocol=https \
-           file://0001-Makefile-fixing-build-errrors.patch \
-           file://0001-GPLv3-licence-file-added.patch \
-           "
+    git://github.com/nix-community/acpi_call.git;branch=master;protocol=https \
+    file://0001-Makefile-fixing-build-errrors.patch \
+    file://0001-GPLv3-licence-file-added.patch \
+"
 
 SRCREV = "fe9dc95a83a95e4826c1a7c809d41c2f16de40a6"
 
