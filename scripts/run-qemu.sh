@@ -37,6 +37,8 @@ Options:
   -n|--no-graphics          No graphic mode, only serial
   -m|--memory <mem>         How much RAM should QEMU have (default: 2G)
   -c|--cpu <cpu>            How many vCPUs should QEMU create (default: 4)
+  -u|--usb <file>           Add <file> as an removable USB device
+                            Can be used multiple times
   -v|--verbose              Enable trace output
   -h|--help                 Print this help
 EOF
@@ -90,6 +92,14 @@ parse_args() {
         CPU="$2"
         shift 2
         ;;
+      -u|--usb)
+        USB+=(
+            -drive "if=none,id=usbstick${USB_COUNT},format=raw,file=$2"
+            -device "usb-storage,bus=ehci.0,drive=usbstick${USB_COUNT},removable=on"
+        )
+        USB_COUNT=$((USB_COUNT + 1))
+        shift 2
+        ;;
       -v|--verbose)
         set -x
         shift
@@ -116,6 +126,8 @@ CPU="4"
 EFI=
 SECBOOT=
 TPM=
+USB=(-device "usb-ehci,id=ehci")
+USB_COUNT=0
 parse_args "$@"
 set -- "${POSITIONAL_ARGS[@]}"
 
@@ -154,4 +166,5 @@ qemu-system-x86_64 -serial mon:stdio -global ICH9-LPC.disable_s3=1 \
   "${OVMF[@]}" \
   -device virtio-net,netdev=vmnic \
   -netdev user,id=vmnic,hostfwd=tcp::5222-:22 \
-  -m "$MEM" -smp "$CPU" -M q35 $KVM "${TPM_ARGS[@]}" $NO_GRAPHIC "${POSITIONAL_ARGS[@]}"
+  -m "$MEM" -smp "$CPU" -M q35 $KVM "${TPM_ARGS[@]}" \
+  $NO_GRAPHIC "${USB[@]}" "${POSITIONAL_ARGS[@]}"
