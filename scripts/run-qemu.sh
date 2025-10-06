@@ -35,6 +35,7 @@ Options:
   -s|--secure-boot          Enable Secure Boot with EFI BIOS.
   -t|--tpm                  Add TPM2 device
   -n|--no-graphics          No graphic mode, only serial
+  -p|--port                 Change SSH port (5222 by default)
   -m|--memory <mem>         How much RAM should QEMU have (default: 2G)
   -c|--cpu <cpu>            How many vCPUs should QEMU create (default: 4)
   -u|--usb <file>           Add <file> as an removable USB device
@@ -85,6 +86,10 @@ parse_args() {
         NO_GRAPHIC="-nographic"
         shift
         ;;
+      -p|--port)
+        PORT="$2"
+        shift 2
+        ;;
       -m|--memory)
         MEM="$2"
         shift 2
@@ -122,6 +127,7 @@ parse_args() {
 
 POSITIONAL_ARGS=()
 KVM=(-enable-kvm)
+PORT=5222
 MEM="2G"
 CPU="4"
 EFI=
@@ -166,6 +172,6 @@ fi
 qemu-system-x86_64 -serial mon:stdio -global ICH9-LPC.disable_s3=1 \
   "${OVMF[@]}" \
   -device virtio-net,netdev=vmnic \
-  -netdev user,id=vmnic,hostfwd=tcp::5222-:22 \
+  -netdev user,id=vmnic,hostfwd=tcp::"${PORT}"-:22 \
   -m "$MEM" -smp "$CPU" -M q35 "${KVM[@]}" "${TPM_ARGS[@]}" \
   $NO_GRAPHIC "${USB[@]}" "${POSITIONAL_ARGS[@]}"
