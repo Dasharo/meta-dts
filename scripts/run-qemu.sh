@@ -30,7 +30,7 @@ $(basename "$0") [OPTION]... <image> [image]...
 Run <image> in QEMU. Each image is mounted as separate drive.
 
 Options:
-  -k|--disable-kvm          Disable KVM in QEMU. DTS most likely won't boot.
+  -k|--disable-kvm          Disable KVM in QEMU.
   -e|--efi                  Use EFI BIOS
   -s|--secure-boot          Enable Secure Boot with EFI BIOS.
   -t|--tpm                  Add TPM2 device
@@ -64,7 +64,8 @@ parse_args() {
   while [[ $# -gt 0 ]]; do
     case $1 in
       -k|--disable-kvm)
-        KVM=
+        # otherwise DTS won't boot
+        KVM=(-cpu Skylake-Server-v5)
         shift
         ;;
       -e|--efi)
@@ -120,7 +121,7 @@ parse_args() {
 }
 
 POSITIONAL_ARGS=()
-KVM="-enable-kvm"
+KVM=(-enable-kvm)
 MEM="2G"
 CPU="4"
 EFI=
@@ -166,5 +167,5 @@ qemu-system-x86_64 -serial mon:stdio -global ICH9-LPC.disable_s3=1 \
   "${OVMF[@]}" \
   -device virtio-net,netdev=vmnic \
   -netdev user,id=vmnic,hostfwd=tcp::5222-:22 \
-  -m "$MEM" -smp "$CPU" -M q35 $KVM "${TPM_ARGS[@]}" \
+  -m "$MEM" -smp "$CPU" -M q35 "${KVM[@]}" "${TPM_ARGS[@]}" \
   $NO_GRAPHIC "${USB[@]}" "${POSITIONAL_ARGS[@]}"
