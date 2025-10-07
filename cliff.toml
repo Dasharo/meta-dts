@@ -39,7 +39,7 @@ split_commits = false
 # regex for parsing and grouping commits
 commit_parsers = [
   { message = "^.*: [aA]dd", group = "Added" },
-  { message = "^.*: [sS]upport", group = "Added" },
+  { message = "^.*: [sS]upport", group = "Added" }, # codespell:ignore
   { message = "^.*: [rR]emove", group = "Removed" },
   { message = "^.*: [dD]elete", group = "Removed" },
   { message = "^[tT]est", group = "Fixed" },
