@@ -31,7 +31,7 @@ repos:
 
   meta-dasharo:
     url: https://github.com/Dasharo/meta-dasharo
-    refspec: 32b646c82d507caf99bfbdc13c48a537a0a8b465
+    refspec: 10a3e7957c01845f87589984cf8c2dd7d95c19db
 
   meta-coreboot:
     url: https://github.com/zarhus/meta-coreboot
