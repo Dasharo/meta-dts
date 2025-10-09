@@ -31,11 +31,11 @@ repos:
 
   meta-dasharo:
     url: https://github.com/Dasharo/meta-dasharo
-    refspec: 32b646c82d507caf99bfbdc13c48a537a0a8b465
+    refspec: b5bf4f82502510500c34c400af96ff019df06226
 
   meta-coreboot:
     url: https://github.com/zarhus/meta-coreboot
-    refspec: e93a00c394b2826f1ad9d274028fa59dcac69a26
+    refspec: c8254de6ee875ff4d8f7a3c91880c4d1ed9a7c6e
 
 bblayers_conf_header:
   standard: |
