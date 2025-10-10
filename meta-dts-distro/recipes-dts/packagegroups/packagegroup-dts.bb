@@ -43,6 +43,7 @@ RDEPENDS:${PN}-tools-base = " \
     txesbmantool \
     smmstoretool \
     cpuid \
+    efibootmgr \
 "
 
 RDEPENDS:${PN}-tools-dts = " \
