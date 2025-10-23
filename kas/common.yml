@@ -21,6 +21,7 @@ repos:
     layers:
       meta-oe:
       meta-networking:
+      meta-filesystems:
       meta-python:
 
   meta-security:
@@ -37,6 +38,10 @@ repos:
     url: https://github.com/zarhus/meta-coreboot
     refspec: c8254de6ee875ff4d8f7a3c91880c4d1ed9a7c6e
 
+  meta-virtualization:
+    url: https://git.yoctoproject.org/meta-virtualization
+    refspec: af1db2042caf8021d767dce1b26c08b59b96f3d1
+
 bblayers_conf_header:
   standard: |
     POKY_BBLAYERS_CONF_VERSION = "2"
@@ -48,6 +53,7 @@ local_conf_header:
     CONF_VERSION = "2"
     PACKAGE_CLASSES = "package_rpm"
     SDKMACHINE = "x86_64"
+    SKIP_META_VIRT_SANITY_CHECK = "1"
   diskmon: |
     BB_DISKMON_DIRS = "\
         STOPTASKS,${TMPDIR},1G,100K \

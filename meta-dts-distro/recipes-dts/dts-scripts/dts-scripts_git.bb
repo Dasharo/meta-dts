@@ -26,6 +26,7 @@ RDEPENDS:${PN} = " \
     python3-semver \
     rpm \
     jq \
+    yq \
     minio-cli \
     dnf \
 "
