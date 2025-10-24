@@ -29,6 +29,7 @@ RDEPENDS:${PN} = " \
     yq \
     minio-cli \
     dnf \
+    make \
 "
 
 do_configure[noexec] = "1"
