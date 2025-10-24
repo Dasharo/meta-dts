@@ -92,40 +92,7 @@ else
     SSH="ssh -p 5222"
 fi
 
-$SSH -q "$REMOTE" mkdir -p /dts-scripts
-$SCP -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r "$DTS_SCRIPTS"/{Makefile,dts-profile.sh,include,scripts,reports} "$REMOTE":/dts-scripts/
-
-$SSH -q "$REMOTE" 'cat >/dts-scripts/update.sh' <<"EOF"
-#!/bin/sh
-
-SBINDIR=/usr/sbin
-SYSCONFDIR=/etc
-
-echo "Updating dts-scripts"
-
-install -d ${DESTDIR}${SBINDIR}
-
-install -m 0755 include/dts-environment.sh ${DESTDIR}${SBINDIR}
-install -m 0755 include/dts-functions.sh ${DESTDIR}${SBINDIR}
-install -m 0755 include/dts-subscription.sh ${DESTDIR}${SBINDIR}
-install -m 0755 include/hal/dts-hal.sh ${DESTDIR}${SBINDIR}
-install -m 0755 include/hal/common-mock-func.sh ${DESTDIR}${SBINDIR}
-
-install -m 0755 scripts/cloud_list.sh ${DESTDIR}${SBINDIR}/cloud_list
-install -m 0755 scripts/dasharo-deploy.sh ${DESTDIR}${SBINDIR}/dasharo-deploy
-install -m 0755 scripts/dts.sh ${DESTDIR}${SBINDIR}/dts
-install -m 0755 scripts/dts-boot.sh ${DESTDIR}${SBINDIR}/dts-boot
-install -m 0755 scripts/ec_transition.sh ${DESTDIR}${SBINDIR}/ec_transition
-install -m 0755 scripts/logging.sh ${DESTDIR}${SBINDIR}/logging
-
-install -m 0755 reports/dasharo-hcl-report.sh ${DESTDIR}${SBINDIR}/dasharo-hcl-report
-install -m 0755 reports/touchpad-info.sh ${DESTDIR}${SBINDIR}/touchpad-info
-
-install -d ${DESTDIR}${SYSCONFDIR}/profile.d
-install -m 0755 dts-profile.sh ${DESTDIR}${SYSCONFDIR}/profile.d
-
-echo "Finished updating dts-scripts"
-EOF
-
-$SSH -q "$REMOTE" chmod +x /dts-scripts/update.sh
-$SSH -q "$REMOTE" 'cd /dts-scripts && ./update.sh'
+$SSH -q "$REMOTE" mkdir -p /tmp/dts-scripts
+$SCP -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null \
+    -r "$DTS_SCRIPTS"/* "$REMOTE":/tmp/dts-scripts
+$SSH -q "$REMOTE" 'cd /tmp/dts-scripts && make'
