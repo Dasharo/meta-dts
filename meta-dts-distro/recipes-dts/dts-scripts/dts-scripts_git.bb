@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSES/Apache-2.0.txt;md5=c846ebb396f8b174b10ded477
 PV = "0.1+git${SRCPV}"
 
 SRC_URI = "git://github.com/Dasharo/dts-scripts;protocol=https;branch=tui-sh"
-SRCREV = "34a6e45915c05bbebdc3baa5590ce1cd1e6aec95"
+SRCREV = "508faf9e4e9f95d8f715adbd7d06866f4d9a8637"
 
 S = "${WORKDIR}/git"
 
@@ -26,10 +26,10 @@ RDEPENDS:${PN} = " \
     python3-semver \
     rpm \
     jq \
-    yq \
     minio-cli \
     dnf \
     make \
+    tui-sh \
 "
 
 do_configure[noexec] = "1"
