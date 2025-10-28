@@ -7,8 +7,8 @@ LIC_FILES_CHKSUM = "file://LICENSES/Apache-2.0.txt;md5=c846ebb396f8b174b10ded477
 
 PV = "0.1+git${SRCPV}"
 
-SRC_URI = "git://github.com/Dasharo/dts-scripts;protocol=https;branch=main"
-SRCREV = "7b43513360816fc2171161b39c2a4bc79f88f487"
+SRC_URI = "git://github.com/Dasharo/dts-scripts;protocol=https;branch=tui-sh"
+SRCREV = "508faf9e4e9f95d8f715adbd7d06866f4d9a8637"
 
 S = "${WORKDIR}/git"
 
@@ -28,6 +28,8 @@ RDEPENDS:${PN} = " \
     jq \
     minio-cli \
     dnf \
+    make \
+    tui-sh \
 "
 
 do_configure[noexec] = "1"
