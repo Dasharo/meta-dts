@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 2.7.2 - 2025-12-05
+
+### Changed
+- recipes-tests: dts-tests: cukinia: enable flashrom Alder Lake support test
+- recipes-dts: firmware-binaries: update reuploaded signature hashes for
+  NovaCustom firmware.
+- dts-scripts: Complete platforms metadata migration from Dasharo/dts-scripts to
+  Dasharo/dts-configs.
+- recipes-tests: converged-security-suite: add bg-prov tool v2.8.1
+- recipes-dts: dts-scripts: add btg_key_validator to verify used key during
+  Intel Boot Guard provisioning.
+
 ## 2.7.2-rc1 - 2025-10-10
 
 ### Added
