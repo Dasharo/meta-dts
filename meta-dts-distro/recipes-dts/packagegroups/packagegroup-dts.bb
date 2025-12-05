@@ -52,6 +52,7 @@ RDEPENDS:${PN}-tools-dts = " \
     dasharo-ectool \
     txt-suite \
     bg-suite \
+    bg-prov \
     dasharo-configuration-utility \
     dts-scripts \
     firmware-binaries \
