@@ -7,40 +7,33 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## 2.7.2 - 2025-12-05
 
 ### Changed
-- recipes-tests: dts-tests: cukinia: enable flashrom Alder Lake support test
-- recipes-dts: firmware-binaries: update reuploaded signature hashes for
-  NovaCustom firmware.
-- dts-scripts: Complete platforms metadata migration from Dasharo/dts-scripts to
+- Enable flashrom Alder Lake cukinia support test.
+- Complete platforms metadata migration from Dasharo/dts-scripts to
   Dasharo/dts-configs.
-- recipes-tests: converged-security-suite: add bg-prov tool v2.8.1
-- recipes-dts: dts-scripts: add btg_key_validator to verify used key during
-  Intel Boot Guard provisioning.
+- Add converged-security-suite/bg-prov tool v2.8.1.
+- Add btg_key_validator script to verify provisioned Intel Boot Guard key.
+
 
 ### Fixed
-- distro: dts-scripts: Do not send HCL for mocked hardware. Otherwise databases
-  are polluted with HCLs that contain nothing more that mocks and are useless.
+- Do not send HCL for mocked hardware. Otherwise databases are polluted with
+  HCLs that contain nothing more that mocks and are useless.
+
 
 ## 2.7.2-rc1 - 2025-10-10
 
 ### Added
-- docs: add error-paths.md
-- docs: error-paths: add unsupported hardware case
-- meta-dts-distro: Add PSPTool
-- dts-scripts: add mocking to allow fum, smmstore, and flash testing
-- scripts: run-qemu: add --usb argument to add file as an USB stick
-- scripts: run-qemu: add --port argument to allow changing ssh port used
-- dts-scripts: add amdtool and psptool in HCL report
+- Add error-paths.md to outline the testcases that are not covered with
+  tests yet.
+- Add PSPReverse/PSPTool 3.0.
+- Add proper mocking to test FUM, SMMSTORE migration, and flashing.
+- Add --usb argument to run-qemu.sh to add file as an USB stick.
+- Add --port argument to run-qemu.sh to allow changing the SSH port used.
+- Add coreboot/amdtool as a part of coreboot-utils that is a part of
+  meta-coreboot layer.
 
 
 ### Changed
-- recipes-dts: firmware-binaries: update sha256sum of reuploaded signatures
-- pre-commit: autoupdate hooks
-- [pre-commit.ci] auto fixes from pre-commit.com hooks
-- scripts: run-qemu: set cpu to be emulated when not using kvm
-
-
-### Fixed
-- cliff.tom; & systemd_%.bbappend: fix pre-commit errors
+- Set CPU to be emulated when not using KVM in ran-qemu.sh script.
 
 
 ## 2.7.1 - 2025-09-25
