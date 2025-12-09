@@ -16,6 +16,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - recipes-dts: dts-scripts: add btg_key_validator to verify used key during
   Intel Boot Guard provisioning.
 
+### Fixed
+- distro: dts-scripts: Do not send HCL for mocked hardware. Otherwise databases
+  are polluted with HCLs that contain nothing more that mocks and are useless.
+
 ## 2.7.2-rc1 - 2025-10-10
 
 ### Added
