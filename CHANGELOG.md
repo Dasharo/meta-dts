@@ -4,6 +4,41 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 2.7.2 - 2025-12-05
+
+### Added
+- Added rhboot/efibootmgr tool version 18.
+
+### Changed
+- Enable flashrom Alder Lake cukinia support test.
+- Complete platforms metadata migration from Dasharo/dts-scripts to
+  Dasharo/dts-configs.
+- Add converged-security-suite/bg-prov tool v2.8.1.
+- Add btg_key_validator script to verify provisioned Intel Boot Guard key.
+
+
+### Fixed
+- Do not send HCL for mocked hardware. Otherwise databases are polluted with
+  HCLs that contain nothing more that mocks and are useless.
+
+
+## 2.7.2-rc1 - 2025-10-10
+
+### Added
+- Add error-paths.md to outline the testcases that are not covered with
+  tests yet.
+- Add PSPReverse/PSPTool 3.0.
+- Add proper mocking to test FUM, SMMSTORE migration, and flashing.
+- Add --usb argument to run-qemu.sh to add file as an USB stick.
+- Add --port argument to run-qemu.sh to allow changing the SSH port used.
+- Add coreboot/amdtool as a part of coreboot-utils that is a part of
+  meta-coreboot layer.
+
+
+### Changed
+- Set CPU to be emulated when not using KVM in ran-qemu.sh script.
+
+
 ## 2.7.1 - 2025-09-25
 
 ### Changed

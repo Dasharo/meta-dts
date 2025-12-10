@@ -1,7 +1,7 @@
 SUMMARY = "A 3mdeb keyring used to verify releases created at 3mdeb"
 DESCRIPTION = "\
-              Provides a trusted keyring of keys that can be used to verify \
-              signatures."
+    Provides a trusted keyring of keys that can be used to verify \
+    signatures."
 HOMEPAGE = "https://github.com/3mdeb/3mdeb-secpack/"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"

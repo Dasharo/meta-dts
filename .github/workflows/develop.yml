@@ -112,7 +112,7 @@ jobs:
       - name: Update iPXE menu
         shell: bash
         run: |
-          ./meta-dts/scripts/generate-ipxe-menu.sh DTS_VER="${{ env.DTS_VER }}"
+          ./meta-dts/scripts/generate-ipxe-menu.sh ${{ env.DTS_VER }}
           scp -i ~/.ssh/dts-ci-key dts-rc.ipxe builder@10.1.40.2:boot/dts/
       - name: Trigger signing
         shell: bash

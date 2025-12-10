@@ -43,6 +43,7 @@ RDEPENDS:${PN}-tools-base = " \
     txesbmantool \
     smmstoretool \
     cpuid \
+    efibootmgr \
 "
 
 RDEPENDS:${PN}-tools-dts = " \
@@ -51,6 +52,7 @@ RDEPENDS:${PN}-tools-dts = " \
     dasharo-ectool \
     txt-suite \
     bg-suite \
+    bg-prov \
     dasharo-configuration-utility \
     dts-scripts \
     firmware-binaries \
@@ -60,4 +62,5 @@ RDEPENDS:${PN}-python = " \
     python3-binwalk \
     python3-uefi-firmware \
     python3-roca-detect \
+    python3-psptool \
 "
