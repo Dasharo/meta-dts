@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## 2.7.2 - 2025-12-05
 
+### Added
+- Added rhboot/efibootmgr tool version 18.
+
 ### Changed
 - Enable flashrom Alder Lake cukinia support test.
 - Complete platforms metadata migration from Dasharo/dts-scripts to
