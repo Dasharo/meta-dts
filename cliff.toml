@@ -19,11 +19,13 @@ body = """
 {% endif -%}
 {% for group, commits in commits | filter(attribute="merge_commit", value=false) | group_by(attribute="group") %}
     ### {{ group | upper_first }}
+
     {% for commit in commits %}
         {%- set short_message = commit.message | split(pat="\n") | first | trim -%}
         - {{ short_message | trim }}\n\
-    {% endfor %}
-{% endfor %}\n
+    {% endfor %}\
+{% endfor %}
+
 """
 
 # remove the leading and trailing whitespace from the templates
