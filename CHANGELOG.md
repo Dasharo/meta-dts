@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 2.7.3-rc1 - 2025-12-12
+
+### Added
+
+- Add `make` and use it with scripts/remote-update.sh script
+- Add TPM PCRs dump to HCL reports
+
+### Changed
+
+- cliff.toml: Update changelog format to use only single space between sections
+
 ## 2.7.2 - 2025-12-05
 
 ### Added
