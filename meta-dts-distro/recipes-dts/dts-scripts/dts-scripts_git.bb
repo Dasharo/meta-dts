@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSES/Apache-2.0.txt;md5=c846ebb396f8b174b10ded477
 PV = "0.1+git${SRCPV}"
 
 SRC_URI = "git://github.com/Dasharo/dts-scripts;protocol=https;branch=main"
-SRCREV = "e5baef21d0a30f3a1d888572860b3e37b649164d"
+SRCREV = "e47d41cc8b400057634cbfc5dfbe2528864e19d7"
 
 S = "${WORKDIR}/git"
 
@@ -28,6 +28,7 @@ RDEPENDS:${PN} = " \
     jq \
     minio-cli \
     dnf \
+    make \
 "
 
 do_configure[noexec] = "1"
