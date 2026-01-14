@@ -23,7 +23,7 @@ BINARIES = " \
 DEPENDS = "tar"
 
 SRC_URI = "git://github.com/Dasharo/dts-configs.git;name=dts-configs;protocol=https;branch=develop"
-SRCREV = "d4fe961c6caa7b1a38ab6489180b8ba7ea331031"
+SRCREV = "6bcb1b8b7446abc6ff4206703b09f4880e777abc"
 
 SRC_URI[v540tu.sha256sum] = "d18c4677cf488f69e9caa33a307a4f580eea14b4addb27a2857b2669327708c9"
 SRC_URI[v540tu-sha.sha256sum] = "34f4ec1f4cc81c41f4b5bbcda97651b9f5a0394e616a399118fc1a337fb4c480"
