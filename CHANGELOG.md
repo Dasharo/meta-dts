@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 2.7.3 - 2026-01-20
+
+### Added
+
+- dts-scripts: Add flashrom operations scheduler to bring more control of its
+  calls for flashing different regions.
+
+### Changed
+
+- dts-scripts: validate key signature during fuse workflow to prevent fusing
+  Intel BTG with untrusted keys.
+- Update PSPTool to 3.3+9feb0300825e7a94123a6ceee3a5d43c26fdb19f.
+
+### Fixed
+
+- Fixed transition from Dasharo (coreboot+UEFI) to Dasharo (coreboot+Heads) for
+  MSI Z690 (MS-7D25) and MSI Z790 (MS-7E06)
+
 ## 2.7.3-rc1 - 2025-12-12
 
 ### Added
