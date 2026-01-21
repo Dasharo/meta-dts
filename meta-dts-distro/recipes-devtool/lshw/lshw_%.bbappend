@@ -1,0 +1,1 @@
+EXTRA_OEMAKE += "GZIP='-9 -n'"

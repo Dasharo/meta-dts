@@ -1,4 +1,4 @@
 bootloader --timeout=0 --append=" rootwait console=ttyUSB0"
 
-part /boot --source bootimg-biosplusefi --sourceparams="loader=grub-efi" --ondisk sda --label dts-boot --align 1024 --use-uuid --active --system-id 0xef
-part /     --source rootfs --fstype=ext4                                 --ondisk sda --label dts-root --align 1024 --use-uuid --fixed-size 1024
+part /boot --source bootimg-biosplusefi --sourceparams="loader=grub-efi" --ondisk sda --label dts-boot --align 1024 --uuid ${BOOT_UUID} --active --system-id 0xef
+part /     --source rootfs --fstype=ext4                                 --ondisk sda --label dts-root --align 1024 --uuid ${ROOT_UUID} --fixed-size 1024
