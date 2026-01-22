@@ -10,17 +10,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - dts-scripts: Add flashrom operations scheduler to bring more control of its
   calls for flashing different regions.
+- Add `make` and use it with scripts/remote-update.sh script.
+- Add TPM PCRs dump to HCL reports.
+- Check for download errors when downloading keys and fix bootsplash and
+  smmstore migration logic.
 
 ### Changed
 
 - dts-scripts: validate key signature during fuse workflow to prevent fusing
   Intel BTG with untrusted keys.
 - Update PSPTool to 3.3+9feb0300825e7a94123a6ceee3a5d43c26fdb19f.
+- cliff.toml: Update changelog format to use only single space between sections.
 
 ### Fixed
 
 - Fixed transition from Dasharo (coreboot+UEFI) to Dasharo (coreboot+Heads) for
-  MSI Z690 (MS-7D25) and MSI Z790 (MS-7E06)
+  MSI Z690 (MS-7D25) and MSI Z790 (MS-7E06).
+
+### Known issues
+
+- DTS fails to update MSI Pro Z790-P when using Firmware Update Mode
+  [#1727](https://github.com/Dasharo/dasharo-issues/issues/1727)
+- DTS: surplus flashrom call can cause uncontrolled firmware overwirtes
+  [#1742](https://github.com/Dasharo/dasharo-issues/issues/1742)
 
 ## 2.7.3-rc1 - 2025-12-12
 
