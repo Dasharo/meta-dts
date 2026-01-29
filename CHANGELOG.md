@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 2.7.4 - 2026-01-29
+
+### Changed
+
+- dts-scripts: Check if capsule update succeeded. Print error explaining what to
+  do if it didn't and stop update.
+
 ## 2.7.3 - 2026-01-20
 
 ### Added
