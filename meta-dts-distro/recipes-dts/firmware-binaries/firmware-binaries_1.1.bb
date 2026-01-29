@@ -6,37 +6,19 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=89aea4e17d99a7ca
 
 FW_STORE_URL ?= "https://dl.3mdeb.com/open-source-firmware/Dasharo"
 BINARIES = " \
-    novacustom_v5x0_mtl/novacustom_mtl_igpu/novacustom_v540tu_mtl/uefi/v1.0.0/novacustom_v54x_mtl_igpu_v1.0.0_btg_provisioned.rom;name=v540tu \
-    novacustom_v5x0_mtl/novacustom_mtl_igpu/novacustom_v540tu_mtl/uefi/v1.0.0/novacustom_v54x_mtl_igpu_v1.0.0_btg_provisioned.rom.sha256;name=v540tu-sha \
-    novacustom_v5x0_mtl/novacustom_mtl_igpu/novacustom_v540tu_mtl/uefi/v1.0.0/novacustom_v54x_mtl_igpu_v1.0.0_btg_provisioned.rom.sha256.sig;name=v540tu-sha-sig \
-    novacustom_v5x0_mtl/novacustom_mtl_igpu/novacustom_v540tu_mtl/uefi/v1.0.0/novacustom_v54x_mtl_igpu_ec_v1.0.0.rom;name=v540tu-ec \
-    novacustom_v5x0_mtl/novacustom_mtl_igpu/novacustom_v540tu_mtl/uefi/v1.0.0/novacustom_v54x_mtl_igpu_ec_v1.0.0.rom.sha256;name=v540tu-ec-sha \
-    novacustom_v5x0_mtl/novacustom_mtl_igpu/novacustom_v540tu_mtl/uefi/v1.0.0/novacustom_v54x_mtl_igpu_ec_v1.0.0.rom.sha256.sig;name=v540tu-ec-sha-sig \
-    novacustom_v5x0_mtl/novacustom_mtl_igpu/novacustom_v560tu_mtl/uefi/v1.0.0/novacustom_v56x_mtl_igpu_v1.0.0_btg_provisioned.rom;name=v560tu \
-    novacustom_v5x0_mtl/novacustom_mtl_igpu/novacustom_v560tu_mtl/uefi/v1.0.0/novacustom_v56x_mtl_igpu_v1.0.0_btg_provisioned.rom.sha256;name=v560tu-sha \
-    novacustom_v5x0_mtl/novacustom_mtl_igpu/novacustom_v560tu_mtl/uefi/v1.0.0/novacustom_v56x_mtl_igpu_v1.0.0_btg_provisioned.rom.sha256.sig;name=v560tu-sha-sig \
-    novacustom_v5x0_mtl/novacustom_mtl_igpu/novacustom_v560tu_mtl/uefi/v1.0.0/novacustom_v56x_mtl_igpu_ec_v1.0.0.rom;name=v560tu-ec \
-    novacustom_v5x0_mtl/novacustom_mtl_igpu/novacustom_v560tu_mtl/uefi/v1.0.0/novacustom_v56x_mtl_igpu_ec_v1.0.0.rom.sha256;name=v560tu-ec-sha \
-    novacustom_v5x0_mtl/novacustom_mtl_igpu/novacustom_v560tu_mtl/uefi/v1.0.0/novacustom_v56x_mtl_igpu_ec_v1.0.0.rom.sha256.sig;name=v560tu-ec-sha-sig \
+    novacustom_v5x0_mtl/novacustom_mtl_igpu/novacustom_v540tu_mtl/uefi/v1.0.1/novacustom_v54x_mtl_igpu_v1.0.1_btg_prod.rom;name=v540tu \
+    novacustom_v5x0_mtl/novacustom_mtl_igpu/novacustom_v540tu_mtl/uefi/v1.0.1/novacustom_v54x_mtl_igpu_ec_v1.0.1.rom;name=v540tu-ec \
+    novacustom_v5x0_mtl/novacustom_mtl_igpu/novacustom_v560tu_mtl/uefi/v1.0.1/novacustom_v56x_mtl_igpu_v1.0.1_btg_prod.rom;name=v560tu \
+    novacustom_v5x0_mtl/novacustom_mtl_igpu/novacustom_v560tu_mtl/uefi/v1.0.1/novacustom_v56x_mtl_igpu_ec_v1.0.1.rom;name=v560tu-ec \
 "
 
-DEPENDS = "tar"
-
 SRC_URI = "git://github.com/Dasharo/dts-configs.git;name=dts-configs;protocol=https;branch=develop"
-SRCREV = "6bcb1b8b7446abc6ff4206703b09f4880e777abc"
+SRCREV = "e5c7262673f14a2962ccdec7718e8f27709523f3"
 
-SRC_URI[v540tu.sha256sum] = "d18c4677cf488f69e9caa33a307a4f580eea14b4addb27a2857b2669327708c9"
-SRC_URI[v540tu-sha.sha256sum] = "34f4ec1f4cc81c41f4b5bbcda97651b9f5a0394e616a399118fc1a337fb4c480"
-SRC_URI[v540tu-sha-sig.sha256sum] = "25ee7cae9ca2d32976d6833dce212e2c2e01cbaed2dcea54d3ed33a71e398791"
-SRC_URI[v540tu-ec.sha256sum] = "6b86617e25510a2289f29d1146e2c1d4f5875f21755e910877e07b27ce0a6b8a"
-SRC_URI[v540tu-ec-sha.sha256sum] = "0c30d0aea622ae551cfefaba2778ffc2a7cc88389ac0a7ce4f9de3e0da147609"
-SRC_URI[v540tu-ec-sha-sig.sha256sum] = "b8a22b9dc1938d736bc9c39995f24325692eef79c6f00376fdc98873c18d3d4d"
-SRC_URI[v560tu.sha256sum] = "22c644a19d7f883bcf19ca42943c62afe81b2ead697ae883d89200ff5bf23fc0"
-SRC_URI[v560tu-sha.sha256sum] = "57b3fedc9367bc89189dde5a105eca9c282dfb10c4295821c59be0b7fbafd736"
-SRC_URI[v560tu-sha-sig.sha256sum] = "076501e6d39598517824e5e0ec33ba1949d01a5a38ab55e0bd55a2739d48f65e"
-SRC_URI[v560tu-ec.sha256sum] = "4f5a2c3a9023b47a9a4e39b539d34689419c48e31abaa310db7db330c4999eb4"
-SRC_URI[v560tu-ec-sha.sha256sum] = "fc3885764248f9627b2157f48b4ad6077b9e96545189f88d109afc54f3db91cf"
-SRC_URI[v560tu-ec-sha-sig.sha256sum] = "2711381e269902906eb3945eca757a1f5a733171f267247e630b663606f9164f"
+SRC_URI[v540tu.sha256sum] = "e915ed1eae8b7b91a7a94ad7a75d57a4a077c0e7c6379234755788ca72fb1cd9"
+SRC_URI[v540tu-ec.sha256sum] = "9159d4f26cac779d8164abb6e7420a7f08928681b3a5bc5eee835bf6bcc4caad"
+SRC_URI[v560tu.sha256sum] = "0c66f864685e5216ff9219c9ff01adf54bb31022742ee19078aa083b065d52c6"
+SRC_URI[v560tu-ec.sha256sum] = "9c0da125fe57ec6a1fec616c53d69f8673c6838e7265db6416fdc533e6ea8348"
 
 S = "${WORKDIR}/git"
 FILES:${PN} += "/firmware"
@@ -53,12 +35,18 @@ python() {
 }
 
 do_install(){
+    cd "${WORKDIR}"
     install -d "${D}/firmware"
     stripped_binaries=$(echo "${BINARIES}" | sed 's/;[^ ]*//g')
     for binary in $stripped_binaries; do
         binary_dir=$(dirname "$binary")
         binary_name=$(basename "$binary")
-        install -Dm 0644 "${WORKDIR}/$binary_name" "${D}/firmware/$binary_dir/$binary_name"
+        sha256sum "$binary_name" >"${binary_name}.sha256"
+        # not verified during local update
+        echo "1" >"${binary_name}.sha256.sig"
+        install -Dm 0644 "${binary_name}" "${D}/firmware/$binary_dir/${binary_name}"
+        install -Dm 0644 "${binary_name}.sha256" "${D}/firmware/$binary_dir/${binary_name}.sha256"
+        install -Dm 0644 "${binary_name}.sha256.sig" "${D}/firmware/$binary_dir/${binary_name}.sha256.sig"
     done
     tar czvf "${D}/firmware/dts-configs.tar.gz" -C "$(dirname "${S}")" "$(basename "${S}")"
 }

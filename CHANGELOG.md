@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - dts-scripts: Check if capsule update succeeded. Print error explaining what to
   do if it didn't and stop update.
+- firmware-binaries: Update to 1.0.1 and generate sha and sig instead of
+  downloading.
 
 ## 2.7.3 - 2026-01-20
 
