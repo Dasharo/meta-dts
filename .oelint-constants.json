@@ -1,0 +1,9 @@
+{
+  "variables": {
+    "known": [
+      "IMAGE_EFI_BOOT_FILES",
+      "INITRD_ARCHIVE"
+    ],
+    "renamed": {}
+  }
+}
