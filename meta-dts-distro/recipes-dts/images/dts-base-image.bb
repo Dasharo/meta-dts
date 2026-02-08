@@ -6,7 +6,8 @@ UKI_FILENAME = "dts.efi"
 IMAGE_EFI_BOOT_FILES += " \
     ${UKI_FILENAME};EFI/DTS/${UKI_FILENAME} \
     grub.cfg;EFI/BOOT/grub.cfg \
-    "
+    shim${EFI_ARCH}.efi;EFI/BOOT/shim${EFI_ARCH}.efi \
+"
 
 do_ipxe_uki() {
     stub="${DEPLOY_DIR_IMAGE}/linux${EFI_ARCH}.efi.stub"
@@ -24,5 +25,7 @@ do_ipxe_uki[depends] += " \
     virtual/kernel:do_deploy \
     dts-base-image:do_image_complete \
 "
+
+do_image_wic[depends] += "shim:do_deploy"
 
 addtask ipxe_uki after do_image_complete before do_build
