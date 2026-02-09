@@ -8,6 +8,7 @@ IMAGE_EFI_BOOT_FILES += " \
     ${UKI_FILENAME};EFI/DTS/${UKI_FILENAME} \
     grub.cfg;EFI/BOOT/grub.cfg \
     shim${EFI_ARCH}.efi;EFI/BOOT/shim${EFI_ARCH}.efi \
+    shim${EFI_ARCH}.efi;EFI/DTS/grub${EFI_ARCH}.efi \
 "
 
 do_ipxe_uki() {
