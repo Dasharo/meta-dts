@@ -30,6 +30,9 @@ cat <<EOF > "${IPXE_FILE}"
 #!ipxe
 set dts_version ${VERSION}
 set dts_prefix \${dts_version}
+iseq \${platform} efi && goto is_efi || goto not_efi
+
+:not_efi
 set path_kernel \${dts_prefix}/bzImage-\${dts_version}
 set path_initrd \${dts_prefix}/dts-base-image-\${dts_version}.cpio.gz
 
@@ -38,4 +41,7 @@ imgfetch --name file_initrd \${path_initrd}
 
 kernel file_kernel initrd=file_initrd console=ttyUSB0
 boot
+
+:is_efi
+chain \${dts_prefix}/ipxe_dtsx64-\${dts_version}.efi
 EOF
