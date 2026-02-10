@@ -77,6 +77,7 @@ jobs:
           ssh -i ~/.ssh/dts-ci-key builder@10.1.40.2 "mkdir -p boot/dts/${DTS_VER}"
           cd build/tmp/deploy/images/genericx86-64/
           cp bzImage bzImage-${DTS_VER}
+          cp ipxe_dtsx64.efi ipxe_dtsx64-${DTS_VER}.efi
           cp dts-base-image-genericx86-64.cpio.gz dts-base-image-${DTS_VER}.cpio.gz
           cp dts-base-image-genericx86-64.wic.gz dts-base-image-${DTS_VER}.wic.gz
           cp dts-base-image-genericx86-64.wic.bmap dts-base-image-${DTS_VER}.wic.bmap
@@ -84,6 +85,7 @@ jobs:
           # see: https://github.com/dasharo/dasharo-issues/issues/288
           # cp dts-base-image-genericx86-64.iso dts-base-image-${DTS_VER}.iso
           scp -i ~/.ssh/dts-ci-key bzImage-${DTS_VER} builder@10.1.40.2:boot/dts/${DTS_VER}/
+          scp -i ~/.ssh/dts-ci-key ipxe_dtsx64-${DTS_VER}.efi builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.cpio.gz builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.wic.gz builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.wic.bmap builder@10.1.40.2:boot/dts/${DTS_VER}/
@@ -103,6 +105,7 @@ jobs:
           DTS_VER="${{ env.DTS_VER }}"
           cd build/tmp/deploy/images/genericx86-64/
           sha256sum bzImage-${DTS_VER} > bzImage-${DTS_VER}.sha256
+          sha256sum ipxe_dtsx64-${DTS_VER}.efi > ipxe_dtsx64-${DTS_VER}.efi.sha256
           sha256sum dts-base-image-${DTS_VER}.cpio.gz > dts-base-image-${DTS_VER}.cpio.gz.sha256
           sha256sum dts-base-image-${DTS_VER}.wic.gz > dts-base-image-${DTS_VER}.wic.gz.sha256
           sha256sum dts-base-image-${DTS_VER}.wic.bmap > dts-base-image-${DTS_VER}.wic.bmap.sha256
@@ -111,6 +114,7 @@ jobs:
           # see: https://github.com/dasharo/dasharo-issues/issues/288
           # sha256sum dts-base-image-${DTS_VER}.iso > dts-base-image-${DTS_VER}.iso.sha256
           scp -i ~/.ssh/dts-ci-key bzImage-${DTS_VER}.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
+          scp -i ~/.ssh/dts-ci-key ipxe_dtsx64-${DTS_VER}.efi.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.cpio.gz.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.wic.gz.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
           scp -i ~/.ssh/dts-ci-key dts-base-image-${DTS_VER}.wic.bmap.sha256 builder@10.1.40.2:boot/dts/${DTS_VER}/
