@@ -31,25 +31,40 @@ This section contains the technical aspects of the `DTS` release process. The
 recipients of this information should be those authorised to issue `DTS`
 releases.
 
-The basic release process can be found [here][zarhus-release-process]
+The basic release process can be found [here][zarhus-release-process].
 
-Follow the first 6 steps from the document linked above. The remaining steps
-will be performed automatically by CI. The pipeline of creating a `DTS` release
-consists of two steps.
+Follow the first 4 steps from the document linked above. After that, open a pull
+request from `develop` into `main` in the following repositories:
 
-* The first step is done on GitHub Actions. Here the `DTS` image is built and
+* [meta-dts][meta-dts]
+* [dts-configs][dts-configs]
+
+The PR in [meta-dts][meta-dts] will trigger a CI/CD with DTS E2E tests. Wait for
+the tests to complete, and collect the test results for internal analysis.
+
+After test results analysis and approval from maintainers, do steps 5 and 6 from
+[the basic release process][zarhus-release-process]. These steps will trigger
+the `DTS` release CI, which consists of two parts:
+
+* The first step is done on GitHub Actions. Here, the `DTS` image is built, and
   the binaries are pushed to `boot.dasharo.com`.
 
-* The second step is done on Gitea Actions. There the ipxe menu is pushed to
-  `boot.3mdeb.com` and the binaries are signed. Additionally, CI publishes the
-  release on `https://github.com/Dasharo/meta-dts/releases`, from
-  where binaries can be downloaded.
+* The second step is done on GiTea Actions. There, the iPXE menu is pushed to
+  `boot.3mdeb.com`, and the binaries are signed. Additionally, CI publishes the
+  release on `https://github.com/Dasharo/meta-dts/releases`, from where binaries
+  can be downloaded.
 
 When generating the changelog, you can provide your GitHub access token as a
 parameter to `generate-changelog.sh`. This will increase the cap on API call
 rate, which may otherwise prevent you from running `git cliff`.
 
+After the CIs finish and the DTS release appears in the [meta-dts][meta-dts]
+repository release tab, merge the previously opened PR in
+[dts-configs][dts-configs].
+
 [zarhus-release-process]: https://docs.zarhus.com/development-process/standard-release-process
+[meta-dts]: https://github.com/dasharo/meta-dts
+[dts-configs]: https://github.com/dasharo/dts-configs
 
 ## Cukinia tests
 
