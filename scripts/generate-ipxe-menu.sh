@@ -37,5 +37,15 @@ imgfetch --name file_kernel \${path_kernel}
 imgfetch --name file_initrd \${path_initrd}
 
 kernel file_kernel initrd=file_initrd console=ttyUSB0
+
+iseq \${platform} efi && goto is_efi || goto not_efi
+:is_efi
+chain replace_fum_efivar.efi
+
+:not_efi
 boot
 EOF
+
+if [ "${IPXE_FILE}" != "${IPXE_RC_FILE}" ]; then
+  cp "${IPXE_FILE}" "${IPXE_RC_FILE}"
+fi
