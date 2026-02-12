@@ -45,3 +45,7 @@ chain replace_fum_efivar.efi
 :not_efi
 boot
 EOF
+
+if [ "${IPXE_FILE}" != "${IPXE_RC_FILE}" ]; then
+  cp "${IPXE_FILE}" "${IPXE_RC_FILE}"
+fi
