@@ -21,6 +21,17 @@ IMAGE_INSTALL:append = " \
     lshw \
 "
 
+LAYER_COMMIT_SHA := "$(cd ${LAYERDIR} && git rev-parse HEAD)"
+
+BOOT_UUID="${@get_uuid('boot' + d.getVar('LAYER_COMMIT_SHA'))}"
+ROOT_UUID="${@get_uuid('root' + d.getVar('LAYER_COMMIT_SHA'))}"
+
+def get_uuid(string):
+    import hashlib, uuid
+    return str(uuid.UUID(hashlib.md5(string.encode()).hexdigest()))
+
+WICVARS:append = "ROOT_UUID BOOT_UUID"
+
 # Enable local auto-login of the root user (local = serial port and
 # virtual console)
 DTS_LOCAL_GETTY ?= " \
