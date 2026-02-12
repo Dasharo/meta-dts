@@ -14,6 +14,7 @@ SRC_URI:append = " \
     file://touchpad.cfg \
     file://tpm.cfg \
     file://capsule-update.cfg \
+    file://0001-drivers-ethernet-realtek-backport-r8126-support.patch \
 "
 
 # Enable support for additional file systems:
