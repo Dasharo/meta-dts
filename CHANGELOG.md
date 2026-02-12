@@ -4,6 +4,48 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 2.7.5 - 2026-02-12
+
+### Added
+
+- recipes-kernel: linux-yocto: Add support for MSI B850 PRO eth. This change
+  adds Ethernet NIC support for MSI B850 PRO platforms.
+
+### Fixed
+
+- dts-scripts: Fix credentials issues.
+    This change introduces fixes related to handling credentials, including:
+    * Disallow empty login and password.
+    * Disallow a space-in-the-middle in login and password.
+    * Ensure new credentials are not appended to the old ones.
+    * Ensure only valid credentials are saved.
+    * Harden checks for detecting if user has already logged in.
+    * Restore last-good credentials if new credentials are bad.
+
+    Fixes the following issues:
+    * https://github.com/Dasharo/dasharo-issues/issues/1326
+    * https://github.com/Dasharo/dasharo-issues/issues/1463
+    * https://github.com/Dasharo/dasharo-issues/issues/1578
+    * https://github.com/Dasharo/dasharo-issues/issues/1589
+- dts-scripts: expand DTS fusing warning & add FUM capsule workaround:
+    * Warnings for fusing are now more explicit, differentiated by different
+      colors and a link to detailed documentation has been added.
+    * Added detection for running capsule updates on a firmware that does not
+      support FUM capsule update. Implemented handling and added explicit
+      messages. Fixes the following issue:
+      <https://github.com/Dasharo/dasharo-issues/issues/1759>
+- scripts: generate-ipxe-menu: run 'replace_fum_efivar.efi' before DTS.
+  This change allows for running FUM capsule update on a firmware that does
+  not support FUM capsule updates. An alternative path has been introduced that
+  makes this possible. Fixes the following issue:
+  <https://github.com/Dasharo/dasharo-issues/issues/1759>
+- dts-scripts: Modify FUM checks after adding workaround.
+  This change is internal and does not affect end-users. New checks were added
+  for FUM testing.
+- scripts: generate-ipxe-menu.sh: Update dts-rc.ipxe during release. This
+  ensures the newest DTS is always booted via ipxe. Fixes the following issue:
+  <https://github.com/Dasharo/dasharo-issues/issues/1754>
+
 ## 2.7.4 - 2026-01-29
 
 ### Changed
