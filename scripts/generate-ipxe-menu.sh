@@ -43,5 +43,10 @@ kernel file_kernel initrd=file_initrd console=ttyUSB0
 boot
 
 :is_efi
+chain replace_fum_efivar.efi
 chain \${dts_prefix}/ipxe_dtsx64-\${dts_version}.efi
 EOF
+
+if [ "${IPXE_FILE}" != "${IPXE_RC_FILE}" ]; then
+  cp "${IPXE_FILE}" "${IPXE_RC_FILE}"
+fi
