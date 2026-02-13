@@ -1,0 +1,35 @@
+@startuml "boot-paths"
+  start
+  if (Choose boot method) then (iPXE)
+    if (UEFI) then (yes)
+      :Run //replace_fum_efivar.efi//;
+      note left
+        Rename //FirmwareUpdateMode// EFI variable
+        to //FirmwareUpdateModeRT// if it exists
+      endnote
+      :Boot //ipxe_dtsx64.efi//;
+      note left
+        Contains both kernel and rootfs
+      endnote
+    else (no)
+      :Boot //bzImage// and
+      //dts.cpio.gz// archive;
+    endif
+  else (USB/disk)
+    if (UEFI) then (no)
+      :Boot GRUB;
+      :Boot //bzImage//;
+    else (yes)
+      if (Which menu entry) then (Dasharo Tools Suite)
+        :Boot //EFI/DTS/grubx64.efi// (shim);
+      else (Default boot file)
+        :Boot //EFI/BOOT/bootx64.efi// (shim);
+      endif
+        :Boot //EFI/BOOT/grubx64.efi// (GRUB);
+        :Boot //EFI/DTS/dtsx64.efi// (DTS);
+    endif
+    :Mount rootfs;
+  endif
+  :We are in DTS;
+  stop
+@enduml
