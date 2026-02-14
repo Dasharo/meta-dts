@@ -33,7 +33,7 @@ EOF
 
 gen_without_fum_workaround_ipxe() {
   gen_common_ipxe "$@"
-  echo "chain \${dts_prefix}/ipxe_dtsx64-\${dts_version}.efi"
+  echo "chain \${dts_prefix}/ipxe_dtsx64-\${dts_version}.efi console=ttyUSB0"
 }
 
 VERSION=$1
