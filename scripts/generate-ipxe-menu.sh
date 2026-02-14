@@ -45,7 +45,7 @@ boot
 :is_efi
 chain replace_fum_efivar.efi
 imgfree
-chain \${dts_prefix}/ipxe_dtsx64-\${dts_version}.efi
+chain \${dts_prefix}/ipxe_dtsx64-\${dts_version}.efi console=ttyUSB0
 EOF
 
 if [ "${IPXE_FILE}" != "${IPXE_RC_FILE}" ]; then
