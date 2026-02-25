@@ -22,6 +22,9 @@
     else (yes)
       if (Which menu entry) then (Dasharo Tools Suite)
         :Boot //EFI/DTS/grubx64.efi// (shim);
+        note left
+          Yes, it's shim
+        endnote
       else (Default boot file)
         :Boot //EFI/BOOT/bootx64.efi// (shim);
       endif

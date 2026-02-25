@@ -130,10 +130,18 @@ Example below allows booting DTS via iPXE with Secure Boot enabled.
     If you are using iPXE on another platform (not QEMU) you should replace
     `localhost` with IP of the host with HTTP server running.
 
-To also run signed `replace_fum_efivar.efi` you have to modify iPXE commands:
+To also run `replace_fum_efivar.efi` you have to
 
-```text
-chain http://localhost:8000/replace_fum_efivar.efi
-imgfree
-chain http://localhost:8000/ipxe_dtsx64.efi
-```
+1. Sign `replace_fum_efivar.efi` the same way you have signed `ipxe_dtsx64.efi`
+
+    ```sh
+    sbsign --key sb.key --cert sb.crt replace_fum_efivar.efi --output replace_fum_efivar.efi
+    ```
+
+1. Modify iPXE commands:
+
+    ```text
+    chain http://localhost:8000/replace_fum_efivar.efi
+    imgfree
+    chain http://localhost:8000/ipxe_dtsx64.efi
+    ```
