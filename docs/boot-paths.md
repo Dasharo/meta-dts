@@ -145,3 +145,27 @@ To also run `replace_fum_efivar.efi` you have to
     imgfree
     chain http://localhost:8000/ipxe_dtsx64.efi
     ```
+
+## Live image
+
+Instead of booting `ipxe_dtsx64.efi` via iPXE you can instead use it as live
+USB image. In short, you just have to boot `ipxe_dtsx64.efi` directly, either by
+using [Boot from
+file](https://docs.dasharo.com/dasharo-menu-docs/boot-maintenance-mgr/#boot-from-file)
+menu, or by creating dedicated flash drive. Below is one such example, that will
+create `dts-live.img` that can be used in QEMU or flashed into USB flash drive:
+
+```sh
+dd if=/dev/zero of=dts-live.img bs=1 seek=400M count=0
+printf '%s\n' "n" "p" "1" "" "" "t" "ef" "w" | fdisk dts-live.img
+dev=$(sudo losetup --show -Pf dts-live.img)
+sudo mkfs.vfat "${dev}p1" -n DTS-LIVE
+sudo mount "${dev}p1" /mnt
+sudo mkdir -p /mnt/EFI/BOOT
+sudo cp ipxe_dtsx64.efi /mnt/EFI/BOOT/bootx64.efi
+sudo umount /mnt
+sudo losetup -d "${dev}"
+sync
+```
+
+This booting method will only work on UEFI firmware.
