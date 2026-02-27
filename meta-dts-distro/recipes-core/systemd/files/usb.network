@@ -1,0 +1,15 @@
+# modified 80-wired.network
+[Match]
+Type=ether
+Name=!veth*
+Driver=rndis_host
+KernelCommandLine=!nfsroot
+KernelCommandLine=!ip
+
+[Network]
+DHCP=yes
+
+[DHCP]
+UseMTU=yes
+RouteMetric=30
+ClientIdentifier=mac
