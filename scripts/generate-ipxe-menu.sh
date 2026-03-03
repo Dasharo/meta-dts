@@ -6,6 +6,9 @@ gen_common_ipxe() {
 #!ipxe
 set dts_version ${version}
 set dts_prefix \${dts_version}
+iseq \${platform} efi && goto is_efi || goto not_efi
+:not_efi
+
 set path_kernel \${dts_prefix}/bzImage-\${dts_version}
 set path_initrd \${dts_prefix}/dts-base-image-\${dts_version}.cpio.gz
 
@@ -13,25 +16,24 @@ imgfetch --name file_kernel \${path_kernel}
 imgfetch --name file_initrd \${path_initrd}
 
 kernel file_kernel initrd=file_initrd console=ttyUSB0
+boot
+
+:is_efi
 EOF
 }
 
 gen_fum_workaround_ipxe() {
   gen_common_ipxe "$@"
   cat <<EOF
-
-iseq \${platform} efi && goto is_efi || goto not_efi
-:is_efi
 chain replace_fum_efivar.efi
-
-:not_efi
-boot
+imgfree
+chain \${dts_prefix}/ipxe_dtsx64-\${dts_version}.efi
 EOF
 }
 
 gen_without_fum_workaround_ipxe() {
   gen_common_ipxe "$@"
-  echo "boot"
+  echo "chain \${dts_prefix}/ipxe_dtsx64-\${dts_version}.efi console=ttyUSB0"
 }
 
 VERSION=$1

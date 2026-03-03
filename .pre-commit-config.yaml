@@ -45,7 +45,7 @@ repos:
     rev: 9.0.1
     hooks:
       - id: oelint-adv
-        args: [--rulefile=.oelint-ruleset.json, --hide=info, --quiet, --fix]
+        args: [--rulefile=.oelint-ruleset.json, --hide=info, --quiet, --fix, --constantmods=+.oelint-constants.json]
         name: Advanced oelint
         description: Based on the OpenEmbedded Styleguide and work done by oe-stylize-tool this module offers a (nearly) complete linter for bitbake-recipes.
         entry: oelint-adv
