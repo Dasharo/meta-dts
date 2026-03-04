@@ -1,9 +1,44 @@
 #!/usr/bin/env bash
 
+gen_common_ipxe() {
+  local version="$1"
+  cat <<EOF
+#!ipxe
+set dts_version ${version}
+set dts_prefix \${dts_version}
+set path_kernel \${dts_prefix}/bzImage-\${dts_version}
+set path_initrd \${dts_prefix}/dts-base-image-\${dts_version}.cpio.gz
+
+imgfetch --name file_kernel \${path_kernel}
+imgfetch --name file_initrd \${path_initrd}
+
+kernel file_kernel initrd=file_initrd console=ttyUSB0
+EOF
+}
+
+gen_fum_workaround_ipxe() {
+  gen_common_ipxe "$@"
+  cat <<EOF
+
+iseq \${platform} efi && goto is_efi || goto not_efi
+:is_efi
+chain replace_fum_efivar.efi
+
+:not_efi
+boot
+EOF
+}
+
+gen_without_fum_workaround_ipxe() {
+  gen_common_ipxe "$@"
+  echo "boot"
+}
+
 VERSION=$1
 RC_VER_PATTERN="v[0-9]+.[0-9]+.[0-9]+-rc[0-9]+$"
 IPXE_FILE="dts.ipxe"
 IPXE_RC_FILE="dts-rc.ipxe"
+IPXE_NO_FUM_FIX_FILE="dts-no-fum-fix.ipxe"
 
 if [ $# -ne 1 ]; then
   echo "Provide version, e.g. v1.2.3"
@@ -26,25 +61,8 @@ fi
 # imgverify file_kernel \${sig_kernel}
 # imgverify file_initrd \${sig_initrd}
 
-cat <<EOF > "${IPXE_FILE}"
-#!ipxe
-set dts_version ${VERSION}
-set dts_prefix \${dts_version}
-set path_kernel \${dts_prefix}/bzImage-\${dts_version}
-set path_initrd \${dts_prefix}/dts-base-image-\${dts_version}.cpio.gz
-
-imgfetch --name file_kernel \${path_kernel}
-imgfetch --name file_initrd \${path_initrd}
-
-kernel file_kernel initrd=file_initrd console=ttyUSB0
-
-iseq \${platform} efi && goto is_efi || goto not_efi
-:is_efi
-chain replace_fum_efivar.efi
-
-:not_efi
-boot
-EOF
+gen_fum_workaround_ipxe "${VERSION}" >"${IPXE_FILE}"
+gen_without_fum_workaround_ipxe "${VERSION}" >"${IPXE_NO_FUM_FIX_FILE}"
 
 if [ "${IPXE_FILE}" != "${IPXE_RC_FILE}" ]; then
   cp "${IPXE_FILE}" "${IPXE_RC_FILE}"

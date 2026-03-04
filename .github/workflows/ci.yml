@@ -124,6 +124,7 @@ jobs:
           ./meta-dts/scripts/generate-ipxe-menu.sh ${{ env.DTS_VER }}
           scp -i ~/.ssh/dts-ci-key dts.ipxe builder@10.1.40.2:boot/dts/
           scp -i ~/.ssh/dts-ci-key dts-rc.ipxe builder@10.1.40.2:boot/dts/
+          scp -i ~/.ssh/dts-ci-key dts-no-fum-fix.ipxe builder@10.1.40.2:boot/dts/
       - name: Trigger signing and deploy to GitHub Release tab
         shell: bash
         run: |

@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 2.7.6 - 2026-03-02
+
+### Changed
+
+- scripts/generate-ipxe-menu.ipxe: generate iPXE script that skips running FUM
+  workaround application. This script is used in tests.
+
+### Fixed
+
+- recipes-core: systemd: increase USB network metric, so that USB network
+  interface will have lower priorty than non-USB one.
+  Fixes: <https://github.com/Dasharo/dasharo-issues/issues/1289>
+
 ## 2.7.5 - 2026-02-12
 
 ### Added
