@@ -36,7 +36,4 @@ do_compile[noexec] = "1"
 
 do_install () {
     oe_runmake install DESTDIR="${D}"
-
-    # Nightly DTS builds from meta-dts develop should default to dts-configs develop.
-    sed -i 's|refs/heads/main|refs/heads/develop|g' "${D}${sbindir}/dts-environment.sh"
 }
