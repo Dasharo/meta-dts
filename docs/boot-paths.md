@@ -59,7 +59,7 @@ Minimal USB example that allows booting DTS with Secure Boot enabled.
     ```sh
     bmaptool copy images/dts-base-image-genericx86-64.wic.gz dts.img
     dev=$(sudo losetup --show -Pf dts.img)
-    sudo mount "${loop}p1" /mnt
+    sudo mount "${dev}p1" /mnt
     ```
 
 3. Sign all files
