@@ -35,7 +35,7 @@ jobs:
     runs-on: dts-builder
     steps:
       - name: Checkout OSFV repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           repository: "Dasharo/open-source-firmware-validation"
           path: "open-source-firmware-validation"

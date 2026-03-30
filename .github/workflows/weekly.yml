@@ -68,7 +68,7 @@ jobs:
       labels: dts-builder
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
         with:
           ref: develop
           fetch-depth: 1
