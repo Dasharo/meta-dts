@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 2.7.7 - 2026-03-30
+
+### Added
+
+- dts-scripts: extend ME operation mode detection by parsing HFSTS1 bits 19:16
+  via coreboot logs and checking coreboot logs for CSE operating mode. Fixes
+  <https://github.com/Dasharo/dasharo-issues/issues/853>.
+- pre-commit: autoupdate hooks.
+
+### Fixed
+
+- dts-scripts: call function "sync_clocks" before dumping and sending HCL. If
+  clocks are not synced the "mc" might fail on sending HCL.
+- dts-scripts: avoid duplicate network wait message in FUM flow. Fixes
+  <https://github.com/Dasharo/dasharo-issues/issues/1219>.
+
 ## 2.7.6 - 2026-03-02
 
 ### Changed
