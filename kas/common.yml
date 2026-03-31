@@ -1,6 +1,6 @@
 ---
 header:
-  version: 11
+  version: 14
 
 repos:
   meta-dts:
@@ -9,7 +9,7 @@ repos:
 
   poky:
     url: https://git.yoctoproject.org/git/poky
-    refspec: d71d1c02ff622e00d6fa5ca9ce44a4e567691dce
+    commit: d71d1c02ff622e00d6fa5ca9ce44a4e567691dce
     layers:
       meta:
       meta-poky:
@@ -17,7 +17,7 @@ repos:
 
   meta-openembedded:
     url: https://git.openembedded.org/meta-openembedded
-    refspec: a72010b414ee3d73888ac9cb4e310e8f05e13aea
+    commit: a72010b414ee3d73888ac9cb4e310e8f05e13aea
     layers:
       meta-oe:
       meta-networking:
@@ -25,17 +25,17 @@ repos:
 
   meta-security:
     url: https://git.yoctoproject.org/git/meta-security
-    refspec: 11ea91192d43d7c2b0b95a93aa63ca7e73e38034
+    commit: 11ea91192d43d7c2b0b95a93aa63ca7e73e38034
     layers:
       meta-tpm:
 
   meta-dasharo:
     url: https://github.com/Dasharo/meta-dasharo
-    refspec: f548e66a69046f60762de05777090c95708ee4a5
+    commit: f548e66a69046f60762de05777090c95708ee4a5
 
   meta-coreboot:
     url: https://github.com/zarhus/meta-coreboot
-    refspec: c8254de6ee875ff4d8f7a3c91880c4d1ed9a7c6e
+    commit: c8254de6ee875ff4d8f7a3c91880c4d1ed9a7c6e
 
 bblayers_conf_header:
   standard: |
