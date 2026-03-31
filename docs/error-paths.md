@@ -151,8 +151,8 @@ Wrong values in DTS variables in `dts-scripts` or `dts-configs`
     * set version in format unsupported by `compare_version`
 
 - Variables related to binary preparation i.e. `*_MIGRATION`. Those
-    variables decide whether we need to run workflow related to this migration. If
-    they have wrong value then final workflow result might be different from
+    variables decide whether we need to run workflow related to this migration.
+    If they have wrong value then final workflow result might be different from
     expected e.g. in case of `NEED_SMMSTORE_MIGRATION` we might end up without
     migrated config (so we lose all BIOS configuration after update)
 
