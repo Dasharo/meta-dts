@@ -2,8 +2,16 @@
   "variables": {
     "known": [
       "IMAGE_EFI_BOOT_FILES",
-      "INITRD_ARCHIVE"
+      "INITRD_ARCHIVE",
+      "hostname",
+      "insane_skip",
+      "GRUB_BUILDIN"
     ],
     "renamed": {}
+  },
+  "functions": {
+    "known": [
+      "do_image_wic"
+    ]
   }
 }
