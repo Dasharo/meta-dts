@@ -1,0 +1,7 @@
+---
+header:
+  version: 14
+
+local_conf_header:
+  dts_configs_ref: |
+    DTS_CONFIGS_REF = "refs/heads/develop"

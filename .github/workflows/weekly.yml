@@ -13,7 +13,7 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       cacheless: true
-      kas-path: meta-dts/kas-uefi-sb.yml
+      kas-path: 'meta-dts/kas-uefi-sb.yml:meta-dts/kas/develop.yml'
       ref: develop
       nightly: true
 
@@ -31,7 +31,7 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       cacheless: true
-      kas-path: meta-dts/kas.yml
+      kas-path: 'meta-dts/kas.yml:meta-dts/kas/develop.yml'
       ref: develop
       nightly: true
 
@@ -68,7 +68,7 @@ jobs:
       labels: dts-builder
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v4
         with:
           ref: develop
           fetch-depth: 1

@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSES/Apache-2.0.txt;md5=c846ebb396f8b174b10ded477
 PV = "0.1+git${SRCPV}"
 
 SRC_URI = "git://github.com/Dasharo/dts-scripts;protocol=https;branch=main"
-SRCREV = "6dd5a1c94cd898e144bfff7946dabac39a3b9c9a"
+SRCREV = "4b0cc017efa7c895b9169f79f999c9278163eec6"
 
 S = "${WORKDIR}/git"
 
@@ -34,6 +34,8 @@ RDEPENDS:${PN} = " \
 do_configure[noexec] = "1"
 do_compile[noexec] = "1"
 
+DTS_CONFIGS_REF ?= "refs/heads/main"
+
 do_install () {
-    oe_runmake install DESTDIR="${D}"
+    oe_runmake install DESTDIR="${D}" DTS_CONFIGS_REF="${DTS_CONFIGS_REF}"
 }

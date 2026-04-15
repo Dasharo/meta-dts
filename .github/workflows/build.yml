@@ -32,11 +32,11 @@ jobs:
       dts_scripts_hash_nightly: ${{ steps.set_dts_scripts_hash_output.outputs.hash }}
     steps:
       - name: Checkout meta-dts repo
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v4
         with:
           path: "meta-dts"
           ref: ${{ inputs.ref }}
-      - name: Prepare nightly SRCREV
+      - name: Prepare nightly DTS settings
         if: ${{ inputs.nightly == true }}
         id: set_dts_scripts_hash_output
         shell: bash
@@ -45,14 +45,16 @@ jobs:
           DTS_SCRIPTS_HASH=$(cd dts-scripts-tmp && git rev-parse HEAD)
           echo "hash=${DTS_SCRIPTS_HASH}" >> $GITHUB_OUTPUT
           rm -rf dts-scripts-tmp
+
           FILE_PATH="meta-dts/meta-dts-distro/recipes-dts/dts-scripts/dts-scripts_git.bb"
-          if [ -f "$FILE_PATH" ]; then
-            sed -i "s/^SRCREV = \".*\"/SRCREV = \"${DTS_SCRIPTS_HASH}\"/" "$FILE_PATH"
-            echo "Updated SRCREV in $FILE_PATH to ${DTS_SCRIPTS_HASH}"
-          else
-            echo "Error: File $FILE_PATH not found. Cannot update SRCREV."
+          if [ ! -f "$FILE_PATH" ]; then
+            echo "Error: File $FILE_PATH not found. Cannot update nightly settings."
             exit 1
           fi
+
+          sed -i "s/^SRCREV = \".*\"/SRCREV = \"${DTS_SCRIPTS_HASH}\"/" "$FILE_PATH"
+
+          echo "Updated nightly SRCREV in $FILE_PATH to ${DTS_SCRIPTS_HASH}"
       - name: Prepare cache-less build configuration
         if: ${{ inputs.cacheless }}
         shell: bash
