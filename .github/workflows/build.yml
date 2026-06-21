@@ -42,13 +42,26 @@ jobs:
         shell: bash
         run: |
           git clone --depth 1 https://github.com/Dasharo/dts-scripts dts-scripts-tmp
-          DTS_SCRIPTS_HASH=$(cd dts-scripts-tmp && git rev-parse HEAD)
+
+          # Nightly builds should consume dts-configs develop by default.
+          # Patch dts-scripts default DTS_CONFIG_REF and create a local commit,
+          # then pin SRCREV to that commit.
+          pushd dts-scripts-tmp
+          sed -i 's#refs/heads/main#refs/heads/develop#' include/dts-environment.sh
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add include/dts-environment.sh
+          git commit -m "nightly: default DTS_CONFIG_REF to refs/heads/develop" >/dev/null
+          DTS_SCRIPTS_HASH=$(git rev-parse HEAD)
+          popd
+
           echo "hash=${DTS_SCRIPTS_HASH}" >> $GITHUB_OUTPUT
           rm -rf dts-scripts-tmp
+
           FILE_PATH="meta-dts/meta-dts-distro/recipes-dts/dts-scripts/dts-scripts_git.bb"
           if [ -f "$FILE_PATH" ]; then
             sed -i "s/^SRCREV = \".*\"/SRCREV = \"${DTS_SCRIPTS_HASH}\"/" "$FILE_PATH"
-            echo "Updated SRCREV in $FILE_PATH to ${DTS_SCRIPTS_HASH}"
+            echo "Updated nightly SRCREV in $FILE_PATH to ${DTS_SCRIPTS_HASH}"
           else
             echo "Error: File $FILE_PATH not found. Cannot update SRCREV."
             exit 1
