@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 2.7.8 - 2026-11-25
+
+### Fixed
+
+- Firmware updates could fail after the reboot, because part of the update
+  stayed in the CPU cache and was lost. DTS now writes the whole update to
+  memory before the reboot. Seen on MSI PRO Z790-P (MS-7E06).
+- Building DTS from source failed after a change in the Dasharo coreboot
+  repository, which provides the txesbmantool utility. The utility in DTS is
+  unchanged.
+
 ## 2.7.7 - 2026-03-30
 
 ### Added
