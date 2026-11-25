@@ -1,0 +1,114 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Micha=C5=82=20Iwanicki?= <michal.iwanicki@3mdeb.com>
+Date: Wed, 25 Nov 2026 14:39:50 +0100
+Subject: [PATCH] efi/capsule: write back capsule data from the CPU caches on
+ x86
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The firmware reads an in-memory capsule and its sglist after a warm
+reset. On x86 the kernel leaves both in the CPU caches, and dirty lines
+are lost at the reset. The firmware then finds a damaged capsule or a
+damaged sglist. On MSI PRO Z790-P with Dasharo, most capsule updates
+queued from DTS failed the capsule signature check (FmpState
+LastAttemptStatus 0x1012), and one reset left an sglist of all 0xFF
+bytes. Writing 512 MiB of other data to memory after queuing the
+capsule evicts the dirty lines, and with that step 3 of 3 updates
+succeeded.
+
+edk2 writes the capsule back in CapsuleCacheWriteBack() only when
+UpdateCapsule() runs at boot time. At runtime it gets only physical
+addresses, so it skips the write-back. A WBINVD in the firmware reset
+path would reach only the caches of the CPU that resets, per Intel SDM
+Vol. 3A section 2.8.6.
+
+Write back every capsule data page and every sglist page with CLFLUSH
+before calling UpdateCapsule(). CLFLUSH writes a line back from all
+caches in the coherence domain. ARM already writes back the sglist
+here.
+
+Upstream-Status: Pending
+
+Signed-off-by: Michał Iwanicki <michal.iwanicki@3mdeb.com>
+---
+ drivers/firmware/efi/capsule.c | 42 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
+
+diff --git a/drivers/firmware/efi/capsule.c b/drivers/firmware/efi/capsule.c
+index 7684302..c4c0db8 100644
+--- a/drivers/firmware/efi/capsule.c
++++ b/drivers/firmware/efi/capsule.c
+@@ -14,6 +14,10 @@
+ #include <linux/vmalloc.h>
+ #include <asm/efi.h>
+ #include <asm/io.h>
++#ifdef CONFIG_X86
++#include <asm/cacheflush.h>
++#include <asm/cpufeature.h>
++#endif
+ 
+ typedef struct {
+ 	u64 length;
+@@ -180,6 +184,37 @@ efi_capsule_update_locked(efi_capsule_header_t *capsule,
+ 	return efi_status_to_err(status);
+ }
+ 
++#ifdef CONFIG_X86
++/*
++ * The firmware reads the capsule from memory after a warm reset, and
++ * dirty cache lines do not survive that reset. At runtime, the firmware
++ * gets only physical addresses of the capsule and its sglist, so it
++ * cannot write them back by address. A WBINVD in the firmware's reset
++ * path reaches only the caches of the CPU that runs it. CLFLUSH writes
++ * a line back from the caches of every CPU, so do it here.
++ */
++static void efi_capsule_flush_x86(void *addr, unsigned int size)
++{
++	if (boot_cpu_has(X86_FEATURE_CLFLUSH))
++		clflush_cache_range(addr, size);
++	else
++		pr_warn_once("No CLFLUSH, capsule may be lost at reset\n");
++}
++
++static void efi_capsule_flush_pages(const phys_addr_t *pages,
++				    unsigned int count)
++{
++	unsigned int i;
++	void *data;
++
++	for (i = 0; i < count; i++) {
++		data = kmap_local_page(pfn_to_page(PHYS_PFN(pages[i])));
++		efi_capsule_flush_x86(data, PAGE_SIZE);
++		kunmap_local(data);
++	}
++}
++#endif
++
+ /**
+  * efi_capsule_update - send a capsule to the firmware
+  * @capsule: capsule to send to firmware
+@@ -230,6 +265,10 @@ int efi_capsule_update(efi_capsule_header_t *capsule, phys_addr_t *pages)
+ 	count = DIV_ROUND_UP(imagesize, PAGE_SIZE);
+ 	sg_count = sg_pages_num(count);
+ 
++#ifdef CONFIG_X86
++	efi_capsule_flush_pages(pages, count);
++#endif
++
+ 	sg_pages = kcalloc(sg_count, sizeof(*sg_pages), GFP_KERNEL);
+ 	if (!sg_pages)
+ 		return -ENOMEM;
+@@ -276,6 +315,9 @@ int efi_capsule_update(efi_capsule_header_t *capsule, phys_addr_t *pages)
+ 		 * it instead.
+ 		 */
+ 		efi_capsule_flush_cache_range(sglist, PAGE_SIZE);
++#endif
++#ifdef CONFIG_X86
++		efi_capsule_flush_x86(sglist, PAGE_SIZE);
+ #endif
+ 		kunmap_atomic(sglist);
+ 	}
+-- 
+2.55.0
+

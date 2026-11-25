@@ -15,6 +15,7 @@ SRC_URI:append = " \
     file://tpm.cfg \
     file://capsule-update.cfg \
     file://0001-drivers-ethernet-realtek-backport-r8126-support.patch \
+    file://0002-efi-capsule-write-back-capsule-data-from-the-CPU-caches-on-x86.patch \
 "
 
 # Enable support for additional file systems:
