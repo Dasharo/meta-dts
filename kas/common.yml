@@ -35,7 +35,7 @@ repos:
 
   meta-coreboot:
     url: https://github.com/zarhus/meta-coreboot
-    refspec: c8254de6ee875ff4d8f7a3c91880c4d1ed9a7c6e
+    refspec: 8861af91a2f90f01cbd51c7f3973f93ccc69a52e
 
 bblayers_conf_header:
   standard: |
